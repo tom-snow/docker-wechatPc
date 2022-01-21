@@ -62,7 +62,7 @@ DWORD WINAPI LoginMonitor(HMODULE hModule)
 	// 跳转到二维码界面
 	GotoQrCode();
 	//修改内存版本号
-	WriteData();
+	//WriteData();
 	// 定时监听登录状态
 	int number = 0;
 	bool sendQrcode = FALSE;
