@@ -17,6 +17,7 @@ docker run \
   -e VNCPASS=asdjix28 \
   -e APP_ID=CD7160A983DD8A288A56BAA078781FCA \
   -e APP_KEY=F2B283D51B3F4A1A4ECCB7A3621E7740 \
+  -e PHPDEBUG=true \
   -e WECHAT_DEST_VERSION=3.3.0.115 \
   -dti  --ipc=host \
   -v ~/DoChat/WeChat\ Files/:'/home/user/WeChat Files/'  \
