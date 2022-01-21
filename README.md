@@ -29,7 +29,7 @@ docker run \
 
 挂载：这两个目录是微信的数据目录，从DoChat镜像继承的。
 
-环境变量：VNCPASS设置VNC的密码，APP_ID和APP_KEY设置wechatPc的密钥。WECHAT_DEST_VERSION是微信自定义版本号，默认3.3.0.115。
+环境变量：VNCPASS设置VNC的密码，APP_ID和APP_KEY设置wechatPc的密钥。WECHAT_DEST_VERSION是微信自定义版本号，默认3.3.0.115。PHPDEBUG是日志详细开关，默认打开，设置为false可关闭。
 
 ## 使用说明：
 ### API使用方法：

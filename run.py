@@ -2,9 +2,9 @@
 import sys, subprocess, os
 
 def run_php():
-    subprocess.run(['/usr/bin/php7.2','index.php','start'],
-        cwd='/ServerPhp')
-    subprocess.Popen(['/usr/bin/tail','-f','/ServerPhp/Storage/logs/wechat.log'])
+    if (os.environ['PHPDEBUG'] == 'false') or (os.environ['PHPDEBUG'] == 'False'):
+        subprocess.run(['sed', '-i', "s@debug' => true@debug' => false@g", '/ServerPhp/Config/Config.php'])
+    subprocess.run(['/usr/bin/php7.2','index.php','start'], cwd='/ServerPhp')
 
 def run_scanversion():
     subprocess.Popen(['/usr/bin/python3','/scanversion.py'])
