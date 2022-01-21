@@ -1,0 +1,6 @@
+<extInfo MinVersion="2.8.0.121" silence="1">
+	<wechatfile url="http://dldir1.qq.com/weixin/Windows/WeChat_2.8.0_update121.dat" />
+	<file_component url="http://dldir1.qq.com/weixin/Windows/WeChat_2.8.0_update121.xml" />
+	<wechatfile_ex url="http://dldir1.qq.com/weixin/Windows/WeChat_2.8.0_update121_ex.dat" />
+	<file_component_ex url="http://dldir1.qq.com/weixin/Windows/WeChat_2.8.0_update121_ex.xml" />
+</extInfo>
