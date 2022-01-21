@@ -1,3 +1,51 @@
+# Linux docker wechat hook镜像
+在Linux下可一键启动的Wechat Hook镜像，仅供学习交流，严禁用于商业用途，请于24小时内删除。
+
+项目的Docker镜像基于：[DoChat](https://github.com/huan/docker-wechat) ，Hook程序基于：[wechatPc](https://github.com/chengciming/wechatPc)，十分感谢两位作者。
+
+## 镜像启动的组件：
+1. PHP7.2运行ServerPhp目录下的Websocket接口服务器，端口5678
+2. tigerVNC服务器用于提供图形显示，端口5905
+3. Wine 环境运行 Hook程序
+4. Wine 环境运行微信程序
+
+## 运行镜像：
+<pre>
+docker run \
+  --name wechathook  \
+  -p 127.0.0.1:5905:5905 -p 127.0.0.1:5678:5678 \
+  -e VNCPASS=asdjix28 \
+  -e APP_ID=CD7160A983DD8A288A56BAA078781FCA \
+  -e APP_KEY=F2B283D51B3F4A1A4ECCB7A3621E7740 \
+  -e WECHAT_DEST_VERSION=3.3.0.115 \
+  -dti  --ipc=host \
+  -v ~/DoChat/WeChat\ Files/:'/home/user/WeChat Files/'  \
+  -v ~/DoChat/Application\ Data:'/home/user/.wine/drive_c/users/user/Application Data/' \
+   --ipc=host \
+  --privileged \
+  endokai/wechatpchook
+</pre>
+端口：其中5905是VNC的端口，5678是Websocket API的输出端口
+
+挂载：这两个目录是微信的数据目录，从DoChat镜像继承的。
+
+环境变量：VNCPASS设置VNC的密码，APP_ID和APP_KEY设置wechatPc的密钥。WECHAT_DEST_VERSION是微信自定义版本号，默认3.3.0.115。
+
+## 使用说明：
+### API使用方法：
+API使用方法参见Web文件夹下的[websocket.js](https://github.com/endokai/docker-wechatPc/blob/master/Web/common/js/websocket.js)文件，配合查看[WechatOffset.h](https://github.com/endokai/docker-wechatPc/blob/master/WechatDll/WechatDll/WechatOffset.h)
+
+### Web端使用方法：
+wechatPc提供一个简易的Web端。下载此项目，打开Web文件夹。
+修改Web/common/js/websocket.js文件靠后面的一个Websocket连接地址，改为API端口地址，
+进入Web目录下，使用浏览器打开index.html即可使用。
+          
+          
+-------
+-------
+-------
+以下是wechatPc项目的原说明
+-------
 <h1 align="left">PC端微信Hook源码</h1>
 
 # PC微信hook源码，仅供学习，请不要用于商业、违法途径，本人不对此源码造成的违法负责！
