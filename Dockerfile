@@ -60,7 +60,7 @@ RUN wget --no-check-certificate -O /bin/dumb-init "https://github.com/Yelp/dumb-
     rm -rf /Tencent
 
 
-RUN echo '0.0.0.0 dldir1.qq.com' | tee -a /etc/hosts
+# RUN echo '0.0.0.0 dldir1.qq.com' | tee -a /etc/hosts
 
 ENTRYPOINT [ "/bin/dumb-init" ]
 CMD ["/run.py","start"]

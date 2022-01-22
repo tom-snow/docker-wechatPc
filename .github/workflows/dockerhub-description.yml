@@ -18,4 +18,4 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_PASSWORD }}
           short-description: ${{ github.event.repository.description }}
-          repository: ${{ secrets.DOCKER_HUB_USERNAME }}/docker-wechatpc
+          repository: ${{ secrets.DOCKER_HUB_USERNAME }}/wechatpchook
