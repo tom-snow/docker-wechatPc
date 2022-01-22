@@ -15,7 +15,7 @@ ENV DISPLAY=:5
 ENV PHPDEBUG=true
 
 
-EXPOSE 5905  8686
+EXPOSE 5678 5905  8686
 
 #VOLUME [\
 #  "/home/user/WeChat Files", \
@@ -60,7 +60,7 @@ RUN wget --no-check-certificate -O /bin/dumb-init "https://github.com/Yelp/dumb-
     rm -rf /Tencent
 
 
-RUN echo '0.0.0.0 dldir1.qq.com' | tee -a /etc/hosts
+# RUN echo '0.0.0.0 dldir1.qq.com' | tee -a /etc/hosts
 
 ENTRYPOINT [ "/bin/dumb-init" ]
 CMD ["/run.py","start"]
