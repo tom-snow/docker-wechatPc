@@ -15,7 +15,7 @@ ENV DISPLAY=:5
 ENV PHPDEBUG=true
 
 
-EXPOSE 5905  8686
+EXPOSE 5678 5905  8686
 
 #VOLUME [\
 #  "/home/user/WeChat Files", \
@@ -29,6 +29,7 @@ COPY ServerPhp /ServerPhp
 #COPY vncserver.sh /vncserver.sh
 COPY run.py /run.py
 COPY scanversion.py /scanversion.py
+COPY scanversion-phpexe.py /scanversion-phpexe.py
 COPY wine/Tencent /Tencent
 COPY wine/微信.lnk /home/user/.wine/drive_c/users/Public/Desktop/微信.lnk
 COPY wine/system.reg  /home/user/.wine/system.reg

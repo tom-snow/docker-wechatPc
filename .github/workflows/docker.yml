@@ -41,7 +41,7 @@ jobs:
           platforms: linux/arm64,linux/amd64
           builder: ${{ steps.buildx.outputs.name }}
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/docker-wechatPc:latest
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/docker-wechatpc:latest
 #           tags: ${{ steps.meta.outputs.tags }}
 #           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=local,src=/tmp/.buildx-cache
