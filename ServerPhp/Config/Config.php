@@ -7,7 +7,7 @@ return [
     /**
      * 是否开启debug模式
      */
-    'debug' => false,
+    'debug' => true,
     /**
      * 服务端websocket配置
      */
@@ -26,7 +26,7 @@ return [
      * 基础配置
      */
     'worker'=>[
-        'daemonize' => true,  //是否后台运行
+        'daemonize' => false,  //是否后台运行
         'worker_num' => 1,  //工作进程数量
         'name' => 'Wechat', //服务名称
         'log_file' => ROOT_PATH . '/Storage/logs/wechat.log',  //日记文件
