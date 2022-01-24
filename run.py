@@ -16,7 +16,7 @@ class DockerWechatHook:
             os.remove('/ServerPhp/Storage/pid/wechat.pid')
         if (os.environ['PHPDEBUG'] == 'false') or (os.environ['PHPDEBUG'] == 'False'):
             subprocess.run(['sed', '-i', "s@debug' => true@debug' => false@g", '/ServerPhp/Config/Config.php'])
-        self.php = subprocess.run(['/usr/bin/php7.2','index.php','start'], cwd='/ServerPhp')
+        self.php = subprocess.Popen(['/usr/bin/php7.2','index.php','start'], cwd='/ServerPhp')
 
     def run_scanversion(self):
         self.scanversion = subprocess.Popen(['/usr/bin/python3','/scanversion.py'])
