@@ -1,4 +1,5 @@
 # Linux docker wechat hook镜像
+[![dockeri.co](https://dockeri.co/image/endokai/wechatpchook)](https://hub.docker.com/r/endokai/wechatpchook/tags)
 在 Linux 下可一键启动的 Wechat Hook 镜像，仅供学习交流，严禁用于商业用途，请于24小时内删除。
 
 项目的 Docker 镜像基于：[DoChat](https://github.com/huan/docker-wechat) ，Hook程序基于：[wechatPc](https://github.com/chengciming/wechatPc)，十分感谢两位作者。

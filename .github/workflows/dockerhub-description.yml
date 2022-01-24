@@ -1,11 +1,19 @@
 name: Update Docker Hub Description
 on:
-  push:
+  workflow_run:
+    workflows: [CI to Docker Hub]
+    types: [completed]
     branches:
       - master
     paths:
       - README.md
       - .github/workflows/dockerhub-description.yml
+  # push:
+  #   branches:
+  #     - master
+  #   paths:
+  #     - README.md
+  #     - .github/workflows/dockerhub-description.yml
 jobs:
   dockerHubDescription:
     runs-on: ubuntu-latest
