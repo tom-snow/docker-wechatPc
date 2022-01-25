@@ -1,5 +1,6 @@
 # Linux docker wechat hook镜像
 [![dockeri.co](https://dockeri.co/image/endokai/wechatpchook)](https://hub.docker.com/r/endokai/wechatpchook/tags)
+
 在 Linux 下可一键启动的 Wechat Hook 镜像，仅供学习交流，严禁用于商业用途，请于24小时内删除。
 
 项目的 Docker 镜像基于：[DoChat](https://github.com/huan/docker-wechat) ，Hook程序基于：[wechatPc](https://github.com/chengciming/wechatPc)，十分感谢两位作者。
@@ -40,16 +41,16 @@ docker run \
   * VNCPASS: 设置 VNC 的密码
   * APP_ID和APP_KEY: 设置 wechatPc 的密钥
   * WECHAT_DEST_VERSION: 微信自定义版本号，默认 3.3.0.115。（伪装微信版本所用）
-  * PHPDEBUG: 日志详细开关，默认打开，设置为false可关闭。
+  * PHPDEBUG: 日志详细开关，默认打开，设置为 false 可关闭。
 
 ## 使用说明：
 ### API使用方法：
-API使用方法参见Web文件夹下的[websocket.js](https://github.com/endokai/docker-wechatPc/blob/master/Web/common/js/websocket.js)文件，配合查看[WechatOffset.h](https://github.com/endokai/docker-wechatPc/blob/master/WechatDll/WechatDll/WechatOffset.h)
+API 使用方法参见 Web 文件夹下的 [websocket.js](https://github.com/endokai/docker-wechatPc/blob/master/Web/common/js/websocket.js) 文件，配合查看 [WechatOffset.h](https://github.com/endokai/docker-wechatPc/blob/master/WechatDll/WechatDll/WechatOffset.h)
 
 ### Web端使用方法：
-wechatPc提供一个简易的Web端。下载此项目，打开Web文件夹。（或者使用 [DownGit](https://minhaskamal.github.io/DownGit/#/home) 仅下载 Web 目录）
+wechatPc 提供一个简易的 Web 端。下载此项目，打开 Web 文件夹。（或者使用 [DownGit](https://minhaskamal.github.io/DownGit/#/home) 仅下载 Web 目录）
 
-修改Web/common/js/websocket.js文件靠后面的一个Websocket连接地址，改为API端口地址，进入Web目录下，使用浏览器打开index.html即可使用。
+修改 Web/common/js/websocket.js 文件靠后面的一个 Websocket 连接地址，改为 API 端口地址，进入 Web 目录下，使用浏览器打开 index.html 即可使用。
           
           
 -------

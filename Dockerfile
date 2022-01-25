@@ -1,4 +1,4 @@
-FROM docker.io/zixia/wechat
+FROM docker.io/zixia/wechat:3.3.0.115
 MAINTAINER endokai
 
 USER root
