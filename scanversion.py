@@ -24,8 +24,8 @@ def compute_version(ver):
         return '0'
 
 #死亡循环（有更好想法的可以提出），查找微信进程并且修改版本号
+process_done_list = []
 while True :
-    process_done_list = []
     #懒得装其他Python模块然后过滤了，所以直接调用系统的pgrep
     process_check = subprocess.run(['/usr/bin/pgrep','WeChat.exe'],capture_output=True,text=True)
 
