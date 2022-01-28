@@ -40,7 +40,7 @@ docker run \
 * 环境变量：
   * VNCPASS: 设置 VNC 的密码
   * APP_ID和APP_KEY: 设置 wechatPc 的密钥
-  * WECHAT_DEST_VERSION: 微信自定义版本号，默认 3.3.0.115。（伪装微信版本所用）
+  * WECHAT_DEST_VERSION: 微信自定义版本号，默认 3.3.0.115。（伪装微信版本所用，必须是 a.b.c.d 格式的版本号）
   * PHPDEBUG: 日志详细开关，默认打开，设置为 false 可关闭。
 
 ## 使用说明：

@@ -22,19 +22,6 @@ EXPOSE 5678 5905  8686
 #  "/home/user/.wine/drive_c/users/user/Application Data" \
 #]
 
-COPY Bin/Debug /Debug
-COPY ServerPhp /ServerPhp
-#COPY run.sh /run.sh
-#COPY scanversion.sh /scanversion.sh
-#COPY vncserver.sh /vncserver.sh
-COPY run.py /run.py
-COPY scanversion.py /scanversion.py
-COPY wine/Tencent /Tencent
-COPY wine/微信.lnk /home/user/.wine/drive_c/users/Public/Desktop/微信.lnk
-COPY wine/system.reg  /home/user/.wine/system.reg
-COPY wine/user.reg  /home/user/.wine/user.reg
-COPY wine/userdef.reg /home/user/.wine/userdef.reg
-
 
 RUN apt update &&  \
   apt install wget -y && \
@@ -49,6 +36,18 @@ RUN wget https://packages.sury.org/php/apt.gpg && \
     apt install php7.2-cli scanmem wget winbind samba tigervnc-standalone-server tigervnc-common openbox -y
 
 
+#COPY run.sh /run.sh
+#COPY scanversion.sh /scanversion.sh
+#COPY vncserver.sh /vncserver.sh
+COPY run.py /run.py
+# COPY scanversion.py /scanversion.py
+COPY wine/Tencent /Tencent
+COPY wine/微信.lnk /home/user/.wine/drive_c/users/Public/Desktop/微信.lnk
+COPY wine/system.reg  /home/user/.wine/system.reg
+COPY wine/user.reg  /home/user/.wine/user.reg
+COPY wine/userdef.reg /home/user/.wine/userdef.reg
+
+
 RUN wget --no-check-certificate -O /bin/dumb-init "https://github.com/Yelp/dumb-init/releases/download/v1.2.5/dumb-init_1.2.5_x86_64"  && \
     chmod a+x /bin/dumb-init && \
 #    chmod a+x /run.sh && \
@@ -59,6 +58,9 @@ RUN wget --no-check-certificate -O /bin/dumb-init "https://github.com/Yelp/dumb-
     chown root:root -R /home/user/.wine && \
     rm -rf /Tencent
 
+
+COPY ServerPhp /ServerPhp
+COPY Bin/Debug /Debug
 
 # RUN echo '0.0.0.0 dldir1.qq.com' | tee -a /etc/hosts
 
