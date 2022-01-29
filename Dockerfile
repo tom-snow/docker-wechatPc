@@ -1,4 +1,4 @@
-FROM docker.io/zixia/wechat
+FROM docker.io/zixia/wechat:3.3.0.115
 MAINTAINER endokai
 
 USER root
@@ -17,21 +17,6 @@ ENV VNCPASS=YourSafeVNCPassword \
 
 EXPOSE 5678 5905  8686
 
-#VOLUME [\
-#  "/home/user/WeChat Files", \
-#  "/home/user/.wine/drive_c/users/user/Application Data" \
-#]
-
-COPY Bin/Debug /Debug
-COPY ServerPhp /ServerPhp
-COPY run.py /run.py
-COPY scanversion.py /scanversion.py
-COPY wine/Tencent /Tencent
-COPY wine/微信.lnk /home/user/.wine/drive_c/users/Public/Desktop/微信.lnk
-COPY wine/system.reg  /home/user/.wine/system.reg
-COPY wine/user.reg  /home/user/.wine/user.reg
-COPY wine/userdef.reg /home/user/.wine/userdef.reg
-
 
 RUN apt update &&  \
   apt install wget -y && \
@@ -44,14 +29,26 @@ RUN wget https://packages.sury.org/php/apt.gpg && \
     echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" | tee /etc/apt/sources.list.d/php7.list && \
     apt update && \
     apt install php7.2-cli scanmem wget winbind samba tigervnc-standalone-server tigervnc-common openbox -y && \
-    wget --no-check-certificate -O /bin/dumb-init "https://github.com/Yelp/dumb-init/releases/download/v1.2.5/dumb-init_1.2.5_x86_64"  && \
-    chmod a+x /bin/dumb-init && \
+    wget --no-check-certificate -O /bin/dumb-init "https://github.com/Yelp/dumb-init/releases/download/v1.2.5/dumb-init_1.2.5_x86_64"
+
+
+COPY run.py /run.py
+COPY wine/Tencent /Tencent
+COPY wine/微信.lnk /home/user/.wine/drive_c/users/Public/Desktop/微信.lnk
+COPY wine/system.reg  /home/user/.wine/system.reg
+COPY wine/user.reg  /home/user/.wine/user.reg
+COPY wine/userdef.reg /home/user/.wine/userdef.reg
+
+
+RUN chmod a+x /bin/dumb-init && \
     chmod a+x /run.py && \
-    chmod a+x /scanversion.py && \
     cp -rf /Tencent "/home/user/.wine/drive_c/Program Files/" && \
     chown root:root -R /home/user/.wine && \
     rm -rf /Tencent
 
+
+COPY ServerPhp /ServerPhp
+COPY Bin/Debug /Debug
 
 ENTRYPOINT [ "/bin/dumb-init" ]
 CMD ["/run.py","start"]

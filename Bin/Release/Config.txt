@@ -4,3 +4,4 @@ app_key=F2B283D51B3F4A1A4ECCB7A3620E7740
 # websocket服务端配置
 wesocket_server_address=127.0.0.1
 wesocket_server_port=8686
+hex_version=0x63030073

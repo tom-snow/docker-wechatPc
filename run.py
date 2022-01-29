@@ -8,6 +8,28 @@ class DockerWechatHook:
         signal.signal(signal.SIGHUP, self.now_exit)
         signal.signal(signal.SIGTERM, self.now_exit)
 
+    def compute_version(self, ver):
+        #计算微信版本号，并且转换为10进制字符串
+        if len(ver) >= 7 :
+            version_list = ver.split('.')
+
+            #第一个最前面要补个6，后面几个则是补0
+            version_list[0] = '6' + str(hex(int(version_list[0]))).split('x')[1]
+            version_list[1] = str(hex(int(version_list[1]))).split('x')[1]
+            if len(version_list[1]) == 1 :
+                version_list[1] = '0' + version_list[1]
+            version_list[2] = str(hex(int(version_list[2]))).split('x')[1]
+            if len(version_list[2]) == 1 :
+                version_list[2] = '0' + version_list[2]
+            version_list[3] = str(hex(int(version_list[3]))).split('x')[1]
+            if len(version_list[3]) == 1 :
+                version_list[3] = '0' + version_list[3]
+            version_hex = "0x" + version_list[0] + version_list[1] + version_list[2] + version_list[3]
+            # version_int = int(version_hex, 16)
+            return str(version_hex)
+        else :
+            return '0x63030073' # 默认 3.3.0.115
+
     def now_exit(self,signum, frame):
         self.exit_container()
 
@@ -34,20 +56,23 @@ class DockerWechatHook:
     def run_hook(self):
         app_id = os.environ['APP_ID']
         app_key = os.environ['APP_KEY']
+        hex_version = self.compute_version(os.environ['WECHAT_DEST_VERSION'])
         #修改配置文件
         subprocess.run(['sed', '-i', '-e',
-            f's@api_id=.*$@app_id={app_id}@g' , '-e',
-            f's@api_key=.*$@app_key={app_key}@g',
+            f's@app_id=.*$@app_id={app_id}@g' , '-e',
+            f's@app_key=.*$@app_key={app_key}@g','-e',
+            f's@hex_version=.*$@hex_version={hex_version}@g',
             '/Debug/Config.txt'])
+        # subprocess.run(['cp','/Debug/Config.txt', '/home/user/.wine/drive_c/Config.txt'])
         self.hook = subprocess.run(['wine','/Debug/WechatRobot.exe'])
 
     def exit_container(self):
         print(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')+ ' 正在退出容器...')
-        try:
-            print(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')+ ' 退出修改版本脚本...')
-            os.kill(self.scanversion.pid, signal.SIGTERM)
-        except:
-            pass
+        # try:
+        #     print(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')+ ' 退出修改版本脚本...')
+        #     os.kill(self.scanversion.pid, signal.SIGTERM)
+        # except:
+        #     pass
         try:
             print(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')+ ' 退出Hook程序...')
             os.kill(self.hook.pid, signal.SIGTERM)
@@ -68,7 +93,7 @@ class DockerWechatHook:
     def run_all_in_one(self):
         print(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')+ ' 启动容器中...')
         self.run_php()
-        self.run_scanversion()
+        # self.run_scanversion()
         self.run_vnc()
         self.run_hook()
         print(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')+ ' 启动完成.')

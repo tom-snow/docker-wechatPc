@@ -11,17 +11,80 @@
 #include <stdio.h>
 #include <windows.h>
 #include <string>
-#include <tchar.h> 
+#include <tchar.h>
+#include <Windows.h>
+#include <memoryapi.h>
+#include <WinBase.h>
+#include <iostream>
+#include <string>
+#include <fstream>
+
 
 using namespace std;
+
+/*
+ *parameter: cfgfilepath 文件的绝对路径名如: /user/home/my.cfg
+ *           key         文本中的变量名
+ *           value       对应变量的值，用于保存
+ *
+ * modified from: https://blog.csdn.net/lzx_bupt/article/details/7073272
+ * 备注：代码鲁棒性不高，能用就行
+ */
+bool readConfigFile(const char * cfgfilepath, const string & key, string & value)
+{
+	fstream cfgFile;
+	cfgFile.open(cfgfilepath);//打开文件	
+	if (!cfgFile.is_open())
+	{
+		//cout << "can not open cfg file!" << endl;
+		printf_s("can not open cfg file!\n");
+		return false;
+	}
+	printf_s("[Debug] Opened Config file\n");
+	char tmp[1000];
+	while (!cfgFile.eof())//循环读取每一行
+	{
+		cfgFile.getline(tmp, 1000);//每行读取前1000个字符
+		string line(tmp);
+		size_t pos = line.find('=');//找到每行的“=”号位置，之前是key之后是value
+		if (pos == string::npos) continue; // 跳过空行或者注释行
+		string tmpKey = line.substr(0, pos);//取=号之前
+		if (key == tmpKey)
+		{
+			value = line.substr(pos + 1);//取=号之后
+			return true;
+		}
+	}
+	return false;
+}
+
 
 //修改内存版本号
 VOID WriteData() {
 	DWORD winAddress = GetWechatWinAddress();
-	DWORD wxVersion = winAddress + 0x161DA78;
+	DWORD wxVersion = winAddress + 0x16276C4;
+	// DWORD wxVersion = winAddress + 0x161DA78;
 
-	//MessageBox(NULL, (LPCTSTR)"版本值从0x62080079修改为0x63020197", TEXT("版本号已修改"), 0);
-	//WriteProcessMemory(GetCurrentProcess(), (LPVOID)wxVersion, (LPVOID)0x63020197, sizeof((LPVOID)0x63020197), NULL);
+
+
+	DWORD oldVersion = 0x0;
+	DWORD newVersion = 0x63030073;
+	string value = "0x63030073";
+	bool readSuccess = readConfigFile("Z:\\Debug\\Config.txt", "hex_version", value);
+	if (readSuccess) {
+		sscanf_s((char*)value.data(), "%x", &newVersion);
+		printf_s("[Debug] Read wechat version from config file. Loaded data: 0x%x\n", newVersion);
+	}
+
+
+	ReadProcessMemory(GetCurrentProcess(), (LPVOID)wxVersion, (LPVOID)&oldVersion, sizeof((LPVOID)newVersion), NULL);
+	printf_s("[Debug] winAddress: 0x%x, wxVersionAddress: 0x%x, data: 0x%x\n", winAddress, wxVersion, oldVersion);
+	WriteProcessMemory(GetCurrentProcess(), (LPVOID)wxVersion, &newVersion, sizeof((LPVOID)newVersion), NULL);
+	ReadProcessMemory(GetCurrentProcess(), (LPVOID)wxVersion, (LPVOID)&oldVersion, sizeof((LPVOID)newVersion), NULL);
+	printf_s("[Debug]\tsetVersion: 0x%x, newData: 0x%x\n", newVersion, oldVersion);
+	if (oldVersion == newVersion) {
+		printf_s("Wechat Version change success!!!\n\n");
+	}
 
 }
 
@@ -122,7 +185,7 @@ VOID ReadWechatUser()
 	HWND hwndDlg = GetGlobalHwnd();
 
 	// 获取微信ID
-	CHAR wxid[0x100] = {0};
+	CHAR wxid[0x100] = { 0 };
 	int wxidLength = (int)*((DWORD*)(winAddress + WX_USER_ID + 0x10));
 	sprintf_s(wxid, "%s", (CHAR*)(winAddress + WX_USER_ID));
 	if (strlen(wxid) != wxidLength) {  // 指针
