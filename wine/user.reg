@@ -779,7 +779,7 @@ WINE REGISTRY Version 2
 [Software\\Wine\\Fonts] 1642602272
 #time=1d80d40468e31dc
 "Codepages"="936,936"
-"LogPixels"=dword:00000078
+"LogPixels"=dword:00000060
 
 [Software\\Wine\\Fonts\\External Fonts] 1642599928
 #time=1d80d3ad1e47d3c

@@ -38811,7 +38811,7 @@ WINE REGISTRY Version 2
 #time=1d80d3ad21aa2cc
 "FIXEDFON.FON"="svgafix.fon"
 "FONTS.FON"="svgasys.fon"
-"LogPixels"=dword:00000078
+"LogPixels"=dword:00000060
 "OEMFONT.FON"="vga936.fon"
 
 [System\\CurrentControlSet\\Services\\BITS] 1636010780
