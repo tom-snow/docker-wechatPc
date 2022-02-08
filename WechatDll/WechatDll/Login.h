@@ -1,11 +1,11 @@
 #pragma once
 #include "stdafx.h"
 
-// ÍË³öµÇÂ¼
+// é€€å‡ºç™»å½•
 void DoLogout();
-// »ñÈ¡µÇÂ¼×´Ì¬
+// è·å–ç™»å½•çŠ¶æ€
 int CheckLoginStatus();
-// »ñÈ¡µÇÂ¼×´Ì¬ºÍµÇÂ¼¶şÎ¬Âë
+// è·å–ç™»å½•çŠ¶æ€å’Œç™»å½•äºŒç»´ç 
 bool SendLoginStatus(bool sendQrcode = TRUE);
-// Ìø×ªµ½¶şÎ¬Âë½çÃæ
+// è·³è½¬åˆ°äºŒç»´ç ç•Œé¢
 void GotoQrCode();

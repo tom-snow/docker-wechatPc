@@ -1,6 +1,6 @@
 #pragma once
 
-// 保存图片文件 - 保存路径结构
+// 淇濆瓨鍥剧墖鏂囦欢 - 淇濆瓨璺緞缁撴瀯
 struct DownloadImageSavePathStruct
 {
 	wchar_t *path;
@@ -8,7 +8,7 @@ struct DownloadImageSavePathStruct
 	int maxPathLen;
 	char fill[0xC] = { 0 };
 };
-// 保存图片文件 - 消息结构
+// 淇濆瓨鍥剧墖鏂囦欢 - 娑堟伅缁撴瀯
 struct DownloadImageMessageStruct
 {
 	wchar_t *path;
@@ -51,7 +51,7 @@ struct DownloadImageMessageStruct
 
 
 
-// 解密图片文件
+// 瑙ｅ瘑鍥剧墖鏂囦欢
 void DecodeImage(char *datFile, char *saveFile);
-// 下载图片
+// 涓嬭浇鍥剧墖
 void DownloadImage();

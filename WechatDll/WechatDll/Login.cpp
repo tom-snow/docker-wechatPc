@@ -6,10 +6,10 @@
 #include "Send.h"
 #include "Login.h"
 
-// ÍË³öµÇÂ¼
+// é€€å‡ºç™»å½•
 void DoLogout()
 {
-	// »ñÈ¡Î¢ĞÅ»ùÖ·
+	// è·å–å¾®ä¿¡åŸºå€
 	DWORD winAddress = GetWechatWinAddress();
 	DWORD dwCallAddr = winAddress + LOGOUT;
 
@@ -21,16 +21,16 @@ void DoLogout()
 	}
 }
 
-// »ñÈ¡µÇÂ¼×´Ì¬
+// è·å–ç™»å½•çŠ¶æ€
 int CheckLoginStatus()
 {
-	// »ñÈ¡Î¢ĞÅ»ùÖ·
+	// è·å–å¾®ä¿¡åŸºå€
 	DWORD winAddress = GetWechatWinAddress();
-	// ¼ì²éÊÇ·ñÒÑ¾­µÇÂ½
+	// æ£€æŸ¥æ˜¯å¦å·²ç»ç™»é™†
 	wchar_t isLogin[8] = { 0 };
 	memcpy(isLogin, (void*)(winAddress + ISLOGIN), 1);
 	if (isLogin[0] == 1) {
-		// ·µ»ØÒÑµÇÂ¼
+		// è¿”å›å·²ç™»å½•
 		return 1;
 	}
 	return 0;
@@ -38,18 +38,18 @@ int CheckLoginStatus()
 
 bool SendLoginStatus(bool sendQrcode) 
 {
-	// ¼ì²éÊÇ·ñÒÑ¾­µÇÂ½
+	// æ£€æŸ¥æ˜¯å¦å·²ç»ç™»é™†
 	if (CheckLoginStatus() == 1) {
-		// Í¨Öª·şÎñÆ÷¶ËµÇÂ¼³É¹¦
+		// é€šçŸ¥æœåŠ¡å™¨ç«¯ç™»å½•æˆåŠŸ
 		Send::SendLoginStatus(1);
-		// ·µ»ØÒÑµÇÂ¼
+		// è¿”å›å·²ç™»å½•
 		return TRUE;
 	}
 
-	// »ñÈ¡Î¢ĞÅ»ùÖ·
+	// è·å–å¾®ä¿¡åŸºå€
 	DWORD winAddress = GetWechatWinAddress();
 
-	// »ñÈ¡¶şÎ¬ÂëÖµ
+	// è·å–äºŒç»´ç å€¼
 	CHAR qrCodeUrl[0x100] = { 0 };
 	DWORD pCode = 0;
 	while (TRUE) {
@@ -57,27 +57,27 @@ bool SendLoginStatus(bool sendQrcode)
 		if (pCode && strlen((CHAR*)pCode) > 0) {
 			sprintf_s(qrCodeUrl, "http://weixin.qq.com/x/%s", (CHAR*)pCode);
 			if (sendQrcode == TRUE) {
-				Send::SendLoginQrcode(0, qrCodeUrl);  // ·¢ËÍ»Ø·şÎñÆ÷¶Ë
+				Send::SendLoginQrcode(0, qrCodeUrl);  // å‘é€å›æœåŠ¡å™¨ç«¯
 			}
 			break;
 		}
 	}
 
-	// ·µ»ØÎ´µÇÂ¼
+	// è¿”å›æœªç™»å½•
 	return FALSE;
 }
 
 /*
-Ìø×ªµ½¶şÎ¬Âë´°¿Ú
+è·³è½¬åˆ°äºŒç»´ç çª—å£
 */
 void GotoQrCode()
 {
-	// »ñÈ¡Î¢ĞÅ»ùÖ·
+	// è·å–å¾®ä¿¡åŸºå€
 	DWORD winAddress = GetWechatWinAddress();
 
-	// ¼ì²éÊÇ·ñÒÑ¾­µÇÂ½
+	// æ£€æŸ¥æ˜¯å¦å·²ç»ç™»é™†
 	if (CheckLoginStatus() == 1) {
-		return;  // ÒÑ¾­µÇÂ½£¬²»ÔÙÌø×ª
+		return;  // å·²ç»ç™»é™†ï¼Œä¸å†è·³è½¬
 	}
 	DWORD dwCallAddr1 = winAddress + GOTO_QRCODE_1;
 	DWORD dwCallAddr2 = winAddress + GOTO_QRCODE_2;

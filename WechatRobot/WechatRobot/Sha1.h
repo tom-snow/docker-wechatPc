@@ -14,9 +14,9 @@
 * @brief SHA1_String
 *
 * Detailed description.
-* @param[in] inputString Òª½øĞĞ´¦ÀíµÄÎŞ·ûºÅ×Ö·û´®Ö¸Õë
-* @param[in] len Òª´¦ÀíµÄĞÅÏ¢³¤¶È£¬n<= strlen(p);
-* @param[out] pOutSHA1Buf Êä³öÕªÒªĞÅÏ¢£¬³¤¶ÈÎª20µÄ unsigned char £¬¹²160 bits
+* @param[in] inputString è¦è¿›è¡Œå¤„ç†çš„æ— ç¬¦å·å­—ç¬¦ä¸²æŒ‡é’ˆ
+* @param[in] len è¦å¤„ç†çš„ä¿¡æ¯é•¿åº¦ï¼Œn<= strlen(p);
+* @param[out] pOutSHA1Buf è¾“å‡ºæ‘˜è¦ä¿¡æ¯ï¼Œé•¿åº¦ä¸º20çš„ unsigned char ï¼Œå…±160 bits
 * @return int
 */
 int SHA1_String(const unsigned char* inputString, unsigned long len, unsigned char* pOutSHA1Buf);

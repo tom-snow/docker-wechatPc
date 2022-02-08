@@ -6,13 +6,13 @@
 
 typedef struct SHAstate_st
 {
-	unsigned long h[SHA1_SIZE_BYTE / 4]; /* ´æ·ÅÕªÒª½á¹û(32*5=160 bits)*/
+	unsigned long h[SHA1_SIZE_BYTE / 4]; /* å­˜æ”¾æ‘˜è¦ç»“æœ(32*5=160 bits)*/
 	unsigned long Nl;
-	unsigned long Nh;       /*´æ·ÅĞÅÏ¢×ÜÎ»Êı£¬Nh£º¸ß32Î»£¬Nl£ºµÍ32Î»*/
-	unsigned long data[16]; /*Êı¾İ´ÓµÚ0¸öµÄ¸ß8Î»¿ªÊ¼ÒÀ´Î·ÅÖÃ*/
-	int FlagInWord;     /*±êÊ¶Ò»¸ödataÔªËØÖĞÕ¼ÓÃµÄ×Ö½ÚÊı£¨´Ó¸ß->µÍ£©£¬È¡Öµ0,1,2,3*/
-	int msgIndex;       /*µ±Ç°ÒÑÌî³äÂúµÄdataÊı×éÔªËØÊı¡£*/
-	int isTooMang;      /*Õı³£Îª0£¬µ±´¦ÀíµÄĞÅÏ¢³¬¹ı2^64 bitsÊ±Îª1£»*/
+	unsigned long Nh;       /*å­˜æ”¾ä¿¡æ¯æ€»ä½æ•°ï¼ŒNhï¼šé«˜32ä½ï¼ŒNlï¼šä½32ä½*/
+	unsigned long data[16]; /*æ•°æ®ä»ç¬¬0ä¸ªçš„é«˜8ä½å¼€å§‹ä¾æ¬¡æ”¾ç½®*/
+	int FlagInWord;     /*æ ‡è¯†ä¸€ä¸ªdataå…ƒç´ ä¸­å ç”¨çš„å­—èŠ‚æ•°ï¼ˆä»é«˜->ä½ï¼‰ï¼Œå–å€¼0,1,2,3*/
+	int msgIndex;       /*å½“å‰å·²å¡«å……æ»¡çš„dataæ•°ç»„å…ƒç´ æ•°ã€‚*/
+	int isTooMang;      /*æ­£å¸¸ä¸º0ï¼Œå½“å¤„ç†çš„ä¿¡æ¯è¶…è¿‡2^64 bitsæ—¶ä¸º1ï¼›*/
 } SHA1_Context;
 
 #define INIT_DATA_h0 0x67452301U
@@ -26,7 +26,7 @@ typedef struct SHAstate_st
 const unsigned long SHA1_Kt[] = { 0x5A827999, 0x6ED9EBA1, 0x8F1BBCDC, 0xCA62C1D6 };
 typedef unsigned long(*SHA1_pFun)(unsigned long b, unsigned long c, unsigned long d);
 
-/*¶¨ÒåËÄ¸öº¯Êı*/
+/*å®šä¹‰å››ä¸ªå‡½æ•°*/
 static unsigned long SHA1_ft0_19(unsigned long b, unsigned long c, unsigned long d)
 {
 	return (b&c) | ((~b)&d);

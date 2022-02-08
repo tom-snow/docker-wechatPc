@@ -12,46 +12,46 @@
 
 typedef struct SocketList
 {
-	// ½ø³ÌID
+	// è¿›ç¨‹ID
 	int processId = 0;
-	// Á´½ÓID
+	// é“¾æ¥ID
 	CONNID dwConnID = 0;
-	// Î¢ĞÅID
+	// å¾®ä¿¡ID
 	char wechatId[33] = {0};
 
-	// ÊÇ·ñÕıÔÚ½ÓÊÕÊı¾İ - ±»·Ö°üĞèÒª¼ÇÂ¼
+	// æ˜¯å¦æ­£åœ¨æ¥æ”¶æ•°æ® - è¢«åˆ†åŒ…éœ€è¦è®°å½•
 	bool RecvState = FALSE;
-	// µ±Ç°½ÓÊÕµ½µÄÊı¾İ - ±»·Ö°üĞèÒª¼ÇÂ¼
+	// å½“å‰æ¥æ”¶åˆ°çš„æ•°æ® - è¢«åˆ†åŒ…éœ€è¦è®°å½•
 	char *RecvData = { 0 };
-	// µ±Ç°µÄ°ü³¤¶È - ±»·Ö°üĞèÒª¼ÇÂ¼
+	// å½“å‰çš„åŒ…é•¿åº¦ - è¢«åˆ†åŒ…éœ€è¦è®°å½•
 	long long int RecvDataLength = 0;
 
 	SocketList *next;
 }SocketList;
 
-// ´´½¨ÁĞ±í
+// åˆ›å»ºåˆ—è¡¨
 void CreateSocketList();
-// »ñÈ¡ËùÓĞÎ¢ĞÅIDÁĞ±í£¬×Ö·û´®£¬ÓÃ¶ººÅ¸ô¿ª
+// è·å–æ‰€æœ‰å¾®ä¿¡IDåˆ—è¡¨ï¼Œå­—ç¬¦ä¸²ï¼Œç”¨é€—å·éš”å¼€
 CString GetAllSocketWechatIdList();
-// É¾³ıSocket
+// åˆ é™¤Socket
 void DeleteSocket(CONNID dwConnID);
-// ĞÂÌí¼ÓÒ»¸ö½ø³Ì£¬°ó¶¨Î¢ĞÅID
+// æ–°æ·»åŠ ä¸€ä¸ªè¿›ç¨‹ï¼Œç»‘å®šå¾®ä¿¡ID
 void AddWechatProcess(int processId, char *wechatId);
-// ĞÂÌí¼ÓÒ»¸öSocket
+// æ–°æ·»åŠ ä¸€ä¸ªSocket
 void AddSocket(CONNID dwConnID, int processId);
-// »ñÈ¡socketµÄÎ¢ĞÅ¿Í»§¶ËID - ½ø³ÌID
+// è·å–socketçš„å¾®ä¿¡å®¢æˆ·ç«¯ID - è¿›ç¨‹ID
 void GetSocketWechatIdByProcessId(int processId, char *wechatId);
-// »ñÈ¡socketµÄÎ¢ĞÅ¿Í»§¶ËID
+// è·å–socketçš„å¾®ä¿¡å®¢æˆ·ç«¯ID
 void GetSocketWechatId(CONNID dwConnID, char *wechatId);
-// »ñÈ¡socketµÄÎ¢ĞÅ¿Í»§¶ËID
+// è·å–socketçš„å¾®ä¿¡å®¢æˆ·ç«¯ID
 CONNID GetSocketConnectId(char *wechatId);
-// »ñÈ¡socketµÄÎ¢ĞÅ¿Í»§¶ËID
+// è·å–socketçš„å¾®ä¿¡å®¢æˆ·ç«¯ID
 bool GetSocketRecvState(CONNID dwConnID);
-// »ñÈ¡socketµÄÏûÏ¢Êı¾İ´¢´æ
+// è·å–socketçš„æ¶ˆæ¯æ•°æ®å‚¨å­˜
 void GetSocketRecvData(CONNID dwConnID, char *recvData);
-// Ìí¼ÓÏûÏ¢Êı¾İ
+// æ·»åŠ æ¶ˆæ¯æ•°æ®
 void AddSocketRecvData(CONNID dwConnID, const BYTE* pData, int iLength);
-// »ñÈ¡socketµÄÏûÏ¢Êı¾İ´¢´æ³¤¶È
+// è·å–socketçš„æ¶ˆæ¯æ•°æ®å‚¨å­˜é•¿åº¦
 long long int GetSocketRecvDataLength(CONNID dwConnID);
-// ÊÍ·Å·Ö°ü´¢´æµÄ×ÊÔ´
+// é‡Šæ”¾åˆ†åŒ…å‚¨å­˜çš„èµ„æº
 void FreeSocketRecvData(CONNID dwConnID);

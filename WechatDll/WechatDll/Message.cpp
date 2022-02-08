@@ -19,156 +19,156 @@
 
 using namespace std;
 
-// ÏûÏ¢¶ÓÁĞ
+// æ¶ˆæ¯é˜Ÿåˆ—
 typedef queue<WebsocketMessageStruct> DataQueue;
-// È«¾Ö¶ÓÁĞ
+// å…¨å±€é˜Ÿåˆ—
 DataQueue *SendDataQueue;
 
-//Ìø»ØµØÖ·
+//è·³å›åœ°å€
 DWORD jumBackAddress = 0;
-//ÎÒÃÇÒªÌáÈ¡µÄ¼Ä´æÆ÷ÄÚÈİ
+//æˆ‘ä»¬è¦æå–çš„å¯„å­˜å™¨å†…å®¹
 DWORD r_esp = 0;
 DWORD recvMessageCall = 0;
 
-/*==================================ÏûÏ¢¼àÌı¿ªÊ¼=======================================*/
+/*==================================æ¶ˆæ¯ç›‘å¬å¼€å§‹=======================================*/
 VOID RecieveMsg(DWORD esp)
 {
 	WebsocketMessageStruct *message = new WebsocketMessageStruct;
 	
 	//[[esp]]
-	//ĞÅÏ¢¿éÎ»ÖÃ
+	//ä¿¡æ¯å—ä½ç½®
 	DWORD** msgAddress = (DWORD * *)esp;
 
-	//ÏûÏ¢ÀàĞÍ[[esp]]+0x30
+	//æ¶ˆæ¯ç±»å‹[[esp]]+0x30
 	message->msgType = (int)*((DWORD*)(**msgAddress + 0x30));
 	/*
 	switch (message->msgType) {
-		case 0x01:  // ÎÄ×Ö
+		case 0x01:  // æ–‡å­—
 			break;
-		case 0x03:  // Í¼Æ¬
+		case 0x03:  // å›¾ç‰‡
 			break;
-		case 0x22:  // ÓïÒô
+		case 0x22:  // è¯­éŸ³
 			break;
-		case 0x25:  // ºÃÓÑÈ·ÈÏ
+		case 0x25:  // å¥½å‹ç¡®è®¤
 			break;
 		case 0x28:  // POSSIBLEFRIEND_MSG
 			break;
-		case 0x2A:  // ÃûÆ¬
+		case 0x2A:  // åç‰‡
 			break;
-		case 0x2B:  // ÊÓÆµ
+		case 0x2B:  // è§†é¢‘
 			break;
-		case 0x2F:  // Ê¯Í·¼ôµ¶²¼ | ±íÇéÍ¼Æ¬
+		case 0x2F:  // çŸ³å¤´å‰ªåˆ€å¸ƒ | è¡¨æƒ…å›¾ç‰‡
 			break;
-		case 0x30:  // Î»ÖÃ
+		case 0x30:  // ä½ç½®
 			break;
-		case 0x31:  // ¹²ÏíÊµÊ±Î»ÖÃ¡¢ÎÄ¼ş¡¢×ªÕË¡¢Á´½Ó
+		case 0x31:  // å…±äº«å®æ—¶ä½ç½®ã€æ–‡ä»¶ã€è½¬è´¦ã€é“¾æ¥
 			break;
 		case 0x32:  // VOIPMSG
 			break;
-		case 0x33:  // Î¢ĞÅ³õÊ¼»¯
+		case 0x33:  // å¾®ä¿¡åˆå§‹åŒ–
 			break;
 		case 0x34:  // VOIPNOTIFY
 			break;
 		case 0x35:  // VOIPINVITE
 			break;
-		case 0x3E:  // Ğ¡ÊÓÆµ
+		case 0x3E:  // å°è§†é¢‘
 			break;
 		case 0x270F:  // SYSNOTICE
 			break;
-		case 0x2710:  // ºì°ü¡¢ÏµÍ³ÏûÏ¢
+		case 0x2710:  // çº¢åŒ…ã€ç³»ç»Ÿæ¶ˆæ¯
 			break;
-		case 0x2712:  // ³·»ØÏûÏ¢
+		case 0x2712:  // æ’¤å›æ¶ˆæ¯
 			break;
-		default:  // Î´Öª
+		default:  // æœªçŸ¥
 
 			break;
 	}
 	*/
 
 	//dc [[[esp]] + 0x16C]
-	//ÅĞ¶ÏÊÇÈºÏûÏ¢»¹ÊÇºÃÓÑÏûÏ¢
+	//åˆ¤æ–­æ˜¯ç¾¤æ¶ˆæ¯è¿˜æ˜¯å¥½å‹æ¶ˆæ¯
 	wstring msgSource = _T("");
 	msgSource.append(GetMsgByAddress(**msgAddress + 0x16C));
 	if (msgSource.find(L"</membercount>") == wstring::npos) {
-		// ÊÕµ½ºÃÓÑÏûÏ¢
+		// æ”¶åˆ°å¥½å‹æ¶ˆæ¯
 		message->msgSource = 0;
 	} else {
-		// ÊÕµ½ÈºÏûÏ¢
+		// æ”¶åˆ°ç¾¤æ¶ˆæ¯
 		message->msgSource = 1;
 	}
-	//ºÃÓÑÏûÏ¢
+	//å¥½å‹æ¶ˆæ¯
 	if (message->msgSource == 0) {
-		// ºÃÓÑÎ¢ĞÅID
+		// å¥½å‹å¾®ä¿¡ID
 		wstring wxid = GetMsgByAddress(**msgAddress + 0x40);
 		sprintf_s(message->wxid, 0x100, "%s", UnicodeToUtf8((wchar_t*)wxid.c_str()));
 	} else {
-		// ÈºID
+		// ç¾¤ID
 		wstring roomId = GetMsgByAddress(**msgAddress + 0x40);
 		sprintf_s(message->roomId, 0x100, "%s", UnicodeToUtf8((wchar_t*)roomId.c_str()));
-		// ÏûÏ¢·¢ËÍÕß
+		// æ¶ˆæ¯å‘é€è€…
 		wstring wxid = GetMsgByAddress(**msgAddress + 0x118);
 		sprintf_s(message->wxid, 0x100, "%s", UnicodeToUtf8((wchar_t*)wxid.c_str()));
 	}
 
-	// Ïà¹ØĞÅÏ¢
+	// ç›¸å…³ä¿¡æ¯
 	sprintf_s(message->msgSourceXml, 0x2048, "%s", UnicodeToUtf8((wchar_t*)msgSource.c_str()));
 
-	// ÏûÏ¢ÄÚÈİ
+	// æ¶ˆæ¯å†…å®¹
 	wstring content = GetMsgByAddress(**msgAddress + 0x68);
 	sprintf_s(message->content, 0x8092, "%s", UnicodeToUtf8((wchar_t*)content.c_str()));
 
-	// ÏûÏ¢ID
+	// æ¶ˆæ¯ID
 	wstring msgId = GetMsgByAddress(**msgAddress + 0x12C);
 	sprintf_s(message->msgId, 0x100, "%s", UnicodeToUtf8((wchar_t*)msgId.c_str()));
 
-	// ÊÇ·ñ×Ô¼º·¢µÄÏûÏ¢£º0=·ñ£¬1=ÊÇ
+	// æ˜¯å¦è‡ªå·±å‘çš„æ¶ˆæ¯ï¼š0=å¦ï¼Œ1=æ˜¯
 	message->isOwner = (int)*((DWORD*)(**msgAddress + 0x34));
 	
 	//_WaitingSendData *a = new _WaitingSendData;
 	WebsocketMessageStruct a = *message;
 	SendDataQueue->push(a);
 
-	// 0x140  ËõÂÔÍ¼Ïà¶ÔÂ·¾¶   supper-busy\FileStorage\Image\Thumb\2020-03\0adce5xxx.dat
-	// 0x154  ´óÍ¼Ïà¶ÔÂ·¾¶     supper-busy\FileStorage\Image\2020-03\0adce5d47857xxxx.dat
+	// 0x140  ç¼©ç•¥å›¾ç›¸å¯¹è·¯å¾„   supper-busy\FileStorage\Image\Thumb\2020-03\0adce5xxx.dat
+	// 0x154  å¤§å›¾ç›¸å¯¹è·¯å¾„     supper-busy\FileStorage\Image\2020-03\0adce5d47857xxxx.dat
 }
 
 
 
 /**
- * ±»Ğ´Èëµ½hookµãµÄ½ÓÊÕÏûÏ¢Âãº¯Êı
+ * è¢«å†™å…¥åˆ°hookç‚¹çš„æ¥æ”¶æ¶ˆæ¯è£¸å‡½æ•°
  */
 __declspec(naked) void RecieveMsgHook()
 {
 	__asm {
-		// ²¹³ä±»¸²¸ÇµÄ´úÂë
+		// è¡¥å……è¢«è¦†ç›–çš„ä»£ç 
 		// 0F4B28C3    B9 20FA7810     mov ecx,WeChatWi.1078FA20
 		mov ecx, recvMessageCall
 
-		//ÌáÈ¡esp¼Ä´æÆ÷ÄÚÈİ£¬·ÅÔÚÒ»¸ö±äÁ¿ÖĞ
-		//ÕâÀïÊ¹ÓÃÈ«¾Ö±äÁ¿ r_esp£¬½«µ¼ÖÂ¶ªÊ§ÏûÏ¢£¬Ô­Òò£º¶àÏß³ÌÇé¿öÏÂ£¬ĞÂÊı¾İ¸²¸Ç¾ÉÊı¾İ
-		//ÔÚÕâÀï£¬¿ÉÒÔ½«espÖ±½ÓÑ¹Èë¶ÑÕ»(esp±ä¶¯¶à)£¬È»ºóÔÚRecieveMsgº¯ÊıÖĞ½øĞĞ¼ÆËã
+		//æå–espå¯„å­˜å™¨å†…å®¹ï¼Œæ”¾åœ¨ä¸€ä¸ªå˜é‡ä¸­
+		//è¿™é‡Œä½¿ç”¨å…¨å±€å˜é‡ r_espï¼Œå°†å¯¼è‡´ä¸¢å¤±æ¶ˆæ¯ï¼ŒåŸå› ï¼šå¤šçº¿ç¨‹æƒ…å†µä¸‹ï¼Œæ–°æ•°æ®è¦†ç›–æ—§æ•°æ®
+		//åœ¨è¿™é‡Œï¼Œå¯ä»¥å°†espç›´æ¥å‹å…¥å †æ ˆ(espå˜åŠ¨å¤š)ï¼Œç„¶ååœ¨RecieveMsgå‡½æ•°ä¸­è¿›è¡Œè®¡ç®—
 		mov r_esp, esp
 
-		//±£´æ¼Ä´æÆ÷
+		//ä¿å­˜å¯„å­˜å™¨
 		pushad
 		pushf
 	}
 
-	//µ÷ÓÃ½ÓÊÕÏûÏ¢µÄº¯Êı
+	//è°ƒç”¨æ¥æ”¶æ¶ˆæ¯çš„å‡½æ•°
 	RecieveMsg(r_esp);
 
-	//»Ö¸´ÏÖ³¡
+	//æ¢å¤ç°åœº
 	__asm
 	{
 		popf
 		popad
 
-		//Ìø»Ø±»HOOKÖ¸ÁîµÄÏÂÒ»ÌõÖ¸Áî
+		//è·³å›è¢«HOOKæŒ‡ä»¤çš„ä¸‹ä¸€æ¡æŒ‡ä»¤
 		jmp jumBackAddress
 	}
 }
 /*
-Ïû·Ñ¶ÓÁĞ - ¸ºÔğ·¢ËÍ¶ÓÁĞµÄÏûÏ¢»Ø·şÎñ¶Ë
+æ¶ˆè´¹é˜Ÿåˆ— - è´Ÿè´£å‘é€é˜Ÿåˆ—çš„æ¶ˆæ¯å›æœåŠ¡ç«¯
 */
 DWORD WINAPI QueueSendMesssage()
 {
@@ -185,68 +185,68 @@ DWORD WINAPI QueueSendMesssage()
 	return TRUE;
 }
 /*
-×¢ÈëÏûÏ¢¼àÌı
+æ³¨å…¥æ¶ˆæ¯ç›‘å¬
 */
 VOID ListenMessage()
 {
-	// ¿ªÆôÒ»¸öÏß³Ì£¬¸ºÔğ·¢ËÍ¶ÓÁĞµÄÏûÏ¢
-	SendDataQueue = new DataQueue;  // ³õÊ¼»¯¶ÓÁĞ
-	// ¿ªÆôÏß³Ì
+	// å¼€å¯ä¸€ä¸ªçº¿ç¨‹ï¼Œè´Ÿè´£å‘é€é˜Ÿåˆ—çš„æ¶ˆæ¯
+	SendDataQueue = new DataQueue;  // åˆå§‹åŒ–é˜Ÿåˆ—
+	// å¼€å¯çº¿ç¨‹
 	HANDLE cThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)QueueSendMesssage, NULL, NULL, 0);
 	if (cThread != 0) {
 		CloseHandle(cThread);
 	}
 
-	// »ñÈ¡Î¢ĞÅ»ùÖ·
+	// è·å–å¾®ä¿¡åŸºå€
 	DWORD winAddress = GetWechatWinAddress();
 
 	//WeChatWin.dll + LISTEN_MESSAGE_CALL
 	int hookAddress = winAddress + LISTEN_MESSAGE_HOOK;
 	recvMessageCall = winAddress + LISTEN_MESSAGE_CALL;
 
-	//Ìø»ØµÄµØÖ·
+	//è·³å›çš„åœ°å€
 	jumBackAddress = hookAddress + 5;
 
-	//×é×°Ìø×ªÊı¾İ
+	//ç»„è£…è·³è½¬æ•°æ®
 	BYTE jmpCode[5] = { 0 };
 	jmpCode[0] = 0xE9;
 
-	//ĞÂÌø×ªÖ¸ÁîÖĞµÄÊı¾İ=Ìø×ªµÄµØÖ·-Ô­µØÖ·£¨HOOKµÄµØÖ·£©-Ìø×ªÖ¸ÁîµÄ³¤¶È
+	//æ–°è·³è½¬æŒ‡ä»¤ä¸­çš„æ•°æ®=è·³è½¬çš„åœ°å€-åŸåœ°å€ï¼ˆHOOKçš„åœ°å€ï¼‰-è·³è½¬æŒ‡ä»¤çš„é•¿åº¦
 	*(DWORD*)& jmpCode[1] = (DWORD)RecieveMsgHook - hookAddress - 5;
 
-	//¸²¸ÇÖ¸Áî 
+	//è¦†ç›–æŒ‡ä»¤ 
 	// 5A665373   .  B9 B8716D5B   mov ecx,WeChatWi.5B6D71B8
 	WriteProcessMemory(GetCurrentProcess(), (LPVOID)hookAddress, jmpCode, 5, 0);
 }
-/*==================================ÏûÏ¢¼àÌı½áÊø=======================================*/
+/*==================================æ¶ˆæ¯ç›‘å¬ç»“æŸ=======================================*/
 
-/*==================================·¢ËÍÎÄ±¾ÏûÏ¢¿ªÊ¼=======================================*/
+/*==================================å‘é€æ–‡æœ¬æ¶ˆæ¯å¼€å§‹=======================================*/
 VOID SendTextMessage(wchar_t *wxid, wchar_t *message)
 {
-	// »ñÈ¡Î¢ĞÅ»ùÖ·
+	// è·å–å¾®ä¿¡åŸºå€
 	DWORD winAddress = GetWechatWinAddress();
 
 	DWORD sendCallAddress = winAddress + SEND_MESSAGE_CALL;
 
-	// ½ÓÊÕÈËµÄÎ¢ĞÅID
+	// æ¥æ”¶äººçš„å¾®ä¿¡ID
 	wxMessageStruct wxWxid = { 0 };
 	wxWxid.text = wxid;
 	wxWxid.textLength = wcslen(wxid);
 	wxWxid.textLen = wcslen(wxid) * 2;
 
-	// Î¢ĞÅÏûÏ¢
+	// å¾®ä¿¡æ¶ˆæ¯
 	wxMessageStruct wxMessage = {0};
 	wxMessage.text = message;
 	wxMessage.textLength = wcslen(message);
 	wxMessage.textLen = wcslen(message) * 2;
 	
-	// @µÄÄÇ¸öÈË
+	// @çš„é‚£ä¸ªäºº
 	//wxMessageStruct wxToWxid = {0};
 	//wxMessage.text = toWxid;
 	//wxMessage.textLength = wcslen(toWxid);
 	//wxMessage.textLen = wcslen(toWxid) * 2;
 
-	// È¡Î¢ĞÅIDºÍÎ¢ĞÅÏûÏ¢µÄÄÚ´æµØÖ·
+	// å–å¾®ä¿¡IDå’Œå¾®ä¿¡æ¶ˆæ¯çš„å†…å­˜åœ°å€
 	char *pWxid = (char *)&wxWxid.text;
 	char *pMsg = (char *)&wxMessage.text;
 	//char *pToWxId = (char *)&wxToWxid.text;
@@ -267,12 +267,12 @@ VOID SendTextMessage(wchar_t *wxid, wchar_t *message)
 		popad
 	}
 }
-/*==================================·¢ËÍÎÄ±¾ÏûÏ¢½áÊø=======================================*/
+/*==================================å‘é€æ–‡æœ¬æ¶ˆæ¯ç»“æŸ=======================================*/
 
-/*==================================·¢ËÍXMLÃûÆ¬¿ªÊ¼=======================================*/
+/*==================================å‘é€XMLåç‰‡å¼€å§‹=======================================*/
 void SendXmlCardMessage(wchar_t* recverWxid, wchar_t* xmlData)
 {
-	// »ñÈ¡Î¢ĞÅ»ùÖ·
+	// è·å–å¾®ä¿¡åŸºå€
 	DWORD winAddress = GetWechatWinAddress();
 	
 	SendXmlCardWxString pWxid = { 0 };
@@ -303,22 +303,22 @@ void SendXmlCardMessage(wchar_t* recverWxid, wchar_t* xmlData)
 		popad
 	}
 }
-/*==================================·¢ËÍXMLÃûÆ¬½áÊø=======================================*/
+/*==================================å‘é€XMLåç‰‡ç»“æŸ=======================================*/
 
 
-/*==================================·¢ËÍÍ¼Æ¬¿ªÊ¼=======================================*/
+/*==================================å‘é€å›¾ç‰‡å¼€å§‹=======================================*/
 void SendImageMessage(wchar_t* wxid, wchar_t* filepath)
 {
-	// »ñÈ¡Î¢ĞÅ»ùÖ·
+	// è·å–å¾®ä¿¡åŸºå€
 	DWORD winAddress = GetWechatWinAddress();
 
-	//×é×°Î¢ĞÅIDµÄÊı¾İ½á¹¹
+	//ç»„è£…å¾®ä¿¡IDçš„æ•°æ®ç»“æ„
 	SendImageWxidStruct imagewxid;
 	imagewxid.pWxid = wxid;
 	imagewxid.length = wcslen(wxid);
 	imagewxid.maxLength = wcslen(wxid) * 2;
 
-	//×é×°ÎÄ¼şÂ·¾¶µÄÊı¾İ½á¹¹
+	//ç»„è£…æ–‡ä»¶è·¯å¾„çš„æ•°æ®ç»“æ„
 	SendImageFileStruct imagefilepath;
 	imagefilepath.filePath = filepath;
 	imagefilepath.length = wcslen(filepath);
@@ -329,18 +329,18 @@ void SendImageMessage(wchar_t* wxid, wchar_t* filepath)
 	DWORD dwCall1 = winAddress + WX_SEND_IMAGE_CALL1;
 	DWORD dwCall2 = winAddress + WX_SEND_IMAGE_CALL2;
 
-	//Î¢ĞÅ·¢ËÍÍ¼Æ¬µ÷ÓÃÁËGidCreateBimapFileCM Ö®ºóÍ¼Æ¬Ò»Ö±±»Õ¼ÓÃ ÎŞ·¨É¾³ı patchµôÏÂÃæµÄ´úÂë
+	//å¾®ä¿¡å‘é€å›¾ç‰‡è°ƒç”¨äº†GidCreateBimapFileCM ä¹‹åå›¾ç‰‡ä¸€ç›´è¢«å ç”¨ æ— æ³•åˆ é™¤ patchæ‰ä¸‹é¢çš„ä»£ç 
 	unsigned char oldcode[5] = { 0 };
 	// {0x31,0xC0} = xor eax,eax
 	// {0xC3} = return
 	unsigned char fix[5] = { 0x31,0xC0,0xC3,0x90,0x90 };
 	DWORD dwPathcAddr = winAddress + WX_SEND_IMAGE_PATCH_ADDR;
-	//ĞŞ¸Ä´úÂë¶ÎÊôĞÔ
+	//ä¿®æ”¹ä»£ç æ®µå±æ€§
 	DWORD dwOldAttr = 0;
 	VirtualProtect((LPVOID)dwPathcAddr, 5, PAGE_EXECUTE_READWRITE, &dwOldAttr);
-	//ÏÈ±£´æÔ­ÓĞÖ¸Áî
+	//å…ˆä¿å­˜åŸæœ‰æŒ‡ä»¤
 	memcpy(oldcode, (LPVOID)dwPathcAddr, 5);
-	//ÔÙPatchµô
+	//å†Patchæ‰
 	memcpy((LPVOID)dwPathcAddr, fix, 5);
 	__asm
 	{
@@ -356,17 +356,17 @@ void SendImageMessage(wchar_t* wxid, wchar_t* filepath)
 		mov ecx, eax;
 		call dwCall2;
 	}
-	//µ÷ÓÃÍêÖ®ºó»Ö¸´
+	//è°ƒç”¨å®Œä¹‹åæ¢å¤
 	memcpy((LPVOID)dwPathcAddr, oldcode, 5);
-	//»Ö¸´ÊôĞÔ
+	//æ¢å¤å±æ€§
 	VirtualProtect((LPVOID)dwPathcAddr, 5, dwOldAttr, &dwOldAttr);
 }
-/*==================================·¢ËÍÍ¼Æ¬½áÊø=======================================*/
+/*==================================å‘é€å›¾ç‰‡ç»“æŸ=======================================*/
 
-/*==================================·¢ËÍxmlÎÄÕÂ¿ªÊ¼=======================================*/
+/*==================================å‘é€xmlæ–‡ç« å¼€å§‹=======================================*/
 void SendXmlMessage(DWORD type, wchar_t* recverWxid, wchar_t* fromWxid, wchar_t* filePath, wchar_t* xmlData)
 {
-	// »ñÈ¡Î¢ĞÅ»ùÖ·
+	// è·å–å¾®ä¿¡åŸºå€
 	DWORD winAddress = GetWechatWinAddress();
 
 	SendXmlWxidStruct wxid = { 0 };
@@ -406,7 +406,7 @@ void SendXmlMessage(DWORD type, wchar_t* recverWxid, wchar_t* fromWxid, wchar_t*
 	__asm {
 		pushad
 		lea ebx, wxid
-		push typeInt  // 0x5ÊÇÁ´½Ó·ÖÏí£¬0x21ÊÇĞ¡³ÌĞò·ÖÏí
+		push typeInt  // 0x5æ˜¯é“¾æ¥åˆ†äº«ï¼Œ0x21æ˜¯å°ç¨‹åºåˆ†äº«
 		lea eax, buff1
 		push eax
 		lea eax, file
@@ -445,12 +445,12 @@ void SendXmlMessage(DWORD type, wchar_t* recverWxid, wchar_t* fromWxid, wchar_t*
 		popad
 	}
 }
-/*==================================·¢ËÍxmlÎÄÕÂ½áÊø=======================================*/
+/*==================================å‘é€xmlæ–‡ç« ç»“æŸ=======================================*/
 
-/*==================================·¢ËÍ¸½¼ş¿ªÊ¼=======================================*/
+/*==================================å‘é€é™„ä»¶å¼€å§‹=======================================*/
 void SendFileMessage(wchar_t* wxid, wchar_t* filepath)
 {
-	// »ñÈ¡Î¢ĞÅ»ùÖ·
+	// è·å–å¾®ä¿¡åŸºå€
 	DWORD winAddress = GetWechatWinAddress();
 	
 	DWORD dwCall1 = winAddress + WX_SEND_ATTACH_CALL1;
@@ -497,6 +497,6 @@ void SendFileMessage(wchar_t* wxid, wchar_t* filepath)
 		popad
 	}
 }
-/*==================================·¢ËÍ¸½¼ş½áÊø=======================================*/
+/*==================================å‘é€é™„ä»¶ç»“æŸ=======================================*/
 
 

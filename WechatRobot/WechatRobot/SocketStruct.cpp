@@ -13,27 +13,27 @@
 #include "HPSocket.h"
 
 
-// È«¾Ö´¢´æSocketÁĞ±í
+// å…¨å±€å‚¨å­˜Socketåˆ—è¡¨
 SocketList *socketList;
 
-// ´´½¨ÁĞ±í
-void CreateSocketList()     /*Á´±íÃ¿Ò»¸ö½Úµã¶¼ÊÇÖ¸Ïò  SocketListPointStruct½á¹¹µÄÖ¸Õë£¬ËùÒÔ·µ»ØÖµÊÇSocketListPointStruct *,nÊÇÖ¸´´½¨µÄÁ´±íµÄ½ÚµãÊıÄ¿*/
+// åˆ›å»ºåˆ—è¡¨
+void CreateSocketList()     /*é“¾è¡¨æ¯ä¸€ä¸ªèŠ‚ç‚¹éƒ½æ˜¯æŒ‡å‘  SocketListPointStructç»“æ„çš„æŒ‡é’ˆï¼Œæ‰€ä»¥è¿”å›å€¼æ˜¯SocketListPointStruct *,næ˜¯æŒ‡åˆ›å»ºçš„é“¾è¡¨çš„èŠ‚ç‚¹æ•°ç›®*/
 {
-	SocketList *normal, *next;/*´´½¨Í·½Úµã£¬ÆäËû½Úµã£¬ºÍÎ²½Úµã*/
+	SocketList *normal, *next;/*åˆ›å»ºå¤´èŠ‚ç‚¹ï¼Œå…¶ä»–èŠ‚ç‚¹ï¼Œå’Œå°¾èŠ‚ç‚¹*/
 	next = new SocketList;
 
-	/*·ÖÅäÄÚ´æ*/
-	socketList = next;/*×î¿ªÊ¼×îºóÒ»¸ö½Úµã¾ÍÊÇÍ·½Úµã£¬×¢ÒâÒòÎªÍ¨¹ıÖ¸Õë¿ÉÒÔÖ±½Ó¶ÔµØÖ·ÉÏµÄ¶«Î÷½øĞĞ²Ù×÷£¬´ËÊ±endºÍheadÖ¸ÏòÍ¬Ò»¸öµØÖ·£¬¶ÔendËùÖ¸ÏòµØÖ·½øĞĞ²Ù×÷£¬µÈÍ¬ÓÚ¶ÔheadµØÖ·Ëù×öµÄ²Ù×÷*/
+	/*åˆ†é…å†…å­˜*/
+	socketList = next;/*æœ€å¼€å§‹æœ€åä¸€ä¸ªèŠ‚ç‚¹å°±æ˜¯å¤´èŠ‚ç‚¹ï¼Œæ³¨æ„å› ä¸ºé€šè¿‡æŒ‡é’ˆå¯ä»¥ç›´æ¥å¯¹åœ°å€ä¸Šçš„ä¸œè¥¿è¿›è¡Œæ“ä½œï¼Œæ­¤æ—¶endå’ŒheadæŒ‡å‘åŒä¸€ä¸ªåœ°å€ï¼Œå¯¹endæ‰€æŒ‡å‘åœ°å€è¿›è¡Œæ“ä½œï¼Œç­‰åŒäºå¯¹headåœ°å€æ‰€åšçš„æ“ä½œ*/
 	for (int i = 0; i < WEBSOCKET_LISTEN_MAX_LINK; i++) {
 		normal = new SocketList;
 
-		/* ÍùĞÂ½Úµã´æÈëÊı¾İ£¬×¢ÒâÎÒÃÇÖ»¸øºóÃæµÄ½Úµã´æÈëÊı¾İ£¬head²»´æÊı¾İ*/
-		next->next = normal;/*ÍùendºóÔöÌíĞÂ½Úµã*/
+		/* å¾€æ–°èŠ‚ç‚¹å­˜å…¥æ•°æ®ï¼Œæ³¨æ„æˆ‘ä»¬åªç»™åé¢çš„èŠ‚ç‚¹å­˜å…¥æ•°æ®ï¼Œheadä¸å­˜æ•°æ®*/
+		next->next = normal;/*å¾€endåå¢æ·»æ–°èŠ‚ç‚¹*/
 		next = next->next;
 	}
-	next->next = NULL;/*Á´±íµÄ×îºóÖ¸ÏòÒ»¸öĞÂµØÖ·*/
+	next->next = NULL;/*é“¾è¡¨çš„æœ€åæŒ‡å‘ä¸€ä¸ªæ–°åœ°å€*/
 }
-// »ñÈ¡ËùÓĞÎ¢ĞÅIDÁĞ±í£¬×Ö·û´®£¬ÓÃ¶ººÅ¸ô¿ª
+// è·å–æ‰€æœ‰å¾®ä¿¡IDåˆ—è¡¨ï¼Œå­—ç¬¦ä¸²ï¼Œç”¨é€—å·éš”å¼€
 CString GetAllSocketWechatIdList()
 {
 	CString list;
@@ -57,14 +57,14 @@ CString GetAllSocketWechatIdList()
 	}
 	return list;
 }
-// É¾³ıSocket
+// åˆ é™¤Socket
 void DeleteSocket(CONNID dwConnID)
 {
 	SocketList *p = socketList;
 	for (int i = 0; i < WEBSOCKET_LISTEN_MAX_LINK; i++) {
 		if (p && p->dwConnID == dwConnID) {
 			if (p->RecvDataLength > 0) {
-				// ÊÍ·Å·Ö°ü´¢´æµÄ×ÊÔ´
+				// é‡Šæ”¾åˆ†åŒ…å‚¨å­˜çš„èµ„æº
 				p->RecvDataLength = 0;
 				free(p->RecvData);
 				p->RecvState = FALSE;
@@ -79,7 +79,7 @@ void DeleteSocket(CONNID dwConnID)
 		}
 	}
 }
-// ĞÂÌí¼ÓÒ»¸ö½ø³Ì£¬°ó¶¨Î¢ĞÅID
+// æ–°æ·»åŠ ä¸€ä¸ªè¿›ç¨‹ï¼Œç»‘å®šå¾®ä¿¡ID
 void AddWechatProcess(int processId, char *wechatId) 
 {
 	SocketList *p = socketList;
@@ -94,7 +94,7 @@ void AddWechatProcess(int processId, char *wechatId)
 		}
 	}
 }
-// ĞÂÌí¼ÓÒ»¸öSocket
+// æ–°æ·»åŠ ä¸€ä¸ªSocket
 void AddSocket(CONNID dwConnID, int processId)
 {
 	SocketList *p = socketList;
@@ -108,7 +108,7 @@ void AddSocket(CONNID dwConnID, int processId)
 		}
 	}
 }
-// »ñÈ¡socketµÄÎ¢ĞÅ¿Í»§¶ËID - ½ø³ÌID
+// è·å–socketçš„å¾®ä¿¡å®¢æˆ·ç«¯ID - è¿›ç¨‹ID
 void GetSocketWechatIdByProcessId(int processId, char *wechatId) 
 {
 	SocketList *p = socketList;
@@ -122,7 +122,7 @@ void GetSocketWechatIdByProcessId(int processId, char *wechatId)
 		}
 	}
 }
-// »ñÈ¡socketµÄÎ¢ĞÅ¿Í»§¶ËID
+// è·å–socketçš„å¾®ä¿¡å®¢æˆ·ç«¯ID
 void GetSocketWechatId(CONNID dwConnID, char *wechatId)
 {
 	SocketList *p = socketList;
@@ -136,7 +136,7 @@ void GetSocketWechatId(CONNID dwConnID, char *wechatId)
 		}
 	}
 }
-// »ñÈ¡socketµÄÎ¢ĞÅ¿Í»§¶ËID
+// è·å–socketçš„å¾®ä¿¡å®¢æˆ·ç«¯ID
 CONNID GetSocketConnectId(char *wechatId)
 {
 	SocketList *p = socketList;
@@ -150,7 +150,7 @@ CONNID GetSocketConnectId(char *wechatId)
 	}
 	return 0;
 }
-// »ñÈ¡socketµÄÎ¢ĞÅ¿Í»§¶ËID
+// è·å–socketçš„å¾®ä¿¡å®¢æˆ·ç«¯ID
 bool GetSocketRecvState(CONNID dwConnID)
 {
 	bool RecvState = FALSE;
@@ -166,7 +166,7 @@ bool GetSocketRecvState(CONNID dwConnID)
 	}
 	return RecvState;
 }
-// »ñÈ¡socketµÄÏûÏ¢Êı¾İ´¢´æ
+// è·å–socketçš„æ¶ˆæ¯æ•°æ®å‚¨å­˜
 void GetSocketRecvData(CONNID dwConnID, char *recvData)
 {
 	SocketList *p = socketList;
@@ -182,13 +182,13 @@ void GetSocketRecvData(CONNID dwConnID, char *recvData)
 	}
 	return;
 }
-// Ìí¼ÓÏûÏ¢Êı¾İ
+// æ·»åŠ æ¶ˆæ¯æ•°æ®
 void AddSocketRecvData(CONNID dwConnID, const BYTE* pData, int iLength)
 {
 	SocketList *p = socketList;
 	for (int i = 0; i < WEBSOCKET_LISTEN_MAX_LINK; i++) {
 		if (p && p->dwConnID == dwConnID) {
-			// ĞÂ·ÖÅäÄÚ´æ¿Õ¼ä
+			// æ–°åˆ†é…å†…å­˜ç©ºé—´
 			if (p->RecvState == FALSE) {
 				if ((p->RecvData = (char *)malloc((iLength + 1) * sizeof(char))) == NULL) {
 					return;
@@ -196,7 +196,7 @@ void AddSocketRecvData(CONNID dwConnID, const BYTE* pData, int iLength)
 				p->RecvState = TRUE;
 				memcpy(p->RecvData, pData, iLength);
 			}
-			// ¶¯Ì¬Ôö¼ÓÄÚ´æ´óĞ¡
+			// åŠ¨æ€å¢åŠ å†…å­˜å¤§å°
 			else {
 				p->RecvData = (char *)realloc(p->RecvData, (size_t)((p->RecvDataLength + iLength + 1) * sizeof(char)));
 				if (p->RecvData == NULL) {
@@ -204,7 +204,7 @@ void AddSocketRecvData(CONNID dwConnID, const BYTE* pData, int iLength)
 					p->RecvState = FALSE;
 					return;
 				}
-				// ×·¼ÓÄÚ´æ
+				// è¿½åŠ å†…å­˜
 				for (int i = 0; i < iLength; i++) {
 					p->RecvData[p->RecvDataLength + i] = pData[i];
 				}
@@ -218,7 +218,7 @@ void AddSocketRecvData(CONNID dwConnID, const BYTE* pData, int iLength)
 		}
 	}
 }
-// »ñÈ¡socketµÄÏûÏ¢Êı¾İ´¢´æ³¤¶È
+// è·å–socketçš„æ¶ˆæ¯æ•°æ®å‚¨å­˜é•¿åº¦
 long long int GetSocketRecvDataLength(CONNID dwConnID)
 {
 	SocketList *p = socketList;
@@ -232,13 +232,13 @@ long long int GetSocketRecvDataLength(CONNID dwConnID)
 	}
 	return 0;
 }
-// ÊÍ·Å·Ö°ü´¢´æµÄ×ÊÔ´
+// é‡Šæ”¾åˆ†åŒ…å‚¨å­˜çš„èµ„æº
 void FreeSocketRecvData(CONNID dwConnID)
 {
 	SocketList *p = socketList;
 	for (int i = 0; i < WEBSOCKET_LISTEN_MAX_LINK; i++) {
 		if (p && p->dwConnID == dwConnID) {
-			// ÊÍ·Å·Ö°ü´¢´æµÄ×ÊÔ´
+			// é‡Šæ”¾åˆ†åŒ…å‚¨å­˜çš„èµ„æº
 			p->RecvDataLength = 0;
 			free(p->RecvData);
 			p->RecvState = FALSE;
