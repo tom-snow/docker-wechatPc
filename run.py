@@ -9,11 +9,11 @@ class DockerWechatHook:
         signal.signal(signal.SIGTERM, self.now_exit)
 
     def compute_version(self, ver):
-        #计算微信版本号，并且转换为10进制字符串
+        # 计算微信版本号，并且转换为10进制字符串
         if len(ver) >= 7 :
             version_list = ver.split('.')
 
-            #第一个最前面要补个6，后面几个则是补0
+            # 第一个最前面要补个6，后面几个则是补0
             version_list[0] = '6' + str(hex(int(version_list[0]))).split('x')[1]
             version_list[1] = str(hex(int(version_list[1]))).split('x')[1]
             if len(version_list[1]) == 1 :
@@ -44,7 +44,7 @@ class DockerWechatHook:
         self.scanversion = subprocess.Popen(['/usr/bin/python3','/scanversion.py'])
 
     def run_vnc(self):
-        #根据VNCPASS环境变量生成vncpasswd文件
+        # 根据VNCPASS环境变量生成vncpasswd文件
         os.makedirs('/root/.vnc', mode=755, exist_ok=True)
         passwd_output = subprocess.run(['/usr/bin/vncpasswd','-f'],input=os.environ['VNCPASS'].encode(),capture_output=True)
         with open('/root/.vnc/passwd', 'wb') as f:
@@ -57,7 +57,7 @@ class DockerWechatHook:
         app_id = os.environ['APP_ID']
         app_key = os.environ['APP_KEY']
         hex_version = self.compute_version(os.environ['WECHAT_DEST_VERSION'])
-        #修改配置文件
+        # 修改配置文件
         subprocess.run(['sed', '-i', '-e',
             f's@app_id=.*$@app_id={app_id}@g' , '-e',
             f's@app_key=.*$@app_key={app_key}@g','-e',

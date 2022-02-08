@@ -5,18 +5,18 @@
 
 return [
     /**
-     * 是否开启debug模式
+     * 是否开启 debug 模式
      */
     'debug' => true,
     /**
-     * 服务端websocket配置
+     * 服务端 websocket 配置
      */
     'listen'=>[
         'ipaddress'=>'0.0.0.0',
         'port'=>8686
     ],
     /**
-     * 浏览器端websocket配置
+     * 浏览器端 websocket 配置
      */
     'web_listen'=>[
         'ipaddress'=>'0.0.0.0',
