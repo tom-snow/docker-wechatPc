@@ -24,13 +24,13 @@ ConfigStruct Setting;
 
 LPVOID writeMemory(HANDLE hProcess, char *path)
 {
-	// ÉêÇëÄÚ´æ
+	// ç”³è¯·å†…å­˜
 	LPVOID dllAddress = VirtualAllocEx(hProcess, NULL, strlen(path), MEM_COMMIT, PAGE_READWRITE);
 	if (dllAddress == NULL) {
 		return NULL;
 	}
 
-	// Ğ´ÈëÄÚ´æ
+	// å†™å…¥å†…å­˜
 	if (WriteProcessMemory(hProcess, dllAddress, path, strlen(path), NULL) == 0) {
 		return NULL;
 	}
@@ -38,7 +38,7 @@ LPVOID writeMemory(HANDLE hProcess, char *path)
 }
 
 /*
-¼ÓÔØDLL
+åŠ è½½DLL
 */
 INT_PTR loadLibrary(HANDLE hProcess, LPVOID dllAddress)
 {
@@ -52,13 +52,13 @@ INT_PTR loadLibrary(HANDLE hProcess, LPVOID dllAddress)
 }
 
 /*
-²éÕÒ½ø³ÌID
+æŸ¥æ‰¾è¿›ç¨‹ID
 */
 DWORD ProcessNameFindPid(LPCSTR processName)
 {
-	// »ñÈ¡½ø³Ì¿ìÕÕ
+	// è·å–è¿›ç¨‹å¿«ç…§
 	HANDLE processAll = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, NULL);
-	// ±éÀú½ø³Ì
+	// éå†è¿›ç¨‹
 	PROCESSENTRY32 processInfo = { 0 };
 	processInfo.dwSize = sizeof(PROCESSENTRY32);
 
@@ -70,10 +70,10 @@ DWORD ProcessNameFindPid(LPCSTR processName)
 
 	return NULL;
 }
-// »ñÈ¡DLLÂ·¾¶
+// è·å–DLLè·¯å¾„
 void GetDllPath(char *dllPath, int dllSize)
 {
-	// »ñÈ¡µ±Ç°Ä¿Â¼
+	// è·å–å½“å‰ç›®å½•
 	string strUrl = GetExePath();
 
 	sprintf_s(dllPath, dllSize, "%s\\%s", strUrl.c_str(), DLL_NAME);
@@ -83,7 +83,7 @@ void GetDllPath(char *dllPath, int dllSize)
 	return ;
 }
 
-//UTF-8µ½GB2312µÄ×ª»»
+//UTF-8åˆ°GB2312çš„è½¬æ¢
 char* UTF8ToGB2312(char* utf8)
 {
 	int len = MultiByteToWideChar(CP_UTF8, 0, utf8, -1, NULL, 0);
@@ -98,7 +98,7 @@ char* UTF8ToGB2312(char* utf8)
 	return str;
 }
 
-//GB2312µ½UTF-8µÄ×ª»»
+//GB2312åˆ°UTF-8çš„è½¬æ¢
 char* GB2312ToUTF8(char* gb2312)
 {
 	int len = MultiByteToWideChar(CP_ACP, 0, gb2312, -1, NULL, 0);
@@ -114,7 +114,7 @@ char* GB2312ToUTF8(char* gb2312)
 }
 
 /*
-±àÂë×ª»»
+ç¼–ç è½¬æ¢
  */
 char* UnicodeToUtf8(wchar_t* unicode)
 {
@@ -129,7 +129,7 @@ char* UnicodeToUtf8(wchar_t* unicode)
 }
 
 /*
-±àÂë×ª»»
+ç¼–ç è½¬æ¢
 */
 wchar_t* UTF8ToUnicode(char* str)
 {
@@ -145,7 +145,7 @@ wchar_t* UTF8ToUnicode(char* str)
 	return    result;
 }
 
-// char*×ªwchar*
+// char*è½¬wchar*
 wchar_t *CharToWChar(char *cStr)
 {
 	size_t len = strlen(cStr) + 1;
@@ -156,7 +156,7 @@ wchar_t *CharToWChar(char *cStr)
 	return wStr;
 }
 
-// wchar*×ªchar*
+// wchar*è½¬char*
 CHAR *WcharToChar(wchar_t *wStr)
 {
 	size_t len = wcslen(wStr) + 1;
@@ -168,17 +168,17 @@ CHAR *WcharToChar(wchar_t *wStr)
 }
 
 /*
-»ñÈ¡Ëæ»úÊı
+è·å–éšæœºæ•°
 */
 int GetRand(int number)
 {
-	srand((unsigned int)time(NULL));//Í¨¹ıÏµÍ³Ê±¼ä³õÊ¼»¯Ëæ»úÊıÖÖ×Ó//Èç¹û²»ÉèÖÃËæ»úÊıÖÖ×Ó,ÔòÃ¿´Îrand()º¯ÊıµÄÆğÊ¼Öµ¶¼Ò»Ñù.
-	int n = random(number) % 181 + 20;// rand()ÎªËæ»úÊıº¯Êı, ²úÉú[0,intĞÍ×î´óÖµ)Ö®¼äµÄÕûÊıÊı, ´ËÖµÒÀÏµÍ³²»Í¬¶ø²»Í¬, Ò»°ãÎª2147483648, ¿ÉÈÏÎªÎŞÇî// Í¨¹ırand()%181+20×ª»¯Îª[20,200]Ö®¼äµÄÕûÊı (×¢:rand()%181²úÉú[0,180]Ö®¼äµÄÕûÊı)
-	return n; //·µ»ØÕâ¸öÕûÊı
+	srand((unsigned int)time(NULL));//é€šè¿‡ç³»ç»Ÿæ—¶é—´åˆå§‹åŒ–éšæœºæ•°ç§å­//å¦‚æœä¸è®¾ç½®éšæœºæ•°ç§å­,åˆ™æ¯æ¬¡rand()å‡½æ•°çš„èµ·å§‹å€¼éƒ½ä¸€æ ·.
+	int n = random(number) % 181 + 20;// rand()ä¸ºéšæœºæ•°å‡½æ•°, äº§ç”Ÿ[0,intå‹æœ€å¤§å€¼)ä¹‹é—´çš„æ•´æ•°æ•°, æ­¤å€¼ä¾ç³»ç»Ÿä¸åŒè€Œä¸åŒ, ä¸€èˆ¬ä¸º2147483648, å¯è®¤ä¸ºæ— ç©·// é€šè¿‡rand()%181+20è½¬åŒ–ä¸º[20,200]ä¹‹é—´çš„æ•´æ•° (æ³¨:rand()%181äº§ç”Ÿ[0,180]ä¹‹é—´çš„æ•´æ•°)
+	return n; //è¿”å›è¿™ä¸ªæ•´æ•°
 }
 
 /*
-»ñÈ¡µ±Ç°Ê±¼ä´Á - ¾«ÇĞµ½ºÁÃë
+è·å–å½“å‰æ—¶é—´æˆ³ - ç²¾åˆ‡åˆ°æ¯«ç§’
 */
 long long CreateTimestamp()
 {
@@ -187,7 +187,7 @@ long long CreateTimestamp()
 	return t.time * 1000 + t.millitm;
 }
 
-// ´´½¨Î¨Ò»Öµ
+// åˆ›å»ºå”¯ä¸€å€¼
 string CreateUniqueId()
 {
 	long long intTimestamp = CreateTimestamp();
@@ -197,22 +197,22 @@ string CreateUniqueId()
 
 	MD5 *md5 = new MD5();
 	string res = md5->encode(str);
-	// ×ª´óĞ´
+	// è½¬å¤§å†™
 	transform(res.begin(), res.end(), res.begin(), ::toupper);
 	return res;
 	//sprintf_s(uniqueId, 33, "%s", res.c_str());
 }
-// »ñÈ¡µ±Ç°Ö´ĞĞÎÄ¼şµÄÄ¿Â¼
+// è·å–å½“å‰æ‰§è¡Œæ–‡ä»¶çš„ç›®å½•
 string GetExePath(void)
 {
 	char szFilePath[MAX_PATH + 1] = { 0 };
 	GetModuleFileNameA(NULL, szFilePath, MAX_PATH);
-	(strrchr(szFilePath, '\\'))[0] = 0; // É¾³ıÎÄ¼şÃû£¬Ö»»ñµÃÂ·¾¶×Ö´®  
+	(strrchr(szFilePath, '\\'))[0] = 0; // åˆ é™¤æ–‡ä»¶åï¼Œåªè·å¾—è·¯å¾„å­—ä¸²  
 	string path = szFilePath;
 
 	return path;
 }
-// ¶ÁÈ¡ÅäÖÃÎÄ¼ş
+// è¯»å–é…ç½®æ–‡ä»¶
 string ReadConfig(string key)
 {
 	string value = "";
@@ -222,7 +222,7 @@ string ReadConfig(string key)
 		CHAR configPath[MAX_PATH] = { 0 };
 		sprintf_s(configPath, "%s\\%s", strUrl.c_str(), CONFIG_PATH);
 		if (_access(configPath, 0) == -1) {
-			MessageBox(NULL, L"ÅäÖÃÎÄ¼ş²»´æÔÚ£¡", L"ÎÂÜ°ÌáÊ¾£º", NULL);
+			MessageBox(NULL, L"é…ç½®æ–‡ä»¶ä¸å­˜åœ¨ï¼", L"æ¸©é¦¨æç¤ºï¼š", NULL);
 			return value;
 		}
 		Config configSettings(configPath);

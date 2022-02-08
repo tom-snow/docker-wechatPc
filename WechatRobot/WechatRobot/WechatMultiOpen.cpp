@@ -28,7 +28,7 @@ NTQUERYOBJECT    NtQueryObject = (NTQUERYOBJECT)GetProcAddress(GetModuleHandleW(
 
 
 /*
-½ø³ÌÌáÈ¨
+è¿›ç¨‹ææƒ
 */
 BOOL ElevatePrivileges()
 {
@@ -49,7 +49,7 @@ BOOL ElevatePrivileges()
 
 
 /*
-¸´ÖÆ¾ä±ú
+å¤åˆ¶å¥æŸ„
 */
 HANDLE DuplicateHandleEx(DWORD pid, HANDLE h, DWORD flags)
 {
@@ -72,7 +72,7 @@ HANDLE DuplicateHandleEx(DWORD pid, HANDLE h, DWORD flags)
 
 
 /*
-»ñÈ¡PID
+è·å–PID
 */
 int GetProcIds(CONST CHAR *Name, DWORD* Pids)
 {
@@ -102,7 +102,7 @@ int GetProcIds(CONST CHAR *Name, DWORD* Pids)
 
 
 /*
-ÊÇ·ñÊÇÄ¿±êPID
+æ˜¯å¦æ˜¯ç›®æ ‡PID
 */
 BOOL IsTargetPid(DWORD Pid, DWORD* Pids, int num)
 {
@@ -118,7 +118,7 @@ BOOL IsTargetPid(DWORD Pid, DWORD* Pids, int num)
 
 
 /*
-ĞŞ¸ÄÎ¢ĞÅ
+ä¿®æ”¹å¾®ä¿¡
 */
 int PatchWeChat()
 {
@@ -161,7 +161,7 @@ int PatchWeChat()
 			}
 			return FALSE;
 		} else {
-			// ÕâÀï´ó¼Ò¿ÉÒÔ±£Ö¤³ÌĞòµÄÕıÈ·ĞÔÊ¹ÓÃÑ­»··ÖÅäÉÔºÃ
+			// è¿™é‡Œå¤§å®¶å¯ä»¥ä¿è¯ç¨‹åºçš„æ­£ç¡®æ€§ä½¿ç”¨å¾ªç¯åˆ†é…ç¨å¥½
 			if (NULL != pbuffer) {
 				VirtualFree(pbuffer, 0, MEM_RELEASE);
 			}

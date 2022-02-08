@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #define ISLOGIN 0x161C964  //是否登录标识，0-未登录|1-已登录  (WX_USER_SEX - 0x10)
 

@@ -21,50 +21,50 @@ using namespace std;
 IHttpClient *pClient;
 WebSocketClient *cClient;
 
-// ·¢ËÍÊı¾İ
+// å‘é€æ•°æ®
 void WsClientSend(char *body)
 {
 	static const BYTE MASK_KEY[] = { 0x1, 0x2, 0x3, 0x4 };
 
 	USES_CONVERSION;
-	// Êı¾İ×ªutf8
+	// æ•°æ®è½¬utf8
 	CStringA strBodyA(body);
 	if (pClient) {
 		pClient->SendWSMessage(TRUE, 0, 0x1, MASK_KEY, (BYTE*)(LPCSTR)strBodyA, strBodyA.GetLength());
 	}
 }
-// ½ÓÊÕÊı¾İ
+// æ¥æ”¶æ•°æ®
 void WsClientRecvCallback(char *data)
 {
-	// ³õÊ¼»¯Êı¾İ°ü
+	// åˆå§‹åŒ–æ•°æ®åŒ…
 	Package *package = new Package();
 	package->SetConText(data);
-	// ¼ì²éÊı¾İ°ü±ØÒª²ÎÊı
+	// æ£€æŸ¥æ•°æ®åŒ…å¿…è¦å‚æ•°
 	if (package->Check() == FALSE) {
-		//MessageBox(NULL, L"ÊÕµ½´íÎóµÄÊı¾İ°ü£¡", L"ÎÂÜ°ÌáÊ¾£º", NULL);
+		//MessageBox(NULL, L"æ”¶åˆ°é”™è¯¯çš„æ•°æ®åŒ…ï¼", L"æ¸©é¦¨æç¤ºï¼š", NULL);
 		return;
 	}
 
 	int opCode = package->GetOpCode();
 	char *wechatId = package->GetWechatId();
-	if (opCode == OpCode::OPCODE_WECHAT_OPEN && strlen(wechatId) > 0) {  // ĞÂ¿ªÒ»¸öÎ¢ĞÅ¿Í»§¶Ë
-		// ¿ªÆôÎ¢ĞÅ
+	if (opCode == OpCode::OPCODE_WECHAT_OPEN && strlen(wechatId) > 0) {  // æ–°å¼€ä¸€ä¸ªå¾®ä¿¡å®¢æˆ·ç«¯
+		// å¼€å¯å¾®ä¿¡
 		int processId = StartWechat();
-		// °ó¶¨½ø³ÌÓëÎ¢ĞÅID
+		// ç»‘å®šè¿›ç¨‹ä¸å¾®ä¿¡ID
 		if (processId > 0) {
 			AddWechatProcess(processId, wechatId);
 		}
 		return;
 	}
 
-	// ÕÒ³ö¶ÔÓ¦µÄÎ¢ĞÅ¿Í»§¶Ë
+	// æ‰¾å‡ºå¯¹åº”çš„å¾®ä¿¡å®¢æˆ·ç«¯
 	CONNID dwConnID = GetSocketConnectId(wechatId);
-	// ·¢ËÍ¸øÎ¢ĞÅ¿Í»§¶Ë
+	// å‘é€ç»™å¾®ä¿¡å®¢æˆ·ç«¯
 	if (dwConnID != 0) {
 		WsServerSend(dwConnID, data);
 	}
 }
-// ³ÖĞøÁ¬½Ó·şÎñ¶Ë
+// æŒç»­è¿æ¥æœåŠ¡ç«¯
 BOOL WsClientKeepConnect(int time)
 {
 	bool result = WsClientConnect();
@@ -74,25 +74,25 @@ BOOL WsClientKeepConnect(int time)
 	}
 	return TRUE;
 }
-// ÖØĞÂÁ¬½Ó·şÎñ¶Ë
+// é‡æ–°è¿æ¥æœåŠ¡ç«¯
 void WsClientReConnect(int time)
 {
 	Sleep(time);
 	WsClientConnect();
 }
-// ³õÊ¼»¯
+// åˆå§‹åŒ–
 void WsClientInit()
 {
 	cClient = new WebSocketClient;
 	pClient = HttpClient_Creator::Create(cClient);
 	WsClientConnect();
 }
-// Á¬½Ó·şÎñ¶Ë
+// è¿æ¥æœåŠ¡ç«¯
 BOOL WsClientConnect()
 {
 	pClient->Stop();
 	pClient = HttpClient_Creator::Create(cClient);
-	// Á´½Ó·şÎñÆ÷ÅäÖÃ
+	// é“¾æ¥æœåŠ¡å™¨é…ç½®
 	string serverAddress = ReadConfig("wesocket_server_address");
 	string serverPort = ReadConfig("wesocket_server_port");
 	if (serverAddress.length() <= 0) {
@@ -106,9 +106,9 @@ BOOL WsClientConnect()
 	CString strPort(serverPort.c_str());
 	USHORT usPort = (USHORT)_ttoi(strPort);
 
-	// ¿ªÊ¼Á¬½Ó
+	// å¼€å§‹è¿æ¥
 	if (pClient->Start(strAddress, usPort) && pClient->GetConnectionID()) {
-		// ·¢ËÍÎÕÊÖ°ü
+		// å‘é€æ¡æ‰‹åŒ…
 		WsClientHandShake();
 		return TRUE;
 	}
@@ -117,19 +117,19 @@ BOOL WsClientConnect()
 		return FALSE;
 	}
 }
-// ¹Ø±Õ·şÎñ¶ËÁ¬½Ó
+// å…³é—­æœåŠ¡ç«¯è¿æ¥
 void WsClientClose()
 {
 	pClient->Stop();
 }
-// ·¢ËÍÊı¾İ°üÈÃ·şÎñ¶Ë¹Ø±ÕÁ¬½Ó
+// å‘é€æ•°æ®åŒ…è®©æœåŠ¡ç«¯å…³é—­è¿æ¥
 void WsClientSafeClose()
 {
 	static const BYTE MASK_KEY[] = { 0x1, 0x2, 0x3, 0x4 };
-	// ÇëÇó·şÎñ¶Ë¹Ø±ÕÁ¬½Ó
+	// è¯·æ±‚æœåŠ¡ç«¯å…³é—­è¿æ¥
 	pClient->SendWSMessage(TRUE, 0, 0x8, MASK_KEY, nullptr, 0);
 }
-// ·¢ËÍÎÕÊÖ°ü
+// å‘é€æ¡æ‰‹åŒ…
 void WsClientHandShake()
 {
 	Sleep(100);
@@ -139,12 +139,12 @@ void WsClientHandShake()
 
 	USES_CONVERSION;
 
-	// Éú³Ékey
+	// ç”Ÿæˆkey
 	sprintf_s(key, 40, "%d", GetRand(8));
 	int len = SHA1_String((unsigned char*)key, strlen(key), OutSHA1Buf);
 	base64_encode(OutSHA1Buf, 20, key);
 
-	// ÎÕÊÖ
+	// æ¡æ‰‹
 	CString body;
 	body += "GET / HTTP/1.1\r\n";
 	body += "Host: WechatRobot.Domain\r\n";
@@ -164,7 +164,7 @@ void WsClientHandShake()
 
 EnHandleResult WebSocketClient::OnClose(ITcpClient* pSender, CONNID dwConnID, EnSocketOperation enOperation, int iErrorCode)
 {
-	// ÖØĞÂÁ¬½Ó·şÎñ¶Ë
+	// é‡æ–°è¿æ¥æœåŠ¡ç«¯
 	WsClientReConnect(3000);
 	return HR_OK;
 }
@@ -173,7 +173,7 @@ EnHandleResult WebSocketClient::OnClose(ITcpClient* pSender, CONNID dwConnID, En
 
 EnHandleResult WebSocketClient::OnWSMessageBody(IHttpClient* pSender, CONNID dwConnID, const BYTE* pData, int iLength)
 {
-	// ĞÂ·ÖÅäÄÚ´æ¿Õ¼ä
+	// æ–°åˆ†é…å†…å­˜ç©ºé—´
 	if (this->RecvState == FALSE) {
 		if ((this->RecvData = (char *)malloc((iLength + 1) * sizeof(char))) == NULL) {
 			return HR_OK;
@@ -181,7 +181,7 @@ EnHandleResult WebSocketClient::OnWSMessageBody(IHttpClient* pSender, CONNID dwC
 		this->RecvState = TRUE;
 		memcpy(this->RecvData, pData, iLength);
 	}
-	// ¶¯Ì¬Ôö¼ÓÄÚ´æ´óĞ¡
+	// åŠ¨æ€å¢åŠ å†…å­˜å¤§å°
 	else {
 		this->RecvData = (char *)realloc(this->RecvData, (size_t)((this->RecvDataLength + iLength + 1) * sizeof(char)));
 		if (this->RecvData == NULL) {
@@ -189,7 +189,7 @@ EnHandleResult WebSocketClient::OnWSMessageBody(IHttpClient* pSender, CONNID dwC
 			this->RecvState = FALSE;
 			return HR_OK;
 		}
-		// ×·¼ÓÄÚ´æ
+		// è¿½åŠ å†…å­˜
 		for (int i = 0; i < iLength; i++) {
 			this->RecvData[this->RecvDataLength + i] = pData[i];
 		}
@@ -202,16 +202,16 @@ EnHandleResult WebSocketClient::OnWSMessageBody(IHttpClient* pSender, CONNID dwC
 
 EnHandleResult WebSocketClient::OnWSMessageComplete(IHttpClient* pSender, CONNID dwConnID)
 {
-	// ÕûºÏÊı¾İ
+	// æ•´åˆæ•°æ®
 	this->RecvData[this->RecvDataLength] = '\0';
-	// ´¦Àí½ÓÊÕµ½µÄÊı¾İ
+	// å¤„ç†æ¥æ”¶åˆ°çš„æ•°æ®
 	WsClientRecvCallback(this->RecvData);
-	// ÊÍ·Å·Ö°ü´¢´æµÄ×ÊÔ´
+	// é‡Šæ”¾åˆ†åŒ…å‚¨å­˜çš„èµ„æº
 	this->RecvDataLength = 0;
 	free(this->RecvData);
 	this->RecvState = FALSE;
 
-	// Êı¾İ°üµÄcode
+	// æ•°æ®åŒ…çš„code
 	BYTE iOperationCode;
 	pSender->GetWSMessageState(nullptr, nullptr, &iOperationCode, nullptr, nullptr, nullptr);
 	if (iOperationCode == 0x8)
@@ -221,7 +221,7 @@ EnHandleResult WebSocketClient::OnWSMessageComplete(IHttpClient* pSender, CONNID
 }
 
 // ------------------------------------------------------------------------------------------------------------- //
-// ¸æËß·şÎñÆ÷¶Ë×¼±¸ºÃÁË£¬Ë³±ãÉÏ±¨ÒÑ¾­Á¬½ÓÉÏÀ´µÄÖÕ¶Ë
+// å‘Šè¯‰æœåŠ¡å™¨ç«¯å‡†å¤‡å¥½äº†ï¼Œé¡ºä¾¿ä¸ŠæŠ¥å·²ç»è¿æ¥ä¸Šæ¥çš„ç»ˆç«¯
 DWORD WINAPI SendReady()
 {
 	
@@ -230,24 +230,24 @@ DWORD WINAPI SendReady()
 }
 EnHttpParseResult WebSocketClient::OnHeadersComplete(IHttpClient* pSender, CONNID dwConnID)
 {
-	// ¿ªÒ»¸öÏß³ÌµÈ´ı¸æËß·şÎñÆ÷¶Ë×¼±¸ºÃÁË
+	// å¼€ä¸€ä¸ªçº¿ç¨‹ç­‰å¾…å‘Šè¯‰æœåŠ¡å™¨ç«¯å‡†å¤‡å¥½äº†
 	//HANDLE cThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)SendReady, NULL, NULL, 0);
 	//if (cThread != 0) {
 	//	CloseHandle(cThread);
 	//}
 
-	// »Ø¸´¿Í»§¶ËÒÑ¾­×¼±¸ºÃµÄÊı¾İ°ü
+	// å›å¤å®¢æˆ·ç«¯å·²ç»å‡†å¤‡å¥½çš„æ•°æ®åŒ…
 	Package *package = new Package;
 	package->SetOpCode(OpCode::OPCODE_READY);
 
-	// »ñÈ¡Î¢ĞÅ¿Í»§¶ËÁĞ±í£¬ÉÏ±¨
+	// è·å–å¾®ä¿¡å®¢æˆ·ç«¯åˆ—è¡¨ï¼Œä¸ŠæŠ¥
 	CString wechatIdList = GetAllSocketWechatIdList();
 	USES_CONVERSION;
 	CStringA wechatIdListA = W2A(wechatIdList);
 
-	// ÉèÖÃbody
-	rapidjson::Value newBody(rapidjson::kObjectType); // ´´½¨Ò»¸öObjectÀàĞÍµÄÔªËØ
-	// µÇÂ¼×´Ì¬
+	// è®¾ç½®body
+	rapidjson::Value newBody(rapidjson::kObjectType); // åˆ›å»ºä¸€ä¸ªObjectç±»å‹çš„å…ƒç´ 
+	// ç™»å½•çŠ¶æ€
 	rapidjson::Value wechatIdListJson(rapidjson::kStringType);
 	wechatIdListJson.SetString(wechatIdListA.GetString(), wechatIdListA.GetLength());
 	newBody.AddMember("wechatIdList", wechatIdListJson, package->json.GetAllocator());

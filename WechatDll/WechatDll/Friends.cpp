@@ -53,23 +53,23 @@ typedef tuple <
 	string
 > USER_INFO;
 
-// ¶¨Òå7000¸öÓÃ»§ÁĞ±í
+// å®šä¹‰7000ä¸ªç”¨æˆ·åˆ—è¡¨
 list<USER_INFO> userInfoList(10000);
-// »ñÈ¡ºÃÓÑÁĞ±í£º±»¸²¸ÇµÄcallµØÖ·
+// è·å–å¥½å‹åˆ—è¡¨ï¼šè¢«è¦†ç›–çš„callåœ°å€
 DWORD friendsOverWritedCallAdd = 0;
-// »ñÈ¡ºÃÓÑÁĞ±í£ºÌø»ØµÄµØÖ·
+// è·å–å¥½å‹åˆ—è¡¨ï¼šè·³å›çš„åœ°å€
 DWORD friendsJumBackAddress = 0;
-// »ñÈ¡ºÃÓÑÁĞ±í£ºÎÒÃÇÒªÌáÈ¡µÄ¼Ä´æÆ÷ÄÚÈİ
+// è·å–å¥½å‹åˆ—è¡¨ï¼šæˆ‘ä»¬è¦æå–çš„å¯„å­˜å™¨å†…å®¹
 DWORD friendsEsi = 0;
-// »ñÈ¡ºÃÓÑÁĞ±í£ºHookµØÖ·
+// è·å–å¥½å‹åˆ—è¡¨ï¼šHookåœ°å€
 DWORD friendsHookAddress = 0;
-// ÊÇ·ñ¸üĞÂºÃÓÑÁĞ±í - ¸üĞÂµÄÌõÊı
-int updateUserListNumber = 0;  // ¸üĞÂµÄÌõÊı
-int updateUserListComparedNumber = 0;  // ¶Ô±ÈµÄÌõÊı
-// ·ÖÒ³»ñÈ¡ºÃÓÑÁĞ±í - Ã¿Ò³ÌõÊı
+// æ˜¯å¦æ›´æ–°å¥½å‹åˆ—è¡¨ - æ›´æ–°çš„æ¡æ•°
+int updateUserListNumber = 0;  // æ›´æ–°çš„æ¡æ•°
+int updateUserListComparedNumber = 0;  // å¯¹æ¯”çš„æ¡æ•°
+// åˆ†é¡µè·å–å¥½å‹åˆ—è¡¨ - æ¯é¡µæ¡æ•°
 int friendPageSize = 50;
 
-/*==================================»ñÈ¡ºÃÓÑÁĞ±í¿ªÊ¼=======================================*/
+/*==================================è·å–å¥½å‹åˆ—è¡¨å¼€å§‹=======================================*/
 INT GetContactCallBack(void* para, int nColumn, char** colValue, char** colName)
 {
 	char data[0x3A98] = { 0 };
@@ -143,8 +143,8 @@ INT GetContactCallBack(void* para, int nColumn, char** colValue, char** colName)
 		len = sqlite3_column_bytes(stmt, 1);
 
 		memcpy(&tempStudent, pReadBolbData, len);
-		cout << "ĞÕÃû=" << tempStudent.name << endl;
-		cout << "ÄêÁä=" << tempStudent.age << endl;
+		cout << "å§“å=" << tempStudent.name << endl;
+		cout << "å¹´é¾„=" << tempStudent.age << endl;
 		*/
 	}
 	
@@ -152,14 +152,14 @@ INT GetContactCallBack(void* para, int nColumn, char** colValue, char** colName)
 		return 0;
 	}
 
-	// Èç¹ûÒÑ¾­´æÔÚ£¬Ôò²»¼Ó½øÈ¥
+	// å¦‚æœå·²ç»å­˜åœ¨ï¼Œåˆ™ä¸åŠ è¿›å»
 	for (auto& userInfoOld : userInfoList) {
 		string WxidOld = get<0>(userInfoOld);
 		if (Wxid == WxidOld) {
 			return 0;
 		}
 	}
-	// ¼æÈİÍ·Ïñ
+	// å…¼å®¹å¤´åƒ
 	if (BigHeadImgUrl.length() <= 0 || strcmp(BigHeadImgUrl.c_str(), "(null)") == 0) {
 		BigHeadImgUrl = CBigHeadImgUrl;
 	}
@@ -177,7 +177,7 @@ INT GetContactCallBack(void* para, int nColumn, char** colValue, char** colName)
 
 	return 0;
 }
-// ²éÑ¯ÁĞ±í×ÜÊıµÄ·µ»Ø
+// æŸ¥è¯¢åˆ—è¡¨æ€»æ•°çš„è¿”å›
 INT GetContactCountCallBack(void* para, int nColumn, char** colValue, char** colName) 
 {
 	int friendsTotal = 0;
@@ -187,54 +187,54 @@ INT GetContactCountCallBack(void* para, int nColumn, char** colValue, char** col
 		}
 	}
 	
-	// ¼ÆËã×ÜÒ³Êı£¬È»ºóÒ»Ò³Ò³²éÑ¯²¢ÇÒ·¢ËÍ
+	// è®¡ç®—æ€»é¡µæ•°ï¼Œç„¶åä¸€é¡µé¡µæŸ¥è¯¢å¹¶ä¸”å‘é€
 	if (friendsTotal > 0) {
 		Package *package = new Package();
-		// Éú³ÉÎ¨Ò»Âë
+		// ç”Ÿæˆå”¯ä¸€ç 
 		string uniqueId = CreateUniqueId();
-		// ¼ÆËãÒ³Êı£¬Ñ­»·È¡Ã¿Ò»Ò³
+		// è®¡ç®—é¡µæ•°ï¼Œå¾ªç¯å–æ¯ä¸€é¡µ
 		int pageTotal = (int)ceil((double)friendsTotal / (double)friendPageSize);
 		for (int page = 1; page <= pageTotal; page++) {
 			package->SetUniqueId((char*)uniqueId.c_str());
-			// Çå¿ÕÁĞ±í
+			// æ¸…ç©ºåˆ—è¡¨
 			userInfoList.clear();
-			// ¼ÆËã·ÖÒ³ÊıÁ¿
+			// è®¡ç®—åˆ†é¡µæ•°é‡
 			int offset = (page - 1) * friendPageSize;
-			// ×é×°²éÑ¯µÄSQL
+			// ç»„è£…æŸ¥è¯¢çš„SQL
 			char sql[0x555] = {0};
 			sprintf_s(sql, "select Contact.UserName as Wxid,Contact.ExtraBuf,Contact.EncryptUserName as EncryptUsername,Contact.Alias,Contact.Type,Contact.DelFlag,Contact.VerifyFlag,Contact.BigHeadImgUrl as CBigHeadImgUrl,Contact.SmallHeadImgUrl AS CSmallHeadImgUrl,Contact.ChatRoomNotify as CRoomNotify,Contact.NickName as Nickname,Contact.ChatRoomType as RoomType,Contact.Remark,BizInfo.Type as BizType,BizInfo.AcceptType as BizAcceptType,BizInfo.BrandList as BizBrandList,BizInfo.BrandFlag as BizBrandFlag,BizInfo.BrandIconURL as BizBrandIconURL,BizInfo.ExtInfo as BizExtInfo,ContactHeadImgUrl.bigHeadImgUrl as BigHeadImgUrl,ContactHeadImgUrl.smallHeadImgUrl as SmallHeadImgUrl,TicketInfo.Ticket,ChatRoom.UserNameList as RoomWxidList,ChatRoom.Owner as RoomOwner,ChatRoomInfo.Announcement as RoomAnnouncement,ChatRoomInfo.AnnouncementEditor as RoomAnnouncementEditor,ChatRoomInfo.AnnouncementPublishTime as RoomAnnouncementPublishTime,ChatRoomInfo.ChatRoomStatus as RoomStatus from Contact LEFT OUTER JOIN BizInfo ON Contact.UserName = BizInfo.UserName LEFT OUTER JOIN ContactHeadImgUrl ON Contact.UserName = ContactHeadImgUrl.usrName LEFT OUTER JOIN TicketInfo ON Contact.UserName = TicketInfo.UserName LEFT OUTER JOIN ChatRoom ON Contact.UserName = ChatRoom.ChatRoomName LEFT OUTER JOIN ChatRoomInfo ON ChatRoom.ChatRoomName = ChatRoomInfo.ChatRoomName limit %d offset %d", friendPageSize, offset);
-			// Ö´ĞĞ²éÑ¯SQL
+			// æ‰§è¡ŒæŸ¥è¯¢SQL
 			string sqlString = sql;
 			runSql("MicroMsg.db", sqlString, GetContactCallBack);
-			// Ïò·şÎñÆ÷·¢ËÍºÃÓÑÁĞ±í
+			// å‘æœåŠ¡å™¨å‘é€å¥½å‹åˆ—è¡¨
 			SendList(package, page, friendPageSize, friendsTotal);
 		}
 	}
 
 	return 0;
 }
-// ¿ªÊ¼²éÑ¯ÁĞ±í
+// å¼€å§‹æŸ¥è¯¢åˆ—è¡¨
 void selectFriendList()
 {
 	runSql("MicroMsg.db", "select count(*) as count from Contact limit 1", GetContactCountCallBack);
 }
 DWORD WINAPI selectFriendListMonitor()
 {
-	// ÏÈ±£´æÏÖÓĞµÄÊıÁ¿£¬ÓÃÓÚ×ö¶Ô±È£¬Ò»ÃëºóÈç¹ûÊıÁ¿Ã»±ä¶¯£¬Ôò·¢ËÍÁĞ±í
+	// å…ˆä¿å­˜ç°æœ‰çš„æ•°é‡ï¼Œç”¨äºåšå¯¹æ¯”ï¼Œä¸€ç§’åå¦‚æœæ•°é‡æ²¡å˜åŠ¨ï¼Œåˆ™å‘é€åˆ—è¡¨
 	updateUserListComparedNumber = updateUserListNumber;
 	
 	while (TRUE) {
-		Sleep(1500);  // ÏÈµÈ´ı1.5Ãë
+		Sleep(1500);  // å…ˆç­‰å¾…1.5ç§’
 		if (updateUserListComparedNumber != updateUserListNumber) {
 			updateUserListComparedNumber = updateUserListNumber;
-			// Êı¾İÓĞ±ä¶¯£¬ËµÃ÷»¹ÔÚ¸üĞÂ£¬Ìø¹ıÏÂÒ»´ÎµÈÒ»Ãë
+			// æ•°æ®æœ‰å˜åŠ¨ï¼Œè¯´æ˜è¿˜åœ¨æ›´æ–°ï¼Œè·³è¿‡ä¸‹ä¸€æ¬¡ç­‰ä¸€ç§’
 			continue;
 		}
-		// ÔÙµÈ2ÃëÔÙ·¢ËÍÊı¾İ
+		// å†ç­‰2ç§’å†å‘é€æ•°æ®
 		Sleep(2000);
-		// Ö´ĞĞ²éÑ¯Êı¾İ¿âÈ»ºó·¢ËÍÁĞ±í
+		// æ‰§è¡ŒæŸ¥è¯¢æ•°æ®åº“ç„¶åå‘é€åˆ—è¡¨
 		selectFriendList();
-		// ÖØÖÃ¼ÆÊıÆ÷
+		// é‡ç½®è®¡æ•°å™¨
 		updateUserListComparedNumber = 0;
 		updateUserListNumber = 0;
 		break;
@@ -242,54 +242,54 @@ DWORD WINAPI selectFriendListMonitor()
 	
 	return FALSE;
 }
-// ¸üĞÂºÃÓÑÁĞ±í£¬²¢ÇÒ·¢ËÍ»Ø·şÎñÆ÷
+// æ›´æ–°å¥½å‹åˆ—è¡¨ï¼Œå¹¶ä¸”å‘é€å›æœåŠ¡å™¨
 void UpdateUserList() 
 {
-	// ÒÑ¾­ÔÚµÈ´ı¸üĞÂÁË
+	// å·²ç»åœ¨ç­‰å¾…æ›´æ–°äº†
 	if (updateUserListNumber > 0) {
 		updateUserListNumber += 1;
 		return;
 	}
-	// ÉèÖÃ¿ªÊ¼µÈ´ı¸üĞÂ
+	// è®¾ç½®å¼€å§‹ç­‰å¾…æ›´æ–°
 	updateUserListNumber = 1;
-	// ¿ªÒ»¸öÏß³ÌµÈ´ı²¢ÇÒ·¢ËÍ
+	// å¼€ä¸€ä¸ªçº¿ç¨‹ç­‰å¾…å¹¶ä¸”å‘é€
 	HANDLE cThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)selectFriendListMonitor, NULL, NULL, 0);
 	if (cThread != 0) {
 		CloseHandle(cThread);
 	}
 }
-//Ìø×ªµ½ÕâÀï£¬ÈÃÎÒÃÇ×Ô¼º´¦ÀíÏûÏ¢
+//è·³è½¬åˆ°è¿™é‡Œï¼Œè®©æˆ‘ä»¬è‡ªå·±å¤„ç†æ¶ˆæ¯
 __declspec(naked) VOID RecieveUserInfoHook()
 {
-	//±£´æÏÖ³¡
+	//ä¿å­˜ç°åœº
 	__asm
 	{
-		//ÌáÈ¡eax¼Ä´æÆ÷ÄÚÈİ£¬·ÅÔÚÒ»¸ö±äÁ¿ÖĞ
+		//æå–eaxå¯„å­˜å™¨å†…å®¹ï¼Œæ”¾åœ¨ä¸€ä¸ªå˜é‡ä¸­
 		//mov friendsEsi, esi
 
-		//±£´æ¼Ä´æÆ÷
+		//ä¿å­˜å¯„å­˜å™¨
 		pushad
 		pushf
 	}
 
-	// ²éÑ¯Êı¾İ¿â²¢ÇÒ·¢ËÍºÃÓÑÁĞ±í»ØÈ¥
+	// æŸ¥è¯¢æ•°æ®åº“å¹¶ä¸”å‘é€å¥½å‹åˆ—è¡¨å›å»
 	UpdateUserList();
 
-	//»Ö¸´ÏÖ³¡
+	//æ¢å¤ç°åœº
 	__asm
 	{
 		popf
 		popad
 
-		//²¹³ä±»¸²¸ÇµÄ´úÂë
+		//è¡¥å……è¢«è¦†ç›–çš„ä»£ç 
 		call friendsOverWritedCallAdd
 
-		//Ìø»Ø±»HOOKÖ¸ÁîµÄÏÂÒ»ÌõÖ¸Áî
+		//è·³å›è¢«HOOKæŒ‡ä»¤çš„ä¸‹ä¸€æ¡æŒ‡ä»¤
 		jmp friendsJumBackAddress
 	}
 }
 
-//Ïò·¢Æğ·¢ËÍºÃÓÑÁĞ±íÊı¾İ
+//å‘å‘èµ·å‘é€å¥½å‹åˆ—è¡¨æ•°æ®
 void SendList(Package *package, int page, int pageSize, int total)
 {
 	FriendList *list, *normal, *next;
@@ -298,10 +298,10 @@ void SendList(Package *package, int page, int pageSize, int total)
 
 	next = new FriendList;
 
-	/*·ÖÅäÄÚ´æ*/
+	/*åˆ†é…å†…å­˜*/
 	list = next;
 
-	//ĞĞºÅ++
+	//è¡Œå·++
 	DWORD index = 0;
 	for (auto& userInfoOld : userInfoList) {
 		string Wxid = get<0>(userInfoOld);
@@ -361,12 +361,12 @@ void SendList(Package *package, int page, int pageSize, int total)
 		normal->verifyFlag = atoi(VerifyFlag.c_str());
 		normal->roomNotify = atoi(RoomNotify.c_str());
 
-		// Éú³Ékey
+		// ç”Ÿæˆkey
 		memset(buff, 0x0, sizeof(buff));
 		base64_encode((const unsigned char *)ExtraBuf.c_str(), ExtraBuf.length(), buff);
-		sprintf_s(normal->extraBuf, "%s", buff);  // ¶ş½øÖÆµÄ¼ÓÃÜ´®
+		sprintf_s(normal->extraBuf, "%s", buff);  // äºŒè¿›åˆ¶çš„åŠ å¯†ä¸²
 
-		// ´ÓºÃÓÑÏêÇéÀïÃæ²¹³ä²¿·ÖÊı¾İ
+		// ä»å¥½å‹è¯¦æƒ…é‡Œé¢è¡¥å……éƒ¨åˆ†æ•°æ®
 		userInfo info = GetUserInfoByWxid(UTF8ToUnicode((char*)Wxid.c_str()));
 		if (strlen(normal->username) <= 0 || strcmp(normal->username, "(null)") == 0) {
 			sprintf_s(normal->username, "%s", UnicodeToUtf8(info.username));
@@ -383,49 +383,49 @@ void SendList(Package *package, int page, int pageSize, int total)
 
 		index++;
 	}
-	next->next = NULL;/*Á´±íµÄ×îºóÖ¸ÏòÒ»¸öĞÂµØÖ·*/
+	next->next = NULL;/*é“¾è¡¨çš„æœ€åæŒ‡å‘ä¸€ä¸ªæ–°åœ°å€*/
 
-	// ·¢ËÍ
+	// å‘é€
 	if (index > 0) {
 		Send::SendFriendList(list, package, page, pageSize, total);
 	}
 }
 
-//HookºÃÓÑÁĞ±íĞÅÏ¢
+//Hookå¥½å‹åˆ—è¡¨ä¿¡æ¯
 void ListFriendsList()
 {
-	// »ñÈ¡Î¢ĞÅ»ùÖ·
+	// è·å–å¾®ä¿¡åŸºå€
 	DWORD winAddress = GetWechatWinAddress();
 
-	// ¸²¸ÇµÄĞĞ
+	// è¦†ç›–çš„è¡Œ
 	friendsHookAddress = winAddress + LISTEN_FRIENDS_HOOK;
 
-	//±»¸²¸ÇµÄCALLÄ¿±ê
+	//è¢«è¦†ç›–çš„CALLç›®æ ‡
 	friendsOverWritedCallAdd = winAddress + LISTEN_FRIENDS_CALL;
 
-	//Ìø»ØµÄµØÖ·
+	//è·³å›çš„åœ°å€
 	friendsJumBackAddress = friendsHookAddress + 5;
 
-	//×é×°Ìø×ªÊı¾İ
+	//ç»„è£…è·³è½¬æ•°æ®
 	BYTE jmpCodes[5] = { 0 };
 	jmpCodes[0] = 0xE9;
 
-	//ĞÂÌø×ªÖ¸ÁîÖĞµÄÊı¾İ=Ìø×ªµÄµØÖ·-Ô­µØÖ·£¨HOOKµÄµØÖ·£©-Ìø×ªÖ¸ÁîµÄ³¤¶È
+	//æ–°è·³è½¬æŒ‡ä»¤ä¸­çš„æ•°æ®=è·³è½¬çš„åœ°å€-åŸåœ°å€ï¼ˆHOOKçš„åœ°å€ï¼‰-è·³è½¬æŒ‡ä»¤çš„é•¿åº¦
 	*(DWORD*)& jmpCodes[1] = (DWORD)RecieveUserInfoHook - friendsHookAddress - 5;
 
-	//¸²¸ÇÖ¸Áî
+	//è¦†ç›–æŒ‡ä»¤
 	//5A9D1894    E8 0790C1FF     call WeChatWi.5A5EA8A0
 	WriteProcessMemory(GetCurrentProcess(), (LPVOID)friendsHookAddress, jmpCodes, 5, 0);
 }
-/*==================================»ñÈ¡ºÃÓÑÁĞ±í½áÊø=======================================*/
+/*==================================è·å–å¥½å‹åˆ—è¡¨ç»“æŸ=======================================*/
 
-/*==================================Í¬ÒâºÃÓÑÇëÇó¿ªÊ¼=======================================*/
+/*==================================åŒæ„å¥½å‹è¯·æ±‚å¼€å§‹=======================================*/
 /*
-Í¬Òâ¼ÓºÃÓÑÇëÇó
+åŒæ„åŠ å¥½å‹è¯·æ±‚
 */
 void VerifyFriend(PWCHAR v1, PWCHAR v2)
 {
-	// »ñÈ¡Î¢ĞÅ»ùÖ·
+	// è·å–å¾®ä¿¡åŸºå€
 	DWORD winAddress = GetWechatWinAddress();
 
 	DWORD call1 = winAddress + WX_VERIFY_USER_CALL1;
@@ -474,12 +474,12 @@ void VerifyFriend(PWCHAR v1, PWCHAR v2)
 		popad
 	}
 }
-/*==================================Í¬ÒâºÃÓÑÇëÇó½áÊø=======================================*/
+/*==================================åŒæ„å¥½å‹è¯·æ±‚ç»“æŸ=======================================*/
 
-/*==================================¼ÓºÃÓÑ¿ªÊ¼=======================================*/
+/*==================================åŠ å¥½å‹å¼€å§‹=======================================*/
 void AddFriend(PWCHAR wxid, PWCHAR message)
 {
-	// »ñÈ¡Î¢ĞÅ»ùÖ·
+	// è·å–å¾®ä¿¡åŸºå€
 	DWORD winAddress = GetWechatWinAddress();
 
 	DWORD param = winAddress + WX_ADD_USER_PARAM;
@@ -519,7 +519,7 @@ void AddFriend(PWCHAR wxid, PWCHAR message)
 		mov ecx, esp
 		push eax
 		call call2
-		push 0x6  // ÈºÄÚ¼ÓºÃÓÑÊÇE£¬ÈºÍâÊÇ6
+		push 0x6  // ç¾¤å†…åŠ å¥½å‹æ˜¯Eï¼Œç¾¤å¤–æ˜¯6
 		sub esp, 0x14
 		mov ecx, esp
 		mov dword ptr ss : [ebp - 0xE8], esp
@@ -541,12 +541,12 @@ void AddFriend(PWCHAR wxid, PWCHAR message)
 		popad
 	}
 }
-/*==================================¼ÓºÃÓÑ½áÊø=======================================*/
+/*==================================åŠ å¥½å‹ç»“æŸ=======================================*/
 
-/*==================================»ñÈ¡ºÃÓÑÏêÇé¿ªÊ¼=======================================*/
+/*==================================è·å–å¥½å‹è¯¦æƒ…å¼€å§‹=======================================*/
 userInfo GetUserInfoByWxid(wchar_t* userwxid)
 {
-	// »ñÈ¡Î¢ĞÅ»ùÖ·
+	// è·å–å¾®ä¿¡åŸºå€
 	DWORD winAddress = GetWechatWinAddress();
 
 	DWORD call1 = winAddress + WX_GET_USER_INFO_CALL1;
@@ -563,7 +563,7 @@ userInfo GetUserInfoByWxid(wchar_t* userwxid)
 
 	char *asmWxid = (char *)&pWxid.pStr;
 
-	DWORD userData = 0;		//ÓÃ»§Êı¾İµÄµØÖ·
+	DWORD userData = 0;		//ç”¨æˆ·æ•°æ®çš„åœ°å€
 
 	__asm {
 		pushad
@@ -582,23 +582,23 @@ userInfo GetUserInfoByWxid(wchar_t* userwxid)
 		popad
 	}
 
-	//×é×°½á¹¹Ìå
+	//ç»„è£…ç»“æ„ä½“
 	userInfo user = { 0 };
 
 	/*
-	8 Î¢ĞÅID
-	1C Î¢ĞÅºÅ
+	8 å¾®ä¿¡ID
+	1C å¾®ä¿¡å·
 	30 v1
-	48 ¿ÉÄÜÊÇÀàĞÍ£º1=ºÃÓÑ£¬3=ÈºÁÄ
-	50 ±¸×¢
-	64 êÇ³Æ
-	108 Í·Ïñ
-	15C ĞÔ±ğ£¬1=ÄĞ£¬2=Å®£¬ÆäËû=Î´Öª
-	194 ¸öĞÔÇ©Ãû
-	1A8 ¹ú¼®
-	1BC Ê¡·İ
-	1D0 ³ÇÊĞ
-	274 ÅóÓÑÈ¦Í·Ïñ
+	48 å¯èƒ½æ˜¯ç±»å‹ï¼š1=å¥½å‹ï¼Œ3=ç¾¤èŠ
+	50 å¤‡æ³¨
+	64 æ˜µç§°
+	108 å¤´åƒ
+	15C æ€§åˆ«ï¼Œ1=ç”·ï¼Œ2=å¥³ï¼Œå…¶ä»–=æœªçŸ¥
+	194 ä¸ªæ€§ç­¾å
+	1A8 å›½ç±
+	1BC çœä»½
+	1D0 åŸå¸‚
+	274 æœ‹å‹åœˆå¤´åƒ
 	*/
 	LPVOID textWxid = *((LPVOID*)(userData + 0x8));
 	LPVOID textUsername = *((LPVOID*)(userData + 0x1C));
@@ -616,14 +616,14 @@ userInfo GetUserInfoByWxid(wchar_t* userwxid)
 
 	return user;
 }
-/*==================================»ñÈ¡ºÃÓÑÏêÇé½áÊø=======================================*/
+/*==================================è·å–å¥½å‹è¯¦æƒ…ç»“æŸ=======================================*/
 
-/*==================================É¾³ıºÃÓÑ¿ªÊ¼=======================================*/
+/*==================================åˆ é™¤å¥½å‹å¼€å§‹=======================================*/
 void DeleteUser(wchar_t* wxid)
 {
-	// »ñÈ¡Î¢ĞÅ»ùÖ·
+	// è·å–å¾®ä¿¡åŸºå€
 	DWORD winAddress = GetWechatWinAddress();
-	//¹¹ÔìÊı¾İ
+	//æ„é€ æ•°æ®
 	DeleteUserStructWxid structWxid = { 0 };
 	structWxid.pWxid = wxid;
 	structWxid.length = wcslen(wxid);
@@ -642,12 +642,12 @@ void DeleteUser(wchar_t* wxid)
 		popad
 	}
 }
-/*==================================É¾³ıºÃÓÑ½áÊø=======================================*/
+/*==================================åˆ é™¤å¥½å‹ç»“æŸ=======================================*/
 
-/*==================================Í¨¹ıÍÆ¼ö¿¨Æ¬Ìí¼ÓºÃÓÑ¿ªÊ¼=======================================*/
+/*==================================é€šè¿‡æ¨èå¡ç‰‡æ·»åŠ å¥½å‹å¼€å§‹=======================================*/
 void AddUserFromCard(wchar_t* v1, wchar_t* msg)
 {
-	// »ñÈ¡Î¢ĞÅ»ùÖ·
+	// è·å–å¾®ä¿¡åŸºå€
 	DWORD winAddress = GetWechatWinAddress();
 
 	DWORD addParam = winAddress + WX_ADD_CARD_USER_PARAM;
@@ -701,25 +701,25 @@ void AddUserFromCard(wchar_t* v1, wchar_t* msg)
 		popad
 	}
 }
-/*==================================Í¨¹ıÍÆ¼ö¿¨Æ¬Ìí¼ÓºÃÓÑ½áÊø=======================================*/
+/*==================================é€šè¿‡æ¨èå¡ç‰‡æ·»åŠ å¥½å‹ç»“æŸ=======================================*/
 
-/*==================================ÉèÖÃºÃÓÑ±¸×¢¿ªÊ¼=======================================*/
+/*==================================è®¾ç½®å¥½å‹å¤‡æ³¨å¼€å§‹=======================================*/
 void SetRemark(wchar_t *wxid, wchar_t *remark)
 {
-	// »ñÈ¡Î¢ĞÅ»ùÖ·
+	// è·å–å¾®ä¿¡åŸºå€
 	DWORD winAddress = GetWechatWinAddress();
 
-	// ÉèÖÃ±¸×¢µÄÆ«ÒÆ
+	// è®¾ç½®å¤‡æ³¨çš„åç§»
 	DWORD dwCallAddr = winAddress + WX_SET_USER_REMARK_CALL;
 	DWORD dwParamAddr = winAddress + WX_SET_USER_REMARK_PARAM;
 
-	// ¹¹Ôì±¸×¢½á¹¹
+	// æ„é€ å¤‡æ³¨ç»“æ„
 	SetRemarkStruct remarkStruct = { 0 };
 	remarkStruct.remark = remark;
 	remarkStruct.remarkLen = wcslen(remark);
 	remarkStruct.maxRemarkLen = wcslen(remark) * 2;
 
-	// ¿ªÊ¼»ñÈ¡ºÃÓÑÏêÇéÊı¾İ
+	// å¼€å§‹è·å–å¥½å‹è¯¦æƒ…æ•°æ®
 	DWORD userData = 0;
 	DWORD call1 = winAddress + WX_GET_USER_INFO_CALL1;
 	DWORD call2 = winAddress + WX_GET_USER_INFO_CALL2;
@@ -746,22 +746,22 @@ void SetRemark(wchar_t *wxid, wchar_t *remark)
 		popad
 	}
 
-	// ¸³Öµ±¸×¢
+	// èµ‹å€¼å¤‡æ³¨
 	memcpy((LPVOID*)(userData + 0x50), &remarkStruct, sizeof(remarkStruct));
 	DWORD buf = 0x800;
 	memcpy((LPVOID*)userData, &buf, sizeof(buf));
-	DWORD buf2 = 0x1;  // 0x1ĞŞ¸Ä±¸×¢£¬0x3É¾³ıºÃÓÑ
+	DWORD buf2 = 0x1;  // 0x1ä¿®æ”¹å¤‡æ³¨ï¼Œ0x3åˆ é™¤å¥½å‹
 	memcpy((LPVOID*)(userData + 0x48), &buf2, sizeof(buf2));
-	DWORD buf3 = 0x3;  // 0x1É¾³ıºÃÓÑ£¬0x3ĞŞ¸Ä±¸×¢
+	DWORD buf3 = 0x3;  // 0x1åˆ é™¤å¥½å‹ï¼Œ0x3ä¿®æ”¹å¤‡æ³¨
 	memcpy((LPVOID*)(userData + 0x158), &buf3, sizeof(buf3));
-	DWORD buf4 = 0x3;  // 0x1É¾³ıºÃÓÑ£¬0x3ĞŞ¸Ä±¸×¢
+	DWORD buf4 = 0x3;  // 0x1åˆ é™¤å¥½å‹ï¼Œ0x3ä¿®æ”¹å¤‡æ³¨
 	memcpy((LPVOID*)(userData + 0x1E4), &buf4, sizeof(buf4));
-	DWORD buf5 = 0x1;  // 0x1É¾³ıºÃÓÑ£¬0x3ĞŞ¸Ä±¸×¢
+	DWORD buf5 = 0x1;  // 0x1åˆ é™¤å¥½å‹ï¼Œ0x3ä¿®æ”¹å¤‡æ³¨
 	memcpy((LPVOID*)(userData + 0x228), &buf5, sizeof(buf5));
-	DWORD buf6 = 0x1;  // 0x1É¾³ıºÃÓÑ£¬0x3ĞŞ¸Ä±¸×¢
+	DWORD buf6 = 0x1;  // 0x1åˆ é™¤å¥½å‹ï¼Œ0x3ä¿®æ”¹å¤‡æ³¨
 	memcpy((LPVOID*)(userData + 0x230), &buf6, sizeof(buf6));
 
-	// ¿ªÊ¼ÉèÖÃ±¸×¢
+	// å¼€å§‹è®¾ç½®å¤‡æ³¨
 	DWORD *asmP = (DWORD*)dwParamAddr;
 	__asm {
 		pushad
@@ -772,4 +772,4 @@ void SetRemark(wchar_t *wxid, wchar_t *remark)
 		popad
 	}
 }
-/*==================================ÉèÖÃºÃÓÑ±¸×¢½áÊø=======================================*/
+/*==================================è®¾ç½®å¥½å‹å¤‡æ³¨ç»“æŸ=======================================*/

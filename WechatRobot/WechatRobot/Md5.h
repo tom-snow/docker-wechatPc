@@ -11,22 +11,22 @@ private:
 	unsigned int tempA, tempB, tempC, tempD, strlength;
 public:
 	MD5();
-	// Fº¯Êı
+	// Få‡½æ•°
 	unsigned int F(unsigned int b, unsigned int c, unsigned int d);
-	// Gº¯Êı
+	// Gå‡½æ•°
 	unsigned int G(unsigned int b, unsigned int c, unsigned int d);
-	// Hº¯Êı
+	// Hå‡½æ•°
 	unsigned int H(unsigned int b, unsigned int c, unsigned int d);
-	// Iº¯Êı
+	// Iå‡½æ•°
 	unsigned int I(unsigned int b, unsigned int c, unsigned int d);
-	// ÒÆÎ»²Ù×÷º¯Êı
+	// ç§»ä½æ“ä½œå‡½æ•°
 	unsigned int shift(unsigned int a, unsigned int n);
-	// ±àÂëº¯Êı
+	// ç¼–ç å‡½æ•°
 	string encode(string src);
-	// Ñ­»·Ñ¹Ëõ
+	// å¾ªç¯å‹ç¼©
 	void iterateFunc(unsigned int* X, int size);
-	// Ìî³ä×Ö·û´®
+	// å¡«å……å­—ç¬¦ä¸²
 	vector<unsigned int> padding(string src);
-	// ÕûÀíÊä³ö
+	// æ•´ç†è¾“å‡º
 	string format(unsigned int num);
 };

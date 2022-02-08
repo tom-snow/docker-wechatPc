@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "Config.h"
 #include "Md5.h"
 #include "Common.h"
