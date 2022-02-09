@@ -1,1 +1,6 @@
 .vs
+
+# Ignore files generated at compile time with visual studio
+/WechatDll/Debug/
+/WechatDll/Release/
+/WechatDll/x64/
