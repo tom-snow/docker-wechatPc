@@ -3,7 +3,7 @@
 #include <string>
 using namespace std;
 
-//Èº¼Ó³ÉÔ±Î¢ĞÅIDµÄ½á¹¹Ìå
+//ç¾¤åŠ æˆå‘˜å¾®ä¿¡IDçš„ç»“æ„ä½“
 struct AddRoomUserWxid
 {
 	wchar_t* str;
@@ -11,7 +11,7 @@ struct AddRoomUserWxid
 	int maxLen = 0;
 	char file[0x8] = { 0 };
 };
-// »ñÈ¡Èº³ÉÔ±µÄÎ¢ĞÅID
+// è·å–ç¾¤æˆå‘˜çš„å¾®ä¿¡ID
 struct GetRoomUserwxStr
 {
 	wchar_t * pStr;
@@ -20,21 +20,21 @@ struct GetRoomUserwxStr
 	int fill = 0;
 	int fill2 = 0;
 };
-// ÍË³öÈºÁÄ½á¹¹
+// é€€å‡ºç¾¤èŠç»“æ„
 struct QuiteRoomStructWxid
 {
-	//·¢ËÍµÄÎÄ±¾ÏûÏ¢Ö¸Õë
+	//å‘é€çš„æ–‡æœ¬æ¶ˆæ¯æŒ‡é’ˆ
 	wchar_t* pWxid;
-	//×Ö·û´®³¤¶È
+	//å­—ç¬¦ä¸²é•¿åº¦
 	DWORD length;
-	//×Ö·û´®×î´ó³¤¶È
+	//å­—ç¬¦ä¸²æœ€å¤§é•¿åº¦
 	DWORD maxLength;
 
-	//²¹³äÁ½¸öÕ¼Î»Êı¾İ
+	//è¡¥å……ä¸¤ä¸ªå ä½æ•°æ®
 	DWORD fill1;
 	DWORD fill2;
 };
-// ĞŞ¸ÄÈºÃû³Æ½á¹¹
+// ä¿®æ”¹ç¾¤åç§°ç»“æ„
 struct SetRoomNameStruct
 {
 	wchar_t* pStr;
@@ -42,7 +42,7 @@ struct SetRoomNameStruct
 	int strMaxLen;
 	char full[0x8] = { 0 };
 };
-// É¾³ıÈº³ÉÔ±½á¹¹
+// åˆ é™¤ç¾¤æˆå‘˜ç»“æ„
 struct DelRoomIdStruct
 {
 	wchar_t* roomid;
@@ -51,7 +51,7 @@ struct DelRoomIdStruct
 	int full = 0;
 	int full2 = 0;
 };
-//·¢ËÍ°¬ÌØÏûÏ¢ĞèÒªµÄÊı¾İ½á¹¹
+//å‘é€è‰¾ç‰¹æ¶ˆæ¯éœ€è¦çš„æ•°æ®ç»“æ„
 class TEXT_WX
 {
 public:
@@ -91,19 +91,19 @@ public:
 };
 
 
-// »ñÈ¡Èº³ÉÔ±ÁĞ±í
+// è·å–ç¾¤æˆå‘˜åˆ—è¡¨
 void GetRoomUserList(wchar_t* chatroomwxid);
-// Ìí¼ÓÈº³ÉÔ±
+// æ·»åŠ ç¾¤æˆå‘˜
 void AddRoomUser(wchar_t* chatroomwxid, wchar_t* wxid);
-// ·¢ËÍÈº¹«¸æ
+// å‘é€ç¾¤å…¬å‘Š
 void SetRoomAnnouncement(wchar_t* chatroomwxid, wchar_t* Announcement);
-// ÍË³öÈºÁÄ
+// é€€å‡ºç¾¤èŠ
 void QuitRoom(wchar_t* chatroomwxid);
-// ĞŞ¸ÄÈºÃû³Æ
+// ä¿®æ”¹ç¾¤åç§°
 void SetRoomName(wchar_t* roomwxid, wchar_t* roomname);
-// ·¢ËÍ°¬ÌØÏûÏ¢
+// å‘é€è‰¾ç‰¹æ¶ˆæ¯
 void SendRoomAtMsg(wchar_t* chatroomid, wchar_t* memberwxid, wchar_t* membernickname, wchar_t* msg);
-// É¾³ıÈº³ÉÔ±
+// åˆ é™¤ç¾¤æˆå‘˜
 void DelRoomUser(wchar_t* roomid, wchar_t* memberwxid);
-// ´´½¨ÈºÁÄ
+// åˆ›å»ºç¾¤èŠ
 void CreateRoom(wchar_t *wxid1, wchar_t *wxid2);

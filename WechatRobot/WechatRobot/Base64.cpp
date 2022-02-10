@@ -3,25 +3,25 @@
 #include <stdio.h>
 #include <string.h>
 
-// È«¾Ö³£Á¿¶¨Òå
+// å…¨å±€å¸¸é‡å®šä¹‰
 const char * base64char = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 const char padding_char = '=';
 
-/*±àÂë´úÂë
-* const unsigned char * sourcedata£¬ Ô´Êı×é
-* char * base64 £¬Âë×Ö±£´æ
+/*ç¼–ç ä»£ç 
+* const unsigned char * sourcedataï¼Œ æºæ•°ç»„
+* char * base64 ï¼Œç å­—ä¿å­˜
 */
 int base64_encode(const unsigned char * sourcedata, unsigned int datalength, char * base64)
 {
 	unsigned int i = 0, j = 0;
-	unsigned char trans_index = 0;    // Ë÷ÒıÊÇ8Î»£¬µ«ÊÇ¸ßÁ½Î»¶¼Îª0
+	unsigned char trans_index = 0;    // ç´¢å¼•æ˜¯8ä½ï¼Œä½†æ˜¯é«˜ä¸¤ä½éƒ½ä¸º0
 	//const int datalength = strlen((const char*)sourcedata);
 	for (i = 0; i < datalength; i += 3) {
-		// Ã¿Èı¸öÒ»×é£¬½øĞĞ±àÂë
-		// Òª±àÂëµÄÊı×ÖµÄµÚÒ»¸ö
+		// æ¯ä¸‰ä¸ªä¸€ç»„ï¼Œè¿›è¡Œç¼–ç 
+		// è¦ç¼–ç çš„æ•°å­—çš„ç¬¬ä¸€ä¸ª
 		trans_index = ((sourcedata[i] >> 2) & 0x3f);
 		base64[j++] = base64char[(int)trans_index];
-		// µÚ¶ş¸ö
+		// ç¬¬äºŒä¸ª
 		trans_index = ((sourcedata[i] << 4) & 0x30);
 		if (i + 1 < datalength) {
 			trans_index |= ((sourcedata[i + 1] >> 4) & 0x0f);
@@ -34,11 +34,11 @@ int base64_encode(const unsigned char * sourcedata, unsigned int datalength, cha
 
 			base64[j++] = padding_char;
 
-			break;   // ³¬³ö×Ü³¤¶È£¬¿ÉÒÔÖ±½Óbreak
+			break;   // è¶…å‡ºæ€»é•¿åº¦ï¼Œå¯ä»¥ç›´æ¥break
 		}
-		// µÚÈı¸ö
+		// ç¬¬ä¸‰ä¸ª
 		trans_index = ((sourcedata[i + 1] << 2) & 0x3c);
-		if (i + 2 < datalength) { // ÓĞµÄ»°ĞèÒª±àÂë2¸ö
+		if (i + 2 < datalength) { // æœ‰çš„è¯éœ€è¦ç¼–ç 2ä¸ª
 			trans_index |= ((sourcedata[i + 2] >> 6) & 0x03);
 			base64[j++] = base64char[(int)trans_index];
 
@@ -60,9 +60,9 @@ int base64_encode(const unsigned char * sourcedata, unsigned int datalength, cha
 }
 
 
-/** ÔÚ×Ö·û´®ÖĞ²éÑ¯ÌØ¶¨×Ö·ûÎ»ÖÃË÷Òı
-* const char *str £¬×Ö·û´®
-* char c£¬Òª²éÕÒµÄ×Ö·û
+/** åœ¨å­—ç¬¦ä¸²ä¸­æŸ¥è¯¢ç‰¹å®šå­—ç¬¦ä½ç½®ç´¢å¼•
+* const char *str ï¼Œå­—ç¬¦ä¸²
+* char cï¼Œè¦æŸ¥æ‰¾çš„å­—ç¬¦
 */
 inline int num_strchr(const char *str, char c) // 
 {
@@ -72,16 +72,16 @@ inline int num_strchr(const char *str, char c) //
 	}
 	return pindex - str;
 }
-/* ½âÂë
-* const char * base64 Âë×Ö
-* unsigned char * dedata£¬ ½âÂë»Ö¸´µÄÊı¾İ
+/* è§£ç 
+* const char * base64 ç å­—
+* unsigned char * dedataï¼Œ è§£ç æ¢å¤çš„æ•°æ®
 */
 int base64_decode(const char * base64, unsigned char * dedata)
 {
 	int i = 0, j = 0;
 	int trans[4] = { 0, 0, 0, 0 };
 	for (; base64[i] != '\0'; i += 4) {
-		// Ã¿ËÄ¸öÒ»×é£¬ÒëÂë³ÉÈı¸ö×Ö·û
+		// æ¯å››ä¸ªä¸€ç»„ï¼Œè¯‘ç æˆä¸‰ä¸ªå­—ç¬¦
 		trans[0] = num_strchr(base64char, base64[i]);
 		trans[1] = num_strchr(base64char, base64[i + 1]);
 		// 1/3

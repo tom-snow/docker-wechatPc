@@ -19,33 +19,33 @@
 
 
 
-/*==================================»ñÈ¡Èº³ÉÔ±ÁĞ±í¿ªÊ¼=======================================*/
+/*==================================è·å–ç¾¤æˆå‘˜åˆ—è¡¨å¼€å§‹=======================================*/
 void GetRoomUserList(wchar_t* chatroomwxid)
 {
-	// »ñÈ¡Î¢ĞÅ»ùÖ·
+	// è·å–å¾®ä¿¡åŸºå€
 	DWORD winAddress = GetWechatWinAddress();
 
-	//1.ÏÈ»ñÈ¡Èº³ÉÔ±µÄÎ¢ĞÅID
+	//1.å…ˆè·å–ç¾¤æˆå‘˜çš„å¾®ä¿¡ID
 	
-	//×¼±¸»º³åÇø
-	DWORD dwWxidArr = 0;	//±£´æÎ¢ĞÅIDÊı¾İµÄµØÖ·
+	//å‡†å¤‡ç¼“å†²åŒº
+	DWORD dwWxidArr = 0;	//ä¿å­˜å¾®ä¿¡IDæ•°æ®çš„åœ°å€
 	char buff[0x164] = { 0 };
 	char userListBuff[0x174] = { 0 };
 
-	//¹¹ÔìÊı¾İ
+	//æ„é€ æ•°æ®
 	GetRoomUserwxStr pWxid = { 0 };
 	pWxid.pStr = chatroomwxid;
 	pWxid.strLen = wcslen(chatroomwxid);
 	pWxid.strMaxLen = wcslen(chatroomwxid) * 2;
 	char * asmWxid = (char *)&pWxid.pStr;
 
-	//µ÷ÓÃcall
+	//è°ƒç”¨call
 	DWORD dwCall1 = winAddress + WX_GET_ROOM_USER_WXID_CALL1;
 	DWORD dwCall2 = winAddress + WX_GET_ROOM_USER_WXID_CALL2;
 	DWORD dwCall3 = winAddress + WX_GET_ROOM_USER_WXID_CALL3;
 	DWORD dwCall4 = winAddress + WX_GET_ROOM_USER_WXID_CALL4;
 
-	//»ñÈ¡Èº³ÉÔ±
+	//è·å–ç¾¤æˆå‘˜
 	__asm {
 		lea ecx, buff[16]
 		call dwCall1
@@ -63,7 +63,7 @@ void GetRoomUserList(wchar_t* chatroomwxid)
 		mov dwWxidArr, eax
 	}
 
-	//ÄÃµ½Î¢ĞÅID
+	//æ‹¿åˆ°å¾®ä¿¡ID
 	wchar_t test[0x100] = { 0 };
 	wchar_t tempWxid[0x100] = { 0 };
 	DWORD userList = *((DWORD *)dwWxidArr);
@@ -75,18 +75,18 @@ void GetRoomUserList(wchar_t* chatroomwxid)
 		DWORD temWxidAdd = userList + (i * 20);
 		swprintf_s(tempWxid, L"%s", (wchar_t*)*((LPVOID *)temWxidAdd));
 
-		//2.ÔÙÍ¨¹ıÎ¢ĞÅID»ñÈ¡Èº³ÉÔ±ĞÅÏ¢
+		//2.å†é€šè¿‡å¾®ä¿¡IDè·å–ç¾¤æˆå‘˜ä¿¡æ¯
 		userInfo user = GetUserInfoByWxid(tempWxid);
-		MessageBox(NULL, user.wxid, L"ºÃ", NULL);
-		// user=ÓÃ»§ÏëÆğ½á¹¹
+		MessageBox(NULL, user.wxid, L"å¥½", NULL);
+		// user=ç”¨æˆ·æƒ³èµ·ç»“æ„
 	}
 }
-/*==================================»ñÈ¡Èº³ÉÔ±ÁĞ±í½áÊø=======================================*/
+/*==================================è·å–ç¾¤æˆå‘˜åˆ—è¡¨ç»“æŸ=======================================*/
 
-/*==================================Ìí¼ÓÈº³ÉÔ±¿ªÊ¼=======================================*/
+/*==================================æ·»åŠ ç¾¤æˆå‘˜å¼€å§‹=======================================*/
 void AddRoomUser(wchar_t* chatroomwxid, wchar_t* wxid)
 {
-	// »ñÈ¡Î¢ĞÅ»ùÖ·
+	// è·å–å¾®ä¿¡åŸºå€
 	DWORD winAddress = GetWechatWinAddress();
 
 	DWORD dwCallAddr1 = winAddress + WX_ADD_ROOM_MEMBER_CALL1;
@@ -97,7 +97,7 @@ void AddRoomUser(wchar_t* chatroomwxid, wchar_t* wxid)
 	DWORD dwParam = winAddress + WX_ADD_ROOM_MEMBER_PARAM1;
 	DWORD dwParam2 = winAddress + WX_ADD_ROOM_MEMBER_PARAM2;
 	
-	//ÈºID½á¹¹Ìå
+	//ç¾¤IDç»“æ„ä½“
 	struct tempChatRoom
 	{
 		char fill2[0x8] = { 0 };
@@ -108,7 +108,7 @@ void AddRoomUser(wchar_t* chatroomwxid, wchar_t* wxid)
 	};
 
 
-	//¹¹ÔìĞèÒªµÄÊı¾İ
+	//æ„é€ éœ€è¦çš„æ•°æ®
 	AddRoomUserWxid wxidStruct = { 0 };
 	wxidStruct.str = wxid;
 	wxidStruct.strLen = wcslen(wxid) * 2;
@@ -148,17 +148,17 @@ void AddRoomUser(wchar_t* chatroomwxid, wchar_t* wxid)
 		popad;
 	}
 }
-/*==================================Ìí¼ÓÈº³ÉÔ±½áÊø=======================================*/
+/*==================================æ·»åŠ ç¾¤æˆå‘˜ç»“æŸ=======================================*/
 
-/*==================================·¢ËÍÈº¹«¸æ¿ªÊ¼=======================================*/
+/*==================================å‘é€ç¾¤å…¬å‘Šå¼€å§‹=======================================*/
 void SetRoomAnnouncement(wchar_t* chatroomwxid, wchar_t* Announcement)
 {
-	// »ñÈ¡Î¢ĞÅ»ùÖ·
+	// è·å–å¾®ä¿¡åŸºå€
 	DWORD winAddress = GetWechatWinAddress();
 
-	//»ñÈ¡WeChatWinµÄ»ùÖ·
+	//è·å–WeChatWinçš„åŸºå€
 	DWORD callAdrress = winAddress + WX_SET_ROOM_ANNOUNCEMENT;
-	//×é×°Êı¾İ
+	//ç»„è£…æ•°æ®
 	CHAR bufferA[0xD0] = { 0 };
 	DWORD* bufA = (DWORD*)& bufferA;
 
@@ -184,33 +184,33 @@ void SetRoomAnnouncement(wchar_t* chatroomwxid, wchar_t* Announcement)
 	DWORD r_esp = 0;
 	__asm
 	{
-		//±£´æ¶ÑÕ»¼Ä´æÆ÷
+		//ä¿å­˜å †æ ˆå¯„å­˜å™¨
 		mov r_esp, esp
 
 		//654B85B1 | .  8D85 30FFFFFF lea eax, [local.52]    //  lea eax,dword ptr ss:[ebp-0xD0]
 		//654B85B7 | .  50            push eax
-		//654B85B8 | .E8 43FF2000   call WeChatWi.0F411450;  ·¢²¼Èº¹«¸æ
+		//654B85B8 | .E8 43FF2000   call WeChatWi.0F411450;  å‘å¸ƒç¾¤å…¬å‘Š
 		lea eax, bufferA
 		push eax
 		call callAdrress
 
-		//»Ö¸´¶ÑÕ»¼Ä´æÆ÷
+		//æ¢å¤å †æ ˆå¯„å­˜å™¨
 		mov eax, r_esp
 		mov esp, eax
 	}
 }
-/*==================================·¢ËÍÈº¹«¸æ½áÊø=======================================*/
+/*==================================å‘é€ç¾¤å…¬å‘Šç»“æŸ=======================================*/
 
 
 
-/*==================================ÍË³öÈºÁÄ¿ªÊ¼=======================================*/
+/*==================================é€€å‡ºç¾¤èŠå¼€å§‹=======================================*/
 void QuitRoom(wchar_t* chatroomwxid)
 {
-	// »ñÈ¡Î¢ĞÅ»ùÖ·
+	// è·å–å¾®ä¿¡åŸºå€
 	DWORD winAddress = GetWechatWinAddress();
 	DWORD dwCallAddr = winAddress + WX_QUIT_ROOM;
 
-	//¹¹ÔìÊı¾İ
+	//æ„é€ æ•°æ®
 	QuiteRoomStructWxid structWxid = { 0 };
 	structWxid.pWxid = chatroomwxid;
 	structWxid.length = wcslen(chatroomwxid);
@@ -224,12 +224,12 @@ void QuitRoom(wchar_t* chatroomwxid)
 		call dwCallAddr;
 	}
 }
-/*==================================ÍË³öÈºÁÄ½áÊø=======================================*/
+/*==================================é€€å‡ºç¾¤èŠç»“æŸ=======================================*/
 
-/*==================================ĞŞ¸ÄÈºÃû³Æ¿ªÊ¼=======================================*/
+/*==================================ä¿®æ”¹ç¾¤åç§°å¼€å§‹=======================================*/
 void SetRoomName(wchar_t* roomwxid, wchar_t* roomname)
 {
-	// »ñÈ¡Î¢ĞÅ»ùÖ·
+	// è·å–å¾®ä¿¡åŸºå€
 	DWORD winAddress = GetWechatWinAddress();
 	
 	SetRoomNameStruct pRoomwxid = { 0 };
@@ -255,12 +255,12 @@ void SetRoomName(wchar_t* roomwxid, wchar_t* roomname)
 		call dwCall1;
 	}
 }
-/*==================================ĞŞ¸ÄÈºÃû³Æ½áÊø=======================================*/
+/*==================================ä¿®æ”¹ç¾¤åç§°ç»“æŸ=======================================*/
 
-/*==================================·¢ËÍ°¬ÌØÏûÏ¢¿ªÊ¼=======================================*/
+/*==================================å‘é€è‰¾ç‰¹æ¶ˆæ¯å¼€å§‹=======================================*/
 void SendRoomAtMsg(wchar_t* chatroomid, wchar_t* memberwxid, wchar_t* membernickname, wchar_t* msg)
 {
-	// »ñÈ¡Î¢ĞÅ»ùÖ·
+	// è·å–å¾®ä¿¡åŸºå€
 	DWORD winAddress = GetWechatWinAddress();
 	DWORD callAddress_SendText = winAddress + SEND_MESSAGE_CALL;
 
@@ -283,54 +283,54 @@ void SendRoomAtMsg(wchar_t* chatroomid, wchar_t* memberwxid, wchar_t* membernick
 	roomAt.at_end1 = roomAt.at_WxidList + 5 * 4;
 	roomAt.at_end2 = roomAt.at_end1;
 
-	//¶¨ÒåÒ»¸ö»º³åÇø
+	//å®šä¹‰ä¸€ä¸ªç¼“å†²åŒº
 	BYTE buff[0x81C] = { 0 };
 
-	//Ö´ĞĞ»ã±àµ÷ÓÃ
+	//æ‰§è¡Œæ±‡ç¼–è°ƒç”¨
 	__asm
 	{
 		lea edx, wxId
 
-		//´«µİ²ÎÊı
+		//ä¼ é€’å‚æ•°
 		push 0x1
 
 		lea eax, roomAt
 		push eax
 
-		//Î¢ĞÅÏûÏ¢ÄÚÈİ
+		//å¾®ä¿¡æ¶ˆæ¯å†…å®¹
 		lea ebx, wxMsg
 
 		push ebx
 		lea ecx, buff
 
-		//µ÷ÓÃº¯Êı
+		//è°ƒç”¨å‡½æ•°
 		call callAddress_SendText
 
-		//Æ½ºâ¶ÑÕ»
+		//å¹³è¡¡å †æ ˆ
 		add esp, 0xC
 	}
 }
-/*==================================·¢ËÍ°¬ÌØÏûÏ¢½áÊø=======================================*/
+/*==================================å‘é€è‰¾ç‰¹æ¶ˆæ¯ç»“æŸ=======================================*/
 
 
-/*==================================É¾³ıÈº³ÉÔ±¿ªÊ¼=======================================*/
+/*==================================åˆ é™¤ç¾¤æˆå‘˜å¼€å§‹=======================================*/
 void DelRoomUser(wchar_t* roomid, wchar_t* memberwxid)
 {
-	// »ñÈ¡Î¢ĞÅ»ùÖ·
+	// è·å–å¾®ä¿¡åŸºå€
 	DWORD winAddress = GetWechatWinAddress();
 
-	//ÄÃµ½callµÄÊı¾İµØÖ·
+	//æ‹¿åˆ°callçš„æ•°æ®åœ°å€
 	DWORD dwCall1 = winAddress + WX_DEL_ROOM_USER_CALL1;
 	DWORD dwCall2 = winAddress + WX_DEL_ROOM_USER_CALL2;
 	DWORD dwCall3 = winAddress + WX_DEL_ROOM_USER_CALL3;
 
-	//×é×°ÈºID½á¹¹Ìå
+	//ç»„è£…ç¾¤IDç»“æ„ä½“
 	DelRoomIdStruct roomiddata;
 	roomiddata.roomid = roomid;
 	roomiddata.roomidLen = wcslen(roomid) + 1;
 	roomiddata.roomidMaxLen = (wcslen(roomid) + 1) * 2;
 
-	//×é×°Î¢ĞÅID½á¹¹Ìå
+	//ç»„è£…å¾®ä¿¡IDç»“æ„ä½“
 	wchar_t wxidbuff[0xD0] = { 0 };
 	DWORD* dwBuff = (DWORD*)&wxidbuff;
 	dwBuff[0] = (DWORD)memberwxid;
@@ -345,7 +345,7 @@ void DelRoomUser(wchar_t* roomid, wchar_t* memberwxid)
 	dwDatabuf[1] = dwDatabuf[0] + 0x14;
 	dwDatabuf[2] = dwDatabuf[0] + 0x14;
 
-	//µ÷ÓÃÉ¾³ıÈº³ÉÔ±call
+	//è°ƒç”¨åˆ é™¤ç¾¤æˆå‘˜call
 	__asm
 	{
 		pushad;
@@ -362,20 +362,20 @@ void DelRoomUser(wchar_t* roomid, wchar_t* memberwxid)
 		popad;
 	}
 }
-/*==================================É¾³ıÈº³ÉÔ±½áÊø=======================================*/
+/*==================================åˆ é™¤ç¾¤æˆå‘˜ç»“æŸ=======================================*/
 
 
-/*==================================´´½¨ÈºÁÄ¿ªÊ¼=======================================*/
+/*==================================åˆ›å»ºç¾¤èŠå¼€å§‹=======================================*/
 void CreateRoom(wchar_t *wxid1, wchar_t *wxid2)
 {
-	// »ñÈ¡Î¢ĞÅ»ùÖ·
+	// è·å–å¾®ä¿¡åŸºå€
 	DWORD winAddress = GetWechatWinAddress();
 
-	//µ÷ÓÃcall
+	//è°ƒç”¨call
 	DWORD dwParam = winAddress + WX_CREATE_ROOM_PARAM;
 	DWORD dwCall = winAddress + WX_CREATE_ROOM_CALL;
 
-	//×é×°Î¢ĞÅID½á¹¹Ìå
+	//ç»„è£…å¾®ä¿¡IDç»“æ„ä½“
 	wchar_t wxidbuff[0xD0] = { 0 };
 	DWORD* dwBuff = (DWORD*)&wxidbuff;
 	dwBuff[0] = (DWORD)wxid1;
@@ -395,7 +395,7 @@ void CreateRoom(wchar_t *wxid1, wchar_t *wxid2)
 	dwDatabuf[1] = dwDatabuf[0] + 0x28;
 	dwDatabuf[2] = dwDatabuf[0] + 0x28;
 	
-	//»ñÈ¡Èº³ÉÔ±
+	//è·å–ç¾¤æˆå‘˜
 	__asm {
 		sub esp, 0x14
 		mov ecx, dwParam
@@ -404,4 +404,4 @@ void CreateRoom(wchar_t *wxid1, wchar_t *wxid2)
 		call dwCall
 	}
 }
-/*==================================´´½¨ÈºÁÄ½áÊø=======================================*/
+/*==================================åˆ›å»ºç¾¤èŠç»“æŸ=======================================*/

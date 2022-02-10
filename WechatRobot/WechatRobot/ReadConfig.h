@@ -192,7 +192,7 @@ void Config::Add(const std::string& in_key, const T& value)
 }
 
 /*
-ÅäÖÃ´¢´æ
+Ã…Ã¤Ã–ÃƒÂ´Â¢Â´Ã¦
 */
 struct ConfigStruct
 {

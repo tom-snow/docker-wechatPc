@@ -1,11 +1,11 @@
 #pragma once
 #include "Config.h"
 
-// 界面触发回调
+// 鐣岄潰瑙﹀彂鍥炶皟
 INT_PTR CALLBACK Dlgproc(_In_ HWND hwndDlg, _In_ UINT uMsg, _In_ WPARAM wParam, _In_ LPARAM lParam);
-// 显示界面
+// 鏄剧ず鐣岄潰
 DWORD WINAPI ShowDialog(HMODULE hModule);
-// 监控微信
+// 鐩戞帶寰俊
 DWORD WINAPI Monitor(HMODULE hModule);
-// 监控WebSocket
+// 鐩戞帶WebSocket
 DWORD WINAPI WebSocketClientMonitor(HMODULE hModule);

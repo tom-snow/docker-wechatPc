@@ -9,15 +9,15 @@
 #include "HPSocket.h"
 
 
-// ·¢ËÍÊı¾İ
+// å‘é€æ•°æ®
 void WsServerSend(CONNID dwConnID, char *body);
-// ½ÓÊÕÊı¾İ
+// æ¥æ”¶æ•°æ®
 void WsServerRecvCallback(CONNID dwConnID, char *data);
-// ¼àÌı¶Ë¿Ú
+// ç›‘å¬ç«¯å£
 BOOL WsServerListen();
-// ³õÊ¼»¯
+// åˆå§‹åŒ–
 void WsServerInit();
-// ¹Ø±Õ¼àÌı
+// å…³é—­ç›‘å¬
 void WsServerClose();
 
 /* Listener Class */

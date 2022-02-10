@@ -2,7 +2,7 @@
 
 #include <Windows.h>
 
-/*Í·ÎÄ¼þÉùÃ÷*/
+/*å¤´æ–‡ä»¶å£°æ˜Ž*/
 typedef LONG NTSTATUS;
 #define STATUS_INFO_LENGTH_MISMATCH ((NTSTATUS)0xC0000004L)
 #define NT_SUCCESS(Status) ((NTSTATUS)(Status) >= 0)

@@ -12,14 +12,14 @@
 
 using namespace std;
 
-// ÏûÏ¢½á¹¹Ìå
+// æ¶ˆæ¯ç»“æ„ä½“
 struct wxMessageStruct
 {
 	wchar_t * text;
 	DWORD textLength;
 	DWORD textLen;
 };
-// ·¢ËÍXMLÏûÏ¢½á¹¹
+// å‘é€XMLæ¶ˆæ¯ç»“æ„
 struct SendXmlCardWxString
 {
 	wchar_t * pStr;
@@ -27,14 +27,14 @@ struct SendXmlCardWxString
 	DWORD strMaxLen;
 	char fillbuff[0x8] = { 0 };
 };
-//·¢ËÍÍ¼Æ¬µÄ½á¹¹Ìå
+//å‘é€å›¾ç‰‡çš„ç»“æ„ä½“
 struct SendImageWxidStruct
 {
 	wchar_t* pWxid;
 	DWORD length = 0;
 	DWORD maxLength = 0;
 };
-//·¢ËÍÍ¼Æ¬µÄ½á¹¹Ìå
+//å‘é€å›¾ç‰‡çš„ç»“æ„ä½“
 struct SendImageFileStruct
 {
 	wchar_t* filePath;
@@ -42,7 +42,7 @@ struct SendImageFileStruct
 	DWORD maxLength = 0;
 	char fillbuff[0x18] = { 0 };
 };
-//·¢ËÍxmlÎÄÕÂÄÚÈİ½á¹¹Ìå
+//å‘é€xmlæ–‡ç« å†…å®¹ç»“æ„ä½“
 struct SendXmlStruct
 {
 	wchar_t* content;
@@ -50,7 +50,7 @@ struct SendXmlStruct
 	DWORD strMaxLen;
 	char fillbuff[0x8] = { 0 };
 };
-//·¢ËÍxmlÎÄÕÂ½ÓÊÕÈËÎ¢ĞÅID½á¹¹Ìå
+//å‘é€xmlæ–‡ç« æ¥æ”¶äººå¾®ä¿¡IDç»“æ„ä½“
 struct SendXmlWxidStruct
 {
 	wchar_t* wxid;
@@ -58,7 +58,7 @@ struct SendXmlWxidStruct
 	DWORD wxidMaxLen;
 	char file[0x8] = { 0 };
 };
-//·¢ËÍxmlÎÄÕÂ·¢ËÍÈËÎ¢ĞÅID½á¹¹Ìå
+//å‘é€xmlæ–‡ç« å‘é€äººå¾®ä¿¡IDç»“æ„ä½“
 struct SendXmlFromWxidStruct
 {
 	wchar_t* wxid;
@@ -66,7 +66,7 @@ struct SendXmlFromWxidStruct
 	DWORD wxidMaxLen;
 	char file[0x8] = { 0 };
 };
-// ·¢ËÍxmlÎÄÕÂ±¾µØÍ¼Æ¬½á¹¹Ìå
+// å‘é€xmlæ–‡ç« æœ¬åœ°å›¾ç‰‡ç»“æ„ä½“
 struct SendXmlImageStruct
 {
 	wchar_t* filePath;
@@ -74,14 +74,14 @@ struct SendXmlImageStruct
 	DWORD pathMaxLen;
 	char file[0x18] = { 0 };
 };
-//·¢ËÍ¸½¼şÎÄ¼şÎ¢ĞÅID
+//å‘é€é™„ä»¶æ–‡ä»¶å¾®ä¿¡ID
 struct SendAttachWxidStruct
 {
 	wchar_t* str;
 	DWORD strLen = 0;
 	DWORD maxLen = 0;
 };
-//·¢ËÍ¸½¼şÎÄ¼ş½á¹¹Ìå
+//å‘é€é™„ä»¶æ–‡ä»¶ç»“æ„ä½“
 struct SendAttachFileStruct
 {
 	wchar_t* str;
@@ -90,15 +90,15 @@ struct SendAttachFileStruct
 	char file[0x18] = { 0 };
 };
 
-// ·¢ËÍÎÄ±¾ÏûÏ¢
+// å‘é€æ–‡æœ¬æ¶ˆæ¯
 VOID SendTextMessage(wchar_t *wxid, wchar_t *message);
-// ¼àÌıÏûÏ¢
+// ç›‘å¬æ¶ˆæ¯
 VOID ListenMessage();
-// ·¢ËÍXMLÃûÆ¬
+// å‘é€XMLåç‰‡
 void SendXmlCardMessage(wchar_t* RecverWxid, wchar_t* xmlData);
-// ·¢ËÍÍ¼Æ¬
+// å‘é€å›¾ç‰‡
 void SendImageMessage(wchar_t* wxid, wchar_t* filepath);
-// ·¢ËÍxml
+// å‘é€xml
 void SendXmlMessage(DWORD type, wchar_t* recverWxid, wchar_t* fromWxid, wchar_t* filePath, wchar_t* xmlData);
-// ·¢ËÍ¸½¼şÎÄ¼ş
+// å‘é€é™„ä»¶æ–‡ä»¶
 void SendFileMessage(wchar_t* wxid, wchar_t* filepath);

@@ -18,22 +18,22 @@
 #include <string.h>
 #include <atlstr.h>
 
-// ·¢ËÍÒÑÍË³öÏûÏ¢
+// å‘é€å·²é€€å‡ºæ¶ˆæ¯
 bool Receive::SendLogout(Package *package)
 {
-	// ³õÊ¼»¯Êý¾Ý°ü
+	// åˆå§‹åŒ–æ•°æ®åŒ…
 	if (!package) {
 		package = new Package();
 	}
-	// ÉèÖÃ²Ù×÷ÀàÐÍ
+	// è®¾ç½®æ“ä½œç±»åž‹
 	package->SetOpCode(OpCode::OPCODE_WECHAT_QUIT);
-	// ÉèÖÃbody
-	rapidjson::Value newBody(rapidjson::kObjectType); // ´´½¨Ò»¸öObjectÀàÐÍµÄÔªËØ
-	// ½ø³ÌID
+	// è®¾ç½®body
+	rapidjson::Value newBody(rapidjson::kObjectType); // åˆ›å»ºä¸€ä¸ªObjectç±»åž‹çš„å…ƒç´ 
+	// è¿›ç¨‹ID
 	rapidjson::Value processId(rapidjson::kNumberType);
 	processId.SetInt(GetCurrentProcessId());
 	newBody.AddMember("processId", processId, package->json.GetAllocator());
-	// µÇÂ¼×´Ì¬
+	// ç™»å½•çŠ¶æ€
 	rapidjson::Value loginStatus(rapidjson::kNumberType);
 	loginStatus.SetInt(CheckLoginStatus());
 	newBody.AddMember("loginStatus", loginStatus, package->json.GetAllocator());
@@ -43,21 +43,21 @@ bool Receive::SendLogout(Package *package)
 	return TRUE;
 }
 
-// ·¢ËÍµÇÂ¼ÐÅÏ¢
+// å‘é€ç™»å½•ä¿¡æ¯
 bool Receive::GetLoginInfo(Package *package)
 {
-	// ·¢ËÍÏêÇé
+	// å‘é€è¯¦æƒ…
 	SendWechatUser(package);
 
 	return TRUE;
 }
 
-// »ñÈ¡µÇÂ¼×´Ì¬
+// èŽ·å–ç™»å½•çŠ¶æ€
 bool Receive::GetLoginStatus(Package *package)
 {
-	// ÉèÖÃbody
-	rapidjson::Value newBody(rapidjson::kObjectType); // ´´½¨Ò»¸öObjectÀàÐÍµÄÔªËØ
-	// µÇÂ¼×´Ì¬
+	// è®¾ç½®body
+	rapidjson::Value newBody(rapidjson::kObjectType); // åˆ›å»ºä¸€ä¸ªObjectç±»åž‹çš„å…ƒç´ 
+	// ç™»å½•çŠ¶æ€
 	rapidjson::Value loginStatus(rapidjson::kNumberType);
 	loginStatus.SetInt(CheckLoginStatus());
 	newBody.AddMember("loginStatus", loginStatus, package->json.GetAllocator());
@@ -66,17 +66,17 @@ bool Receive::GetLoginStatus(Package *package)
 	WsClientSend((char*)pack.GetString());
 	return TRUE;
 }
-// ÍË³öµÇÂ¼
+// é€€å‡ºç™»å½•
 bool Receive::Logout(Package *package)
 {
-	// ÍË³öµÇÂ¼²Ù×÷
+	// é€€å‡ºç™»å½•æ“ä½œ
 	DoLogout();
-	// ·¢ËÍÒÑÍË³öÏûÏ¢
+	// å‘é€å·²é€€å‡ºæ¶ˆæ¯
 	Receive::SendLogout(package);
 	
 	return TRUE;
 }
-// ·¢ËÍÎÄ±¾ÏûÏ¢
+// å‘é€æ–‡æœ¬æ¶ˆæ¯
 bool Receive::MessageSendText(Package *package)
 {
 	Value *pBody = package->GetBody();
@@ -87,12 +87,12 @@ bool Receive::MessageSendText(Package *package)
 	Value& wxid = body["wxid"];
 	Value& content = body["content"];
 
-	// ·¢ËÍ
+	// å‘é€
 	SendTextMessage(UTF8ToUnicode((char*)wxid.GetString()), UTF8ToUnicode((char*)content.GetString()));
 	
 	return TRUE;
 }
-// ·¢ËÍÍ¼Æ¬ÏûÏ¢
+// å‘é€å›¾ç‰‡æ¶ˆæ¯
 bool Receive::MessageSendImage(Package *package)
 {
 	Value *pBody = package->GetBody();
@@ -103,12 +103,12 @@ bool Receive::MessageSendImage(Package *package)
 	Value& wxid = body["wxid"];
 	Value& imageUrl = body["imageUrl"];
 
-	// ·¢ËÍ
+	// å‘é€
 	SendImageMessage(UTF8ToUnicode((char*)wxid.GetString()), UTF8ToUnicode((char*)imageUrl.GetString()));
 
 	return TRUE;
 }
-// ·¢ËÍ¸½¼þÏûÏ¢
+// å‘é€é™„ä»¶æ¶ˆæ¯
 bool Receive::MessageSendFile(Package *package)
 {
 	Value *pBody = package->GetBody();
@@ -119,12 +119,12 @@ bool Receive::MessageSendFile(Package *package)
 	Value& wxid = body["wxid"];
 	Value& fileUrl = body["fileUrl"];
 
-	// ·¢ËÍ
+	// å‘é€
 	SendFileMessage(UTF8ToUnicode((char*)wxid.GetString()), UTF8ToUnicode((char*)fileUrl.GetString()));
 
 	return TRUE;
 }
-// ·¢ËÍÃûÆ¬ÏûÏ¢
+// å‘é€åç‰‡æ¶ˆæ¯
 bool Receive::MessageSendCard(Package *package)
 {
 	Value *pBody = package->GetBody();
@@ -135,12 +135,12 @@ bool Receive::MessageSendCard(Package *package)
 	Value& wxid = body["wxid"];
 	Value& xml = body["xml"];
 
-	// ·¢ËÍ
+	// å‘é€
 	SendXmlCardMessage(UTF8ToUnicode((char*)wxid.GetString()), UTF8ToUnicode((char*)xml.GetString()));
 
 	return TRUE;
 }
-// ·¢ËÍxmlÏûÏ¢
+// å‘é€xmlæ¶ˆæ¯
 bool Receive::MessageSendXml(Package *package)
 {
 	Value *pBody = package->GetBody();
@@ -154,12 +154,12 @@ bool Receive::MessageSendXml(Package *package)
 	Value& imageUrl = body["imageUrl"];
 	Value& xml = body["xml"];
 
-	// ·¢ËÍ
+	// å‘é€
 	SendXmlMessage(type.GetInt(), UTF8ToUnicode((char*)wxid.GetString()), UTF8ToUnicode((char*)fromWxid.GetString()), UTF8ToUnicode((char*)imageUrl.GetString()), UTF8ToUnicode((char*)xml.GetString()));
 
 	return TRUE;
 }
-// wxid¼ÓºÃÓÑ
+// wxidåŠ å¥½å‹
 bool Receive::FriendAdd(Package *package)
 {
 	Value *pBody = package->GetBody();
@@ -170,12 +170,12 @@ bool Receive::FriendAdd(Package *package)
 	Value& wxid = body["wxid"];
 	Value& message = body["message"];
 
-	// ·¢ËÍ
+	// å‘é€
 	AddFriend(UTF8ToUnicode((char*)wxid.GetString()), UTF8ToUnicode((char*)message.GetString()));
 
 	return TRUE;
 }
-// v1¼ÓºÃÓÑ
+// v1åŠ å¥½å‹
 bool Receive::FriendAddFromV1(Package *package)
 {
 	Value *pBody = package->GetBody();
@@ -186,12 +186,12 @@ bool Receive::FriendAddFromV1(Package *package)
 	Value& v1 = body["v1"];
 	Value& message = body["message"];
 
-	// ·¢ËÍ
+	// å‘é€
 	AddUserFromCard(UTF8ToUnicode((char*)v1.GetString()), UTF8ToUnicode((char*)message.GetString()));
 
 	return TRUE;
 }
-// É¾³ýºÃÓÑ
+// åˆ é™¤å¥½å‹
 bool Receive::FriendDelete(Package *package)
 {
 	Value *pBody = package->GetBody();
@@ -201,12 +201,12 @@ bool Receive::FriendDelete(Package *package)
 	}
 	Value& wxid = body["wxid"];
 
-	// ·¢ËÍ
+	// å‘é€
 	DeleteUser(UTF8ToUnicode((char*)wxid.GetString()));
 
 	return TRUE;
 }
-// v1+v2Í¬ÒâºÃÓÑÇëÇó
+// v1+v2åŒæ„å¥½å‹è¯·æ±‚
 bool Receive::FriendVerify(Package *package)
 {
 	Value *pBody = package->GetBody();
@@ -217,19 +217,19 @@ bool Receive::FriendVerify(Package *package)
 	Value& v1 = body["v1"];
 	Value& v2 = body["v2"];
 
-	// ·¢ËÍ
+	// å‘é€
 	VerifyFriend(UTF8ToUnicode((char*)v1.GetString()), UTF8ToUnicode((char*)v2.GetString()));
 
 	return TRUE;
 }
-// ºÃÓÑÁÐ±í
+// å¥½å‹åˆ—è¡¨
 bool Receive::FriendList(Package *package)
 {
-	// ·¢ËÍºÃÓÑÁÐ±í
+	// å‘é€å¥½å‹åˆ—è¡¨
 	selectFriendList();
 	return TRUE;
 }
-// ÉèÖÃºÃÓÑ±¸×¢
+// è®¾ç½®å¥½å‹å¤‡æ³¨
 bool Receive::FriendRemark(Package *package)
 {
 	Value *pBody = package->GetBody();
@@ -243,7 +243,7 @@ bool Receive::FriendRemark(Package *package)
 	SetRemark(UTF8ToUnicode((char*)wxid.GetString()), UTF8ToUnicode((char*)remark.GetString()));
 	return TRUE;
 }
-// ´´½¨ÈºÁÄ
+// åˆ›å»ºç¾¤èŠ
 bool Receive::RoomCreate(Package *package)
 {
 	Value *pBody = package->GetBody();
@@ -254,12 +254,12 @@ bool Receive::RoomCreate(Package *package)
 	Value& wxid1 = body["wxid1"];
 	Value& wxid2 = body["wxid2"];
 
-	// ·¢ËÍ
+	// å‘é€
 	CreateRoom(UTF8ToUnicode((char*)wxid1.GetString()), UTF8ToUnicode((char*)wxid2.GetString()));
 
 	return TRUE;
 }
-// ÐÞ¸ÄÈºÃû³Æ
+// ä¿®æ”¹ç¾¤åç§°
 bool Receive::RoomEditName(Package *package)
 {
 	Value *pBody = package->GetBody();
@@ -270,12 +270,12 @@ bool Receive::RoomEditName(Package *package)
 	Value& roomId = body["roomId"];
 	Value& roomName = body["roomName"];
 
-	// ·¢ËÍ
+	// å‘é€
 	SetRoomName(UTF8ToUnicode((char*)roomId.GetString()), UTF8ToUnicode((char*)roomName.GetString()));
 
 	return TRUE;
 }
-// ·¢ËÍÈº¹«¸æ
+// å‘é€ç¾¤å…¬å‘Š
 bool Receive::RoomAnnouncement(Package *package)
 {
 	Value *pBody = package->GetBody();
@@ -286,12 +286,12 @@ bool Receive::RoomAnnouncement(Package *package)
 	Value& roomId = body["roomId"];
 	Value& announcement = body["announcement"];
 
-	// ·¢ËÍ
+	// å‘é€
 	SetRoomAnnouncement(UTF8ToUnicode((char*)roomId.GetString()), UTF8ToUnicode((char*)announcement.GetString()));
 
 	return TRUE;
 }
-// »ñÈ¡Èº³ÉÔ±ÁÐ±í
+// èŽ·å–ç¾¤æˆå‘˜åˆ—è¡¨
 bool Receive::RoomMemberList(Package *package)
 {
 	Value *pBody = package->GetBody();
@@ -301,12 +301,12 @@ bool Receive::RoomMemberList(Package *package)
 	}
 	Value& roomId = body["roomId"];
 
-	// ·¢ËÍ
+	// å‘é€
 	GetRoomUserList(UTF8ToUnicode((char*)roomId.GetString()));
 
 	return TRUE;
 }
-// À­ºÃÓÑÈëÈº
+// æ‹‰å¥½å‹å…¥ç¾¤
 bool Receive::RoomAddMember(Package *package)
 {
 	Value *pBody = package->GetBody();
@@ -317,12 +317,12 @@ bool Receive::RoomAddMember(Package *package)
 	Value& roomId = body["roomId"];
 	Value& wxid = body["wxid"];
 
-	// ·¢ËÍ
+	// å‘é€
 	AddRoomUser(UTF8ToUnicode((char*)roomId.GetString()), UTF8ToUnicode((char*)wxid.GetString()));
 
 	return TRUE;
 }
-// É¾³ýÈº³ÉÔ±
+// åˆ é™¤ç¾¤æˆå‘˜
 bool Receive::RoomDeleteMember(Package *package)
 {
 	Value *pBody = package->GetBody();
@@ -333,12 +333,12 @@ bool Receive::RoomDeleteMember(Package *package)
 	Value& roomId = body["roomId"];
 	Value& wxid = body["wxid"];
 
-	// ·¢ËÍ
+	// å‘é€
 	DelRoomUser(UTF8ToUnicode((char*)roomId.GetString()), UTF8ToUnicode((char*)wxid.GetString()));
 
 	return TRUE;
 }
-// °¬ÌØÈº³ÉÔ±
+// è‰¾ç‰¹ç¾¤æˆå‘˜
 bool Receive::RoomAtMember(Package *package)
 {
 	Value *pBody = package->GetBody();
@@ -351,12 +351,12 @@ bool Receive::RoomAtMember(Package *package)
 	Value& nickname = body["nickname"];
 	Value& message = body["message"];
 
-	// ·¢ËÍ
+	// å‘é€
 	SendRoomAtMsg(UTF8ToUnicode((char*)roomId.GetString()), UTF8ToUnicode((char*)wxid.GetString()), UTF8ToUnicode((char*)nickname.GetString()), UTF8ToUnicode((char*)message.GetString()));
 
 	return TRUE;
 }
-// ÍË³öÈºÁÄ
+// é€€å‡ºç¾¤èŠ
 bool Receive::RoomQuit(Package *package)
 {
 	Value *pBody = package->GetBody();
@@ -366,12 +366,12 @@ bool Receive::RoomQuit(Package *package)
 	}
 	Value& roomId = body["roomId"];
 
-	// ·¢ËÍ
+	// å‘é€
 	QuitRoom(UTF8ToUnicode((char*)roomId.GetString()));
 
 	return TRUE;
 }
-// ÊÕ¿î
+// æ”¶æ¬¾
 bool Receive::TransferRecv(Package *package)
 {
 	Value *pBody = package->GetBody();
@@ -382,152 +382,152 @@ bool Receive::TransferRecv(Package *package)
 	Value& wxid = body["wxid"];
 	Value& transferId = body["transferId"];
 
-	// ·¢ËÍ
+	// å‘é€
 	CollectMoney(UTF8ToUnicode((char*)wxid.GetString()), UTF8ToUnicode((char*)transferId.GetString()));
 
 	return TRUE;
 }
 
-// Êý¾Ý°ü´¦Àí
+// æ•°æ®åŒ…å¤„ç†
 int Receive::Handle(Package *package)
 {
 	int opCode = package->GetOpCode();
 
-	int result = 0;  // 0=Õý³£,1=²»Ö§³ÖµÄÖ¸Áî,2=Òì³£
-	bool doResult = FALSE;  // Ö´ÐÐ½á¹û
+	int result = 0;  // 0=æ­£å¸¸,1=ä¸æ”¯æŒçš„æŒ‡ä»¤,2=å¼‚å¸¸
+	bool doResult = FALSE;  // æ‰§è¡Œç»“æžœ
 
-	// »ñÈ¡µÇÂ¼ÏêÇé
+	// èŽ·å–ç™»å½•è¯¦æƒ…
 	if (opCode == OpCode::OPCODE_LOGIN_INFO) {
 		doResult = this->GetLoginInfo(package);
 	}
-	// »ñÈ¡µÇÂ¼×´Ì¬
+	// èŽ·å–ç™»å½•çŠ¶æ€
 	else if (opCode == OpCode::OPCODE_WECHAT_GET_LOGIN_STATUS) {
 		doResult = this->GetLoginStatus(package);
 	}
-	// ÍË³öµÇÂ¼
+	// é€€å‡ºç™»å½•
 	else if (opCode == OpCode::OPCODE_WECHAT_QUIT) {
 		doResult = this->Logout(package);
 	}
-	// ·¢ËÍÎÄ±¾ÏûÏ¢
+	// å‘é€æ–‡æœ¬æ¶ˆæ¯
 	else if (opCode == OpCode::OPCODE_MESSAGE_SEND_TEXT) {
 		doResult = this->MessageSendText(package);
 	}
-	// ·¢ËÍÍ¼Æ¬ÏûÏ¢
+	// å‘é€å›¾ç‰‡æ¶ˆæ¯
 	else if (opCode == OpCode::OPCODE_MESSAGE_SEND_IMAGE) {
 		doResult = this->MessageSendImage(package);
 	}
-	// ·¢ËÍ¸½¼þÏûÏ¢
+	// å‘é€é™„ä»¶æ¶ˆæ¯
 	else if (opCode == OpCode::OPCODE_MESSAGE_SEND_FILE) {
 		doResult = this->MessageSendFile(package);
 	}
-	// ·¢ËÍÃûÆ¬ÏûÏ¢
+	// å‘é€åç‰‡æ¶ˆæ¯
 	else if (opCode == OpCode::OPCODE_MESSAGE_SEND_CARD) {
 		doResult = this->MessageSendCard(package);
 	}
-	// ·¢ËÍxmlÏûÏ¢
+	// å‘é€xmlæ¶ˆæ¯
 	else if (opCode == OpCode::OPCODE_MESSAGE_SEND_XML) {
 		doResult = this->MessageSendXml(package);
 	}
-	// »ñÈ¡ºÃÓÑÁÐ±í
+	// èŽ·å–å¥½å‹åˆ—è¡¨
 	else if (opCode == OpCode::OPCODE_FRIEND_LIST) {
 		doResult = this->FriendList(package);
 	}
-	// »ñÈ¡ºÃÓÑÁÐ±í
+	// èŽ·å–å¥½å‹åˆ—è¡¨
 	else if (opCode == OpCode::OPCODE_FRIEND_REMARK) {
 		doResult = this->FriendRemark(package);
 	}
-	// wxid¼ÓºÃÓÑ
+	// wxidåŠ å¥½å‹
 	else if (opCode == OpCode::OPCODE_FRIEND_ADD) {
 		doResult = this->FriendAdd(package);
 	}
-	// v1¼ÓºÃÓÑ
+	// v1åŠ å¥½å‹
 	else if (opCode == OpCode::OPCODE_FRIEND_ADD_FROM_V1) {
 		doResult = this->FriendAddFromV1(package);
 	}
-	// É¾³ýºÃÓÑ
+	// åˆ é™¤å¥½å‹
 	else if (opCode == OpCode::OPCODE_FRIEND_DELETE) {
 		doResult = this->FriendDelete(package);
 	}
-	// v1+v2Í¬ÒâºÃÓÑÇëÇó
+	// v1+v2åŒæ„å¥½å‹è¯·æ±‚
 	else if (opCode == OpCode::OPCODE_FRIEND_VERIFY) {
 		doResult = this->FriendVerify(package);
 	}
-	// ´´½¨ÈºÁÄ
+	// åˆ›å»ºç¾¤èŠ
 	else if (opCode == OpCode::OPCODE_ROOM_CREATE) {
 		doResult = this->RoomCreate(package);
 	}
-	// ÐÞ¸ÄÈºÃû³Æ
+	// ä¿®æ”¹ç¾¤åç§°
 	else if (opCode == OpCode::OPCODE_ROOM_EDIT_NAME) {
 		doResult = this->RoomEditName(package);
 	}
-	// ·¢ËÍÈº¹«¸æ
+	// å‘é€ç¾¤å…¬å‘Š
 	else if (opCode == OpCode::OPCODE_ROOM_ANNOUNCEMENT) {
 		doResult = this->RoomAnnouncement(package);
 	}
-	// »ñÈ¡Èº³ÉÔ±ÁÐ±í
+	// èŽ·å–ç¾¤æˆå‘˜åˆ—è¡¨
 	else if (opCode == OpCode::OPCODE_ROOM_MEMBER_LIST) {
 		doResult = this->RoomMemberList(package);
 	}
-	// À­ºÃÓÑÈëÈº
+	// æ‹‰å¥½å‹å…¥ç¾¤
 	else if (opCode == OpCode::OPCODE_ROOM_ADD_MEMBER) {
 		doResult = this->RoomAddMember(package);
 	}
-	// É¾³ýÈº³ÉÔ±
+	// åˆ é™¤ç¾¤æˆå‘˜
 	else if (opCode == OpCode::OPCODE_ROOM_DELETE_MEMBER) {
 		doResult = this->RoomDeleteMember(package);
 	}
-	// °¬ÌØÈº³ÉÔ±
+	// è‰¾ç‰¹ç¾¤æˆå‘˜
 	else if (opCode == OpCode::OPCODE_ROOM_AT_MEMBER) {
 		doResult = this->RoomAtMember(package);
 	}
-	// ÍË³öÈºÁÄ
+	// é€€å‡ºç¾¤èŠ
 	else if (opCode == OpCode::OPCODE_ROOM_QUIT) {
 		doResult = this->RoomQuit(package);
 	}
-	// ÊÕ¿î
+	// æ”¶æ¬¾
 	else if (opCode == OpCode::OPCODE_TRANSFER_RECV) {
 		doResult = this->TransferRecv(package);
 	}
 	else {
-		result = 1;   // 0=Õý³£,1=²»Ö§³ÖµÄÖ¸Áî,2=Òì³£
+		result = 1;   // 0=æ­£å¸¸,1=ä¸æ”¯æŒçš„æŒ‡ä»¤,2=å¼‚å¸¸
 	}
 
-	// Èç¹ûÊÇÕý³£µÄ¾ÍÖ±½Ó·µ»Ø
+	// å¦‚æžœæ˜¯æ­£å¸¸çš„å°±ç›´æŽ¥è¿”å›ž
 	if (doResult == TRUE) {
 		return result;
 	}
 
-	// ²Ù×÷Ê§°ÜµÄ
+	// æ“ä½œå¤±è´¥çš„
 	if (result == 0) {  // doResult == FALSE && result == 0
-		result = 2;  // 0=Õý³£,1=²»Ö§³ÖµÄÖ¸Áî,2=Òì³£
+		result = 2;  // 0=æ­£å¸¸,1=ä¸æ”¯æŒçš„æŒ‡ä»¤,2=å¼‚å¸¸
 	}
 
-	// Òì³£Ö¸Áî
+	// å¼‚å¸¸æŒ‡ä»¤
 	package->SetOpCode(OpCode::OPCODE_FAILURE);
-	// ÉèÖÃbody
-	rapidjson::Value newBody(rapidjson::kObjectType); // ´´½¨Ò»¸öObjectÀàÐÍµÄÔªËØ
-	// Ô´²Ù×÷Ö¸Áî
+	// è®¾ç½®body
+	rapidjson::Value newBody(rapidjson::kObjectType); // åˆ›å»ºä¸€ä¸ªObjectç±»åž‹çš„å…ƒç´ 
+	// æºæ“ä½œæŒ‡ä»¤
 	rapidjson::Value oldOpCode(rapidjson::kNumberType);
 	oldOpCode.SetInt(opCode);
 	newBody.AddMember("opCode", opCode, package->json.GetAllocator());
-	// ´íÎóÂë
+	// é”™è¯¯ç 
 	rapidjson::Value errorCode(rapidjson::kNumberType);
 	errorCode.SetInt(result);
 	newBody.AddMember("errorCode", errorCode, package->json.GetAllocator());
-	// ´íÎóÐÅÏ¢
+	// é”™è¯¯ä¿¡æ¯
 	rapidjson::Value errorMessage(rapidjson::kStringType);
 	if (result == 1) {
-		char str[] = "²»Ö§³ÖµÄÖ¸Áî";
+		char str[] = "ä¸æ”¯æŒçš„æŒ‡ä»¤";
 		errorMessage.SetString(GB2312ToUTF8(str), strlen(GB2312ToUTF8(str)));
 		newBody.AddMember("errorMessage", errorMessage, package->json.GetAllocator());
 	}
 	else if (result == 2) {
-		char str[] = "Ö´ÐÐÒì³££¬Çë¼ì²éÒµÎñ²ÎÊý£¡";
+		char str[] = "æ‰§è¡Œå¼‚å¸¸ï¼Œè¯·æ£€æŸ¥ä¸šåŠ¡å‚æ•°ï¼";
 		errorMessage.SetString(GB2312ToUTF8(str), strlen(GB2312ToUTF8(str)));
 		newBody.AddMember("errorMessage", errorMessage, package->json.GetAllocator());
 	}
 	else {
-		char str[] = "Î´ÖªµÄ´íÎó";
+		char str[] = "æœªçŸ¥çš„é”™è¯¯";
 		errorMessage.SetString(GB2312ToUTF8(str), strlen(GB2312ToUTF8(str)));
 		newBody.AddMember("errorMessage", errorMessage, package->json.GetAllocator());
 	}

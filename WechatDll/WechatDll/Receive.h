@@ -5,56 +5,56 @@
 class Receive
 {
 public:
-	// ·¢ËÍÒÑÍË³öÏûÏ¢
+	// å‘é€å·²é€€å‡ºæ¶ˆæ¯
 	static bool SendLogout(Package *package = NULL);
 
 protected:
-	// ·½·¨
-	// »ñÈ¡µÇÂ¼ÏêÇé
+	// æ–¹æ³•
+	// è·å–ç™»å½•è¯¦æƒ…
 	bool GetLoginInfo(Package *package);
-	// »ñÈ¡µÇÂ¼×´Ì¬
+	// è·å–ç™»å½•çŠ¶æ€
 	bool GetLoginStatus(Package *package);
-	// »ñÈ¡µÇÂ¼×´Ì¬
+	// è·å–ç™»å½•çŠ¶æ€
 	bool Logout(Package *package);
-	// ·¢ËÍÎÄ±¾ÏûÏ¢
+	// å‘é€æ–‡æœ¬æ¶ˆæ¯
 	bool MessageSendText(Package *package);
-	// ·¢ËÍÍ¼Æ¬ÏûÏ¢
+	// å‘é€å›¾ç‰‡æ¶ˆæ¯
 	bool MessageSendImage(Package *package);
-	// ·¢ËÍ¸½¼şÏûÏ¢
+	// å‘é€é™„ä»¶æ¶ˆæ¯
 	bool MessageSendFile(Package *package);
-	// ·¢ËÍÃûÆ¬ÏûÏ¢
+	// å‘é€åç‰‡æ¶ˆæ¯
 	bool MessageSendCard(Package *package);
-	// ·¢ËÍxmlÏûÏ¢
+	// å‘é€xmlæ¶ˆæ¯
 	bool MessageSendXml(Package *package);
-	// wxid¼ÓºÃÓÑ
+	// wxidåŠ å¥½å‹
 	bool FriendAdd(Package *package);
-	// v1¼ÓºÃÓÑ
+	// v1åŠ å¥½å‹
 	bool FriendAddFromV1(Package *package);
-	// É¾³ıºÃÓÑ
+	// åˆ é™¤å¥½å‹
 	bool FriendDelete(Package *package);
-	// v1+v2Í¬ÒâºÃÓÑÇëÇó
+	// v1+v2åŒæ„å¥½å‹è¯·æ±‚
 	bool FriendVerify(Package *package);
-	// ºÃÓÑÁĞ±í
+	// å¥½å‹åˆ—è¡¨
 	bool FriendList(Package *package);
-	// ÉèÖÃºÃÓÑ±¸×¢
+	// è®¾ç½®å¥½å‹å¤‡æ³¨
 	bool FriendRemark(Package *package);
-	// ´´½¨ÈºÁÄ
+	// åˆ›å»ºç¾¤èŠ
 	bool RoomCreate(Package *package);
-	// ĞŞ¸ÄÈºÃû³Æ
+	// ä¿®æ”¹ç¾¤åç§°
 	bool RoomEditName(Package *package);
-	// ·¢ËÍÈº¹«¸æ
+	// å‘é€ç¾¤å…¬å‘Š
 	bool RoomAnnouncement(Package *package);
-	// »ñÈ¡Èº³ÉÔ±ÁĞ±í
+	// è·å–ç¾¤æˆå‘˜åˆ—è¡¨
 	bool RoomMemberList(Package *package);
-	// À­ºÃÓÑÈëÈº
+	// æ‹‰å¥½å‹å…¥ç¾¤
 	bool RoomAddMember(Package *package);
-	// É¾³ıÈº³ÉÔ±
+	// åˆ é™¤ç¾¤æˆå‘˜
 	bool RoomDeleteMember(Package *package);
-	// °¬ÌØÈº³ÉÔ±
+	// è‰¾ç‰¹ç¾¤æˆå‘˜
 	bool RoomAtMember(Package *package);
-	// ÍË³öÈºÁÄ
+	// é€€å‡ºç¾¤èŠ
 	bool RoomQuit(Package *package);
-	// ÊÕ¿î
+	// æ”¶æ¬¾
 	bool TransferRecv(Package *package);
 public:
 	int Handle(Package *package);

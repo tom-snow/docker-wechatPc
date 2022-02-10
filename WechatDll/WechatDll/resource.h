@@ -1,6 +1,6 @@
 //{{NO_DEPENDENCIES}}
-// Microsoft Visual C++ ���ɵİ����ļ���
-// �� WechatDll.rc ʹ��
+// Microsoft Visual C++ 生成的包含文件。
+// 供 WechatDll.rc 使用
 //
 #define ID_WECHAT                       101
 #define ID_EXIT                         101

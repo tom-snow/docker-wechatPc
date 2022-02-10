@@ -14,37 +14,37 @@
 
 using namespace std;
 
-// »ñÈ¡DLLÂ·¾¶
+// è·å–DLLè·¯å¾„
 void GetDllPath(char *dllPath, int dllSize);
 
-// Ğ´ÈëÄÚ´æ
+// å†™å…¥å†…å­˜
 LPVOID writeMemory(HANDLE hProcess, char *path);
 
-// ¼ÓÔØDLL
+// åŠ è½½DLL
 INT_PTR loadLibrary(HANDLE hProcess, LPVOID dllAddress);
 
-// ²éÕÒ½ø³ÌID
+// æŸ¥æ‰¾è¿›ç¨‹ID
 DWORD ProcessNameFindPid(LPCSTR processName);
 
-// UTF-8µ½GB2312µÄ×ª»»
+// UTF-8åˆ°GB2312çš„è½¬æ¢
 char* UTF8ToGB2312(char* utf8);
-// GB2312µ½UTF-8µÄ×ª»»
+// GB2312åˆ°UTF-8çš„è½¬æ¢
 char* GB2312ToUTF8(char* gb2312);
-// ±àÂë×ª»»
+// ç¼–ç è½¬æ¢
 char* UnicodeToUtf8(wchar_t* unicode);
-// ±àÂë×ª»»
+// ç¼–ç è½¬æ¢
 wchar_t* UTF8ToUnicode(char* str);
-// char*×ªwchar*
+// char*è½¬wchar*
 wchar_t *CharToWChar(char *cStr);
-// wchar*×ªchar*
+// wchar*è½¬char*
 CHAR *WcharToChar(wchar_t *wStr);
-// »ñÈ¡Ëæ»úÊı
+// è·å–éšæœºæ•°
 int GetRand(int number);
-// »ñÈ¡Ê±¼ä´Á - ¾«ÇĞµ½ºÁÃë
+// è·å–æ—¶é—´æˆ³ - ç²¾åˆ‡åˆ°æ¯«ç§’
 long long CreateTimestamp();
-// ´´½¨Î¨Ò»Öµ
+// åˆ›å»ºå”¯ä¸€å€¼
 string CreateUniqueId();
-// »ñÈ¡µ±Ç°Ö´ĞĞÎÄ¼şµÄÄ¿Â¼
+// è·å–å½“å‰æ‰§è¡Œæ–‡ä»¶çš„ç›®å½•
 string GetExePath(void);
-// ¶ÁÈ¡ÅäÖÃÎÄ¼ş
+// è¯»å–é…ç½®æ–‡ä»¶
 string ReadConfig(string key);

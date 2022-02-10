@@ -1,6 +1,6 @@
 //{{NO_DEPENDENCIES}}
-// Microsoft Visual C++ ���ɵİ����ļ���
-// �� WechatRobot.rc ʹ��
+// Microsoft Visual C++ 生成的包含文件。
+// 供 WechatRobot.rc 使用
 //
 #define ID_INJECTION                    101
 #define ID_START_WECHAT                 1002

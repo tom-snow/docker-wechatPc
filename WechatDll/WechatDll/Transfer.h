@@ -1,6 +1,6 @@
 #pragma once
 
-// ÊÕ¿î½á¹¹Ìå
+// æ”¶æ¬¾ç»“æž„ä½“
 struct CllectMoneyStruct
 {
 	wchar_t* ptransferid;
@@ -15,7 +15,7 @@ struct CllectMoneyStruct
 
 using namespace std;
 
-// ÊÕ¿î
+// æ”¶æ¬¾
 void CollectMoney(wchar_t* wxid, wchar_t* transferid);
-// ×Ô¶¯ÊÕ¿î
+// è‡ªåŠ¨æ”¶æ¬¾
 void AutoCollectMoney(wchar_t* wxid, wstring msg);

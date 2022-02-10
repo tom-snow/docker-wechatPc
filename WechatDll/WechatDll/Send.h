@@ -7,12 +7,12 @@
 
 using namespace rapidjson;
 
-// ºÃÓÑÁĞ±í
+// å¥½å‹åˆ—è¡¨
 typedef struct FriendList
 {
 	CHAR wxid[0x100] = { 0 };
 	CHAR username[0x100] = { 0 };
-	int sex = 0;  // ĞÔ±ğ£º1=ÄĞ£¬2=Å®
+	int sex = 0;  // æ€§åˆ«ï¼š1=ç”·ï¼Œ2=å¥³
 	CHAR v1[0x256] = { 0 };
 	CHAR v2[0x256] = { 0 };
 	int type = 0;
@@ -21,7 +21,7 @@ typedef struct FriendList
 	CHAR remark[0x128] = { 0 };
 	CHAR bigHeadImgUrl[0x512] = { 0 };
 	CHAR smallHeadImgUrl[0x512] = { 0 };
-	CHAR roomWxidList[0xEA60] = { 0 };  // 30 x 2000 = 30³¤¶È x 2000¸öÈº³ÉÔ±ID
+	CHAR roomWxidList[0xEA60] = { 0 };  // 30 x 2000 = 30é•¿åº¦ x 2000ä¸ªç¾¤æˆå‘˜ID
 	int roomOwner = 0;
 	CHAR roomAnnouncement[0x5120] = { 0 };
 	CHAR roomAnnouncementEditor[0x100] = { 0 };
@@ -40,34 +40,34 @@ typedef struct FriendList
 
 	FriendList *next;
 } FriendList;
-// µÇÂ¼ÏêÇé
+// ç™»å½•è¯¦æƒ…
 struct LoginInfo
 {
-	CHAR wxid[0x100] = { 0 };  // Î¢ĞÅID
-	CHAR username[0x100] = { 0 };  // Î¢ĞÅºÅ
-	CHAR nickname[0x100] = { 0 };  // êÇ³Æ
-	CHAR headUrl[0x256] = { 0 };  // Í·ÏñURLµØÖ·
-	CHAR mobile[0x32] = { 0 };  // ÊÖ»úºÅÂë
-	CHAR email[0x32] = { 0 };  // ÓÎÏ·
-	int sex = 0;  // ĞÔ±ğ£º1=ÄĞ£¬2=Å®£¬0=Î´Öª
-	CHAR nation[0x32] = { 0 };  // ¹ú¼®
-	CHAR province[0x32] = { 0 };  // Ê¡·İ
-	CHAR city[0x32] = { 0 };  // ³ÇÊĞ
-	CHAR sign[0x32] = { 0 };  // ¸öĞÔÇ©Ãû
-	CHAR device[0x32] = { 0 };  // µÇÂ¼µÄÊÖ»úÉè±¸
+	CHAR wxid[0x100] = { 0 };  // å¾®ä¿¡ID
+	CHAR username[0x100] = { 0 };  // å¾®ä¿¡å·
+	CHAR nickname[0x100] = { 0 };  // æ˜µç§°
+	CHAR headUrl[0x256] = { 0 };  // å¤´åƒURLåœ°å€
+	CHAR mobile[0x32] = { 0 };  // æ‰‹æœºå·ç 
+	CHAR email[0x32] = { 0 };  // æ¸¸æˆ
+	int sex = 0;  // æ€§åˆ«ï¼š1=ç”·ï¼Œ2=å¥³ï¼Œ0=æœªçŸ¥
+	CHAR nation[0x32] = { 0 };  // å›½ç±
+	CHAR province[0x32] = { 0 };  // çœä»½
+	CHAR city[0x32] = { 0 };  // åŸå¸‚
+	CHAR sign[0x32] = { 0 };  // ä¸ªæ€§ç­¾å
+	CHAR device[0x32] = { 0 };  // ç™»å½•çš„æ‰‹æœºè®¾å¤‡
 };
 
-// ·¢ËÍ»Ø·şÎñÆ÷¶ËµÄÏûÏ¢½á¹¹Ìå
+// å‘é€å›æœåŠ¡å™¨ç«¯çš„æ¶ˆæ¯ç»“æ„ä½“
 struct WebsocketMessageStruct
 {
-	char msgId[0x100] = { 0 };  // ÏûÏ¢ID
-	int isOwner = 0;  // ÊÇ·ñ×Ô¼º·¢µÄÏûÏ¢£º0=·ñ£¬1=ÊÇ
-	int msgType = 0;  // ÏûÏ¢ÀàĞÍ
-	int msgSource = 0;  // ÏûÏ¢À´Ô´£º0=ºÃÓÑÏûÏ¢£¬1=ÈºÏûÏ¢
-	char msgSourceXml[0x2048] = { 0 };  // ÈºÆäËûÏûÏ¢
-	char wxid[0x100] = { 0 };  // ·¢ËÍÈËÎ¢ĞÅID
-	char roomId[0x100] = { 0 };  // ÈºID
-	char content[0x8092] = { 0 };  // ÏûÏ¢ÄÚÈİ
+	char msgId[0x100] = { 0 };  // æ¶ˆæ¯ID
+	int isOwner = 0;  // æ˜¯å¦è‡ªå·±å‘çš„æ¶ˆæ¯ï¼š0=å¦ï¼Œ1=æ˜¯
+	int msgType = 0;  // æ¶ˆæ¯ç±»å‹
+	int msgSource = 0;  // æ¶ˆæ¯æ¥æºï¼š0=å¥½å‹æ¶ˆæ¯ï¼Œ1=ç¾¤æ¶ˆæ¯
+	char msgSourceXml[0x2048] = { 0 };  // ç¾¤å…¶ä»–æ¶ˆæ¯
+	char wxid[0x100] = { 0 };  // å‘é€äººå¾®ä¿¡ID
+	char roomId[0x100] = { 0 };  // ç¾¤ID
+	char content[0x8092] = { 0 };  // æ¶ˆæ¯å†…å®¹
 };
 
 

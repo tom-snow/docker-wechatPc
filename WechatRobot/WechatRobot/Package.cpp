@@ -14,51 +14,51 @@
 using namespace rapidjson;
 using namespace std;
 
-/** @var array ÔÊĞíµÄ²Ù×÷Ö¸Áî */
+/** @var array å…è®¸çš„æ“ä½œæŒ‡ä»¤ */
 int allowOpCode[] = {
-	/** @var int ÏìÓ¦Ö¸Áî */
-	0x0,  // ws¿Í»§¶Ë×¼±¸Íê±Ï
-	0x1,  // ²Ù×÷³É¹¦
-	0x2,  // ²Ù×÷Ê§°Ü
-	/** @var int ÒµÎñÖ¸Áî */
-	0x10,  // ĞÂ¿ªÒ»¸öÎ¢ĞÅ¿Í»§¶Ë
-	0x11,  // ÍË³öÒ»¸öÎ¢ĞÅ
-	0x12,  // »ñÈ¡µÇÂ¼×´Ì¬
-	0x20,  // ·¢ËÍÎÄ±¾ÏûÏ¢
-	0x21,  // ·¢ËÍÍ¼Æ¬ÏûÏ¢
-	0x22,  // ·¢ËÍ¸½¼şÏûÏ¢
-	0x23,  // ·¢ËÍÃûÆ¬ÏûÏ¢
-	0x24,  // ·¢ËÍxmlÏûÏ¢
-	0x30,  // wxid¼ÓºÃÓÑ
-	0x31,  // v1¼ÓºÃÓÑ
-	0x32,  // É¾³ıºÃÓÑ
-	0x33,  // v1+v2Í¬ÒâºÃÓÑÇëÇó
-	0x34,  // ºÃÓÑÁĞ±í
-	0x35,  // ĞŞ¸Ä±¸×¢
-	0x40,  // ´´½¨ÈºÁÄ
-	0x41,  // ĞŞ¸ÄÈºÃû³Æ
-	0x42,  // ·¢ËÍÈº¹«¸æ
-	0x43,  // »ñÈ¡Èº³ÉÔ±ÁĞ±í
-	0x44,  // À­ºÃÓÑÈëÈº
-	0x45,  // É¾³ıÈº³ÉÔ±
-	0x46,  // °¬ÌØÈº³ÉÔ±
-	0x47,  // ÍË³öÈºÁÄ
-	0x50,  // ÊÕ¿î
-	0x90,  // ·µ»ØµÇÂ¼¶şÎ¬ÂëµØÖ·
-	0x91,  // ·µ»Øµ±Ç°µÇÂ¼µÄÎ¢ĞÅºÅĞÅÏ¢
-	0x92,  // ·µ»Ø½ÓÊÕµÄÎ¢ĞÅÏûÏ¢
+	/** @var int å“åº”æŒ‡ä»¤ */
+	0x0,  // wså®¢æˆ·ç«¯å‡†å¤‡å®Œæ¯•
+	0x1,  // æ“ä½œæˆåŠŸ
+	0x2,  // æ“ä½œå¤±è´¥
+	/** @var int ä¸šåŠ¡æŒ‡ä»¤ */
+	0x10,  // æ–°å¼€ä¸€ä¸ªå¾®ä¿¡å®¢æˆ·ç«¯
+	0x11,  // é€€å‡ºä¸€ä¸ªå¾®ä¿¡
+	0x12,  // è·å–ç™»å½•çŠ¶æ€
+	0x20,  // å‘é€æ–‡æœ¬æ¶ˆæ¯
+	0x21,  // å‘é€å›¾ç‰‡æ¶ˆæ¯
+	0x22,  // å‘é€é™„ä»¶æ¶ˆæ¯
+	0x23,  // å‘é€åç‰‡æ¶ˆæ¯
+	0x24,  // å‘é€xmlæ¶ˆæ¯
+	0x30,  // wxidåŠ å¥½å‹
+	0x31,  // v1åŠ å¥½å‹
+	0x32,  // åˆ é™¤å¥½å‹
+	0x33,  // v1+v2åŒæ„å¥½å‹è¯·æ±‚
+	0x34,  // å¥½å‹åˆ—è¡¨
+	0x35,  // ä¿®æ”¹å¤‡æ³¨
+	0x40,  // åˆ›å»ºç¾¤èŠ
+	0x41,  // ä¿®æ”¹ç¾¤åç§°
+	0x42,  // å‘é€ç¾¤å…¬å‘Š
+	0x43,  // è·å–ç¾¤æˆå‘˜åˆ—è¡¨
+	0x44,  // æ‹‰å¥½å‹å…¥ç¾¤
+	0x45,  // åˆ é™¤ç¾¤æˆå‘˜
+	0x46,  // è‰¾ç‰¹ç¾¤æˆå‘˜
+	0x47,  // é€€å‡ºç¾¤èŠ
+	0x50,  // æ”¶æ¬¾
+	0x90,  // è¿”å›ç™»å½•äºŒç»´ç åœ°å€
+	0x91,  // è¿”å›å½“å‰ç™»å½•çš„å¾®ä¿¡å·ä¿¡æ¯
+	0x92,  // è¿”å›æ¥æ”¶çš„å¾®ä¿¡æ¶ˆæ¯
 };
 
 Package::Package()
 {
-	this->json.SetObject(); // ½«µ±Ç°µÄDocumentÉèÖÃÎªÒ»¸öobject£¬Ò²¾ÍÊÇËµÕû¸öDocumentÊÇÒ»¸öObjectÀàĞÍµÄdomÔªËØ
+	this->json.SetObject(); // å°†å½“å‰çš„Documentè®¾ç½®ä¸ºä¸€ä¸ªobjectï¼Œä¹Ÿå°±æ˜¯è¯´æ•´ä¸ªDocumentæ˜¯ä¸€ä¸ªObjectç±»å‹çš„domå…ƒç´ 
 }
-// ½â°ü
+// è§£åŒ…
 void Package::SetConText(char *jsonStr)
 {
 	this->json.Parse(jsonStr);
 
-	// ¿Í»§¶ËµÄÓ¦ÓÃID£¬×Ö·û´®£¬×î³¤32Î»
+	// å®¢æˆ·ç«¯çš„åº”ç”¨IDï¼Œå­—ç¬¦ä¸²ï¼Œæœ€é•¿32ä½
 	if (!this->json.HasMember("appId") || this->json["appId"].IsNull()) {
 		this->SetAppId(NULL);
 	}
@@ -67,7 +67,7 @@ void Package::SetConText(char *jsonStr)
 		Value& appId = this->json["appId"];
 		this->SetAppId((char*)appId.GetString());
 	}
-	// ¿Í»§¶ËµÄÓ¦ÓÃKEY£¬×Ö·û´®£¬×î³¤32Î»
+	// å®¢æˆ·ç«¯çš„åº”ç”¨KEYï¼Œå­—ç¬¦ä¸²ï¼Œæœ€é•¿32ä½
 	if (!this->json.HasMember("appKey") || this->json["appKey"].IsNull()) {
 		this->SetAppKey(NULL);
 	}
@@ -79,17 +79,17 @@ void Package::SetConText(char *jsonStr)
 	if (!this->json.HasMember("package")) return;
 	if (!this->json["package"].IsObject()) return;
 	rapidjson::Value& packageObject = this->json["package"];
-	// Êı¾İ°üÎ¨Ò»ID£¬×Ö·û´®£¬×î³¤32Î»
+	// æ•°æ®åŒ…å”¯ä¸€IDï¼Œå­—ç¬¦ä¸²ï¼Œæœ€é•¿32ä½
 	if (!packageObject.HasMember("uniqueId")) return;
 	if (!packageObject["uniqueId"].IsString()) return;
 	Value& uniqueId = packageObject["uniqueId"];
 	this->SetUniqueId((char*)uniqueId.GetString());
-	// ·¢ËÍÊ±¼ä£¬ºÁÃë¼¶Ê±¼ä´Á£¬×Ö·û´®£¬13Î»
+	// å‘é€æ—¶é—´ï¼Œæ¯«ç§’çº§æ—¶é—´æˆ³ï¼Œå­—ç¬¦ä¸²ï¼Œ13ä½
 	if (!packageObject.HasMember("timestamp")) return;
 	if (!packageObject["timestamp"].IsString()) return;
 	Value& timestamp = packageObject["timestamp"];
 	this->SetTimestamp((char*)timestamp.GetString());
-	// ½ÓÊÕÖ¸ÁîµÄÄ¿±êÎ¢ĞÅ¿Í»§¶ËID£¬Ã¿¿ªÒ»¸öÎ¢ĞÅ¿Í»§¶Ë´øÓĞÒ»¸öÎ¨Ò»ID£¬ÎŞÄ¿±ê¿Í»§¶ËÔòÎªnull£¬×Ö·û´®»ònull
+	// æ¥æ”¶æŒ‡ä»¤çš„ç›®æ ‡å¾®ä¿¡å®¢æˆ·ç«¯IDï¼Œæ¯å¼€ä¸€ä¸ªå¾®ä¿¡å®¢æˆ·ç«¯å¸¦æœ‰ä¸€ä¸ªå”¯ä¸€IDï¼Œæ— ç›®æ ‡å®¢æˆ·ç«¯åˆ™ä¸ºnullï¼Œå­—ç¬¦ä¸²æˆ–null
 	if (!packageObject.HasMember("wechatId")) return;
 	if (packageObject["wechatId"].IsNull()) {
 		this->SetWechatId(NULL);
@@ -99,12 +99,12 @@ void Package::SetConText(char *jsonStr)
 		Value& wechatId = packageObject["wechatId"];
 		this->SetWechatId((char*)wechatId.GetString());
 	}
-	// ²Ù×÷Ö¸Áî£¬16½øÖÆÊıÖµ
+	// æ“ä½œæŒ‡ä»¤ï¼Œ16è¿›åˆ¶æ•°å€¼
 	if (!packageObject.HasMember("opCode")) return;
 	if (!packageObject["opCode"].IsInt()) return;
 	Value& opCode = packageObject["opCode"];
 	this->SetOpCode(opCode.GetInt());
-	// ÒµÎñÖ÷Ìå¶ÔÏó
+	// ä¸šåŠ¡ä¸»ä½“å¯¹è±¡
 	if (!packageObject.HasMember("body")) return;
 	Value& body = packageObject["body"];
 	if (packageObject["body"].IsNull()) {
@@ -117,10 +117,10 @@ void Package::SetConText(char *jsonStr)
 		this->SetBody(packageObject["body"]);
 	}
 }
-// ·â°ü
+// å°åŒ…
 rapidjson::StringBuffer Package::GetConText()
 {
-	// ¿Í»§¶ËµÄÓ¦ÓÃID£¬×Ö·û´®£¬×î³¤32Î»
+	// å®¢æˆ·ç«¯çš„åº”ç”¨IDï¼Œå­—ç¬¦ä¸²ï¼Œæœ€é•¿32ä½
 	char *appId = this->GetAppId();
 	rapidjson::Value appIdString(rapidjson::kStringType);
 	if (!appId) {
@@ -137,7 +137,7 @@ rapidjson::StringBuffer Package::GetConText()
 	}
 	this->json.AddMember("appId", appIdString, this->json.GetAllocator());
 
-	// ¿Í»§¶ËµÄÓ¦ÓÃKEY£¬×Ö·û´®£¬×î³¤32Î»
+	// å®¢æˆ·ç«¯çš„åº”ç”¨KEYï¼Œå­—ç¬¦ä¸²ï¼Œæœ€é•¿32ä½
 	char *appKey = this->GetAppKey();
 	rapidjson::Value appKeyString(rapidjson::kStringType);
 	if (!appKey) {
@@ -154,10 +154,10 @@ rapidjson::StringBuffer Package::GetConText()
 	}
 	this->json.AddMember("appKey", appKeyString, this->json.GetAllocator());
 
-	// ³õÊ¼»¯°üÊı¾İ
+	// åˆå§‹åŒ–åŒ…æ•°æ®
 	rapidjson::Value packageObject(rapidjson::kObjectType);
 
-	// Êı¾İ°üÎ¨Ò»ID£¬×Ö·û´®£¬×î³¤32Î»
+	// æ•°æ®åŒ…å”¯ä¸€IDï¼Œå­—ç¬¦ä¸²ï¼Œæœ€é•¿32ä½
 	char *uniqueId = this->GetUniqueId();
 	rapidjson::Value uniqueIdString(rapidjson::kStringType);
 	if (!uniqueId) {
@@ -174,7 +174,7 @@ rapidjson::StringBuffer Package::GetConText()
 	}
 	packageObject.AddMember("uniqueId", uniqueIdString, this->json.GetAllocator());
 
-	// ·¢ËÍÊ±¼ä£¬ºÁÃë¼¶Ê±¼ä´Á£¬ÊıÖµ
+	// å‘é€æ—¶é—´ï¼Œæ¯«ç§’çº§æ—¶é—´æˆ³ï¼Œæ•°å€¼
 	char *timestamp = this->GetTimestamp();
 	rapidjson::Value timestampString(rapidjson::kStringType);
 	if (timestamp == NULL) {
@@ -191,7 +191,7 @@ rapidjson::StringBuffer Package::GetConText()
 	}
 	packageObject.AddMember("timestamp", timestampString, this->json.GetAllocator());
 
-	// ½ÓÊÕÖ¸ÁîµÄÄ¿±êÎ¢ĞÅ¿Í»§¶ËID£¬Ã¿¿ªÒ»¸öÎ¢ĞÅ¿Í»§¶Ë´øÓĞÒ»¸öÎ¨Ò»ID£¬ÎŞÄ¿±ê¿Í»§¶ËÔòÎªnull£¬×Ö·û´®»ònull
+	// æ¥æ”¶æŒ‡ä»¤çš„ç›®æ ‡å¾®ä¿¡å®¢æˆ·ç«¯IDï¼Œæ¯å¼€ä¸€ä¸ªå¾®ä¿¡å®¢æˆ·ç«¯å¸¦æœ‰ä¸€ä¸ªå”¯ä¸€IDï¼Œæ— ç›®æ ‡å®¢æˆ·ç«¯åˆ™ä¸ºnullï¼Œå­—ç¬¦ä¸²æˆ–null
 	char *wechatId = this->GetWechatId();
 	if (wechatId == NULL) {
 		rapidjson::Value wechatIdString(rapidjson::kNullType);
@@ -210,7 +210,7 @@ rapidjson::StringBuffer Package::GetConText()
 		packageObject.AddMember("wechatId", wechatIdString, this->json.GetAllocator());
 	}
 
-	// ²Ù×÷Ö¸Áî£¬16½øÖÆÊıÖµ
+	// æ“ä½œæŒ‡ä»¤ï¼Œ16è¿›åˆ¶æ•°å€¼
 	int opCode = this->GetOpCode();
 	rapidjson::Value opCodeNumber(rapidjson::kNumberType);
 	opCodeNumber.SetInt(opCode);
@@ -219,42 +219,42 @@ rapidjson::StringBuffer Package::GetConText()
 	}
 	packageObject.AddMember("opCode", opCodeNumber, this->json.GetAllocator());
 
-	// ÒµÎñÖ÷Ìå¶ÔÏó
+	// ä¸šåŠ¡ä¸»ä½“å¯¹è±¡
 	rapidjson::Value *bodyObject = this->GetBody();
 	if (packageObject.HasMember("body")) {
 		packageObject.RemoveMember("body");
 	}
 	packageObject.AddMember("body", *bodyObject, this->json.GetAllocator());
 
-	// ¸³Öµ°üÊı¾İ
+	// èµ‹å€¼åŒ…æ•°æ®
 	if (this->json.HasMember("package")) {
 		this->json.RemoveMember("package");
 	}
 	this->json.AddMember("package", packageObject, this->json.GetAllocator());
 
-	// Éú³É×Ö·û´®
+	// ç”Ÿæˆå­—ç¬¦ä¸²
 	rapidjson::StringBuffer buffer;
 	Writer<rapidjson::StringBuffer> writer(buffer);
 	this->json.Accept(writer);
 
 	return buffer;
 }
-// ¼ì²é°üµÄ±Ø´«²ÎÊı
+// æ£€æŸ¥åŒ…çš„å¿…ä¼ å‚æ•°
 bool Package::Check()
 {
-	// ¼ì²éÓ¦ÓÃID
+	// æ£€æŸ¥åº”ç”¨ID
 	char *appId = this->GetAppId();
 	if (appId == NULL || strlen(appId) <= 0) {
 		return FALSE;
 	}
 
-	// ¼ì²éÓ¦ÓÃKEY
+	// æ£€æŸ¥åº”ç”¨KEY
 	char *appKey = this->GetAppKey();
 	if (appKey == NULL || strlen(appKey) <= 0) {
 		return FALSE;
 	}
 
-	// ¼ì²é²Ù×÷Ö¸Áî
+	// æ£€æŸ¥æ“ä½œæŒ‡ä»¤
 	int opCode = this->GetOpCode();
 	bool checkOpCodeResult = FALSE;
 	for (int i = 0; i < sizeof(allowOpCode); i++) {
@@ -270,77 +270,77 @@ bool Package::Check()
 	return TRUE;
 }
 /*==============================================================*/
-// »ñÈ¡¿Í»§¶ËµÄÓ¦ÓÃID
+// è·å–å®¢æˆ·ç«¯çš„åº”ç”¨ID
 char *Package::GetAppId()
 {
 	return this->appId;
 }
-// ÉèÖÃ¿Í»§¶ËµÄÓ¦ÓÃID
+// è®¾ç½®å®¢æˆ·ç«¯çš„åº”ç”¨ID
 void Package::SetAppId(char *appId)
 {
 	this->appId = appId;
 }
-// »ñÈ¡¿Í»§¶ËµÄÓ¦ÓÃKEY
+// è·å–å®¢æˆ·ç«¯çš„åº”ç”¨KEY
 char *Package::GetAppKey()
 {
 	return this->appKey;
 }
-// ÉèÖÃ¿Í»§¶ËµÄÓ¦ÓÃKEY
+// è®¾ç½®å®¢æˆ·ç«¯çš„åº”ç”¨KEY
 void Package::SetAppKey(char *appKey)
 {
 	this->appKey = appKey;
 }
 /*==============================================================*/
-// »ñÈ¡Êı¾İ°üÎ¨Ò»ID
+// è·å–æ•°æ®åŒ…å”¯ä¸€ID
 char *Package::GetUniqueId()
 {
 	return this->uniqueId;
 }
-// ÉèÖÃÊı¾İ°üÎ¨Ò»
+// è®¾ç½®æ•°æ®åŒ…å”¯ä¸€
 void Package::SetUniqueId(char *uniqueId)
 {
 	this->uniqueId = uniqueId;
 }
 /*==============================================================*/
-// »ñÈ¡·¢ËÍÊ±¼ä
+// è·å–å‘é€æ—¶é—´
 char *Package::GetTimestamp()
 {
 	return this->timestamp;
 }
-// ÉèÖÃ·¢ËÍÊ±¼ä
+// è®¾ç½®å‘é€æ—¶é—´
 void Package::SetTimestamp(char *timestamp)
 {
 	this->timestamp = timestamp;
 }
 /*==============================================================*/
-// »ñÈ¡½ÓÊÕÖ¸ÁîµÄÄ¿±êÎ¢ĞÅ¿Í»§¶ËID
+// è·å–æ¥æ”¶æŒ‡ä»¤çš„ç›®æ ‡å¾®ä¿¡å®¢æˆ·ç«¯ID
 char *Package::GetWechatId()
 {
 	return this->wechatId;
 }
-// ÉèÖÃ½ÓÊÕÖ¸ÁîµÄÄ¿±êÎ¢ĞÅ¿Í»§¶ËID
+// è®¾ç½®æ¥æ”¶æŒ‡ä»¤çš„ç›®æ ‡å¾®ä¿¡å®¢æˆ·ç«¯ID
 void Package::SetWechatId(char *wechatId)
 {
 	this->wechatId = wechatId;
 }
 /*==============================================================*/
-// »ñÈ¡²Ù×÷Ö¸Áî
+// è·å–æ“ä½œæŒ‡ä»¤
 int Package::GetOpCode()
 {
 	return this->opCode;
 }
-// ÉèÖÃ²Ù×÷Ö¸Áî
+// è®¾ç½®æ“ä½œæŒ‡ä»¤
 void Package::SetOpCode(int opCode)
 {
 	this->opCode = opCode;
 }
 /*==============================================================*/
-// »ñÈ¡ÒµÎñÖ÷Ìå¶ÔÏó
+// è·å–ä¸šåŠ¡ä¸»ä½“å¯¹è±¡
 rapidjson::Value *Package::GetBody()
 {
 	return &body;
 }
-// ÉèÖÃÒµÎñÖ÷Ìå¶ÔÏó
+// è®¾ç½®ä¸šåŠ¡ä¸»ä½“å¯¹è±¡
 void Package::SetBody(rapidjson::Value &body)
 {
 	this->body = body;

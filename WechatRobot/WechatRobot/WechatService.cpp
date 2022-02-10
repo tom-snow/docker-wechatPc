@@ -1,4 +1,4 @@
-// Injection.cpp : ¶¨ÒåÎ¢ĞÅ·şÎñ¹Ü¿Ø¡£
+// Injection.cpp : å®šä¹‰å¾®ä¿¡æœåŠ¡ç®¡æ§ã€‚
 //
 #include "stdafx.h"
 #include "WechatMultiOpen.h"
@@ -17,19 +17,19 @@ INT_PTR StartWechat()
 	GetDllPath(dllPath, MAX_PATH);
 
 	if (strlen(dllPath) <= 0) {
-		MessageBox(NULL, L"DLLÎÄ¼ş²»´æÔÚ£¡", L"ÎÂÜ°ÌáÊ¾£º", 0);
+		MessageBox(NULL, L"DLLæ–‡ä»¶ä¸å­˜åœ¨ï¼", L"æ¸©é¦¨æç¤ºï¼š", 0);
 		return FALSE;
 	}
 	HKEY hKey;
 	if (RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Tencent\\WeChat", 0, KEY_ALL_ACCESS, &hKey) != ERROR_SUCCESS) {
-		MessageBox(NULL, L"×¢²á±í´ò¿ªÊ§°Ü£¡", L"ÎÂÜ°ÌáÊ¾£º", 0);
+		MessageBox(NULL, L"æ³¨å†Œè¡¨æ‰“å¼€å¤±è´¥ï¼", L"æ¸©é¦¨æç¤ºï¼š", 0);
 		return FALSE;
 	}
 	CHAR szProductType[MAX_PATH] = {};
 	DWORD dwBufLen = MAX_PATH;
 	if (RegQueryValueEx(hKey, L"InstallPath", NULL, NULL, (LPBYTE)szProductType, &dwBufLen) != ERROR_SUCCESS) {
 		RegCloseKey(hKey);
-		MessageBox(NULL, L"×¢²á±í²éÑ¯Ê§°Ü£¡", L"ÎÂÜ°ÌáÊ¾£º", 0);
+		MessageBox(NULL, L"æ³¨å†Œè¡¨æŸ¥è¯¢å¤±è´¥ï¼", L"æ¸©é¦¨æç¤ºï¼š", 0);
 		return FALSE;
 	}
 
@@ -39,7 +39,7 @@ INT_PTR StartWechat()
 
 	if (_access(WcharToChar(weChatexe), 0) == -1)
 	{
-		MessageBox(NULL, L"WeChat.exe²»´æÔÚ×¢²á±í°²×°Ä¿Â¼£¡", L"ÎÂÜ°ÌáÊ¾£º", 0);
+		MessageBox(NULL, L"WeChat.exeä¸å­˜åœ¨æ³¨å†Œè¡¨å®‰è£…ç›®å½•ï¼", L"æ¸©é¦¨æç¤ºï¼š", 0);
 		return FALSE;
 	}
 	STARTUPINFO si = { 0 };
@@ -50,25 +50,25 @@ INT_PTR StartWechat()
 	si.dwFlags = STARTF_USESHOWWINDOW;
 	si.wShowWindow = SW_SHOW;
 
-	// Æô¶¯Î¢ĞÅ
+	// å¯åŠ¨å¾®ä¿¡
 	CreateProcess(weChatexe, NULL, NULL, NULL, FALSE, CREATE_SUSPENDED, NULL, NULL, &si, &pi);
 	
 	ResumeThread(pi.hThread);
 
-	// ¼ì²é½ø³ÌÊÇ·ñÕı³£²¢ÇÒ×î¶àµÈ´ı1Ãë
+	// æ£€æŸ¥è¿›ç¨‹æ˜¯å¦æ­£å¸¸å¹¶ä¸”æœ€å¤šç­‰å¾…1ç§’
 	WaitForSingleObject(pi.hProcess, 1000);
 
-	// ¶à¿ª½âËø
+	// å¤šå¼€è§£é”
 	PatchWeChat();
-	// ¿ªÊ¼×¢Èë
+	// å¼€å§‹æ³¨å…¥
 	InjectDll(pi.dwProcessId);
 	
-	// ·µ»Ø½ø³ÌID
+	// è¿”å›è¿›ç¨‹ID
 	return pi.dwProcessId;
 }
 
 /**
- * ½áÊøËùÓĞÎ¢ĞÅ½ø³Ì
+ * ç»“æŸæ‰€æœ‰å¾®ä¿¡è¿›ç¨‹
  * @param
  * @return BOOL
  */
@@ -80,7 +80,7 @@ INT_PTR CloseAllWeChat()
 	do
 	{
 		if (wcscmp(_T(WECHAT_PROCESS_NAME), proessInfo.szExeFile) == 0) {
-			CloseProcess(proessInfo.th32ProcessID);  // ¹Ø±Õ½ø³Ì
+			CloseProcess(proessInfo.th32ProcessID);  // å…³é—­è¿›ç¨‹
 		}
 	} while (Process32Next(ProcesssAll, &proessInfo));
 
@@ -88,7 +88,7 @@ INT_PTR CloseAllWeChat()
 }
 
 /**
- * ½áÊøÖ¸¶¨½ø³Ì
+ * ç»“æŸæŒ‡å®šè¿›ç¨‹
  * @param
  * @return BOOL
  */

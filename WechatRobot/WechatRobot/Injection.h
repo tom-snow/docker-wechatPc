@@ -1,16 +1,16 @@
 #pragma once
 
 #include "Config.h"
-// ��ȡ���̾��
+// 获取进程句柄
 #include <TlHelp32.h>
 
 
-// DLLע��
+// DLL注入
 INT_PTR InjectDll(DWORD pid);
 
-// ����Ƿ��Ѿ�ע��
+// 检查是否已经注入
 INT_PTR CheckInject(DWORD dwProcessid);
 
-// ж��DLLע��
+// 卸载DLL注入
 INT_PTR UnjectDll();
 

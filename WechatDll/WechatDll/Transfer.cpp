@@ -15,10 +15,10 @@
 
 using namespace std;
 
-// 收款
+// 鏀舵
 void CollectMoney(wchar_t* wxid, wchar_t* transferid)
 {
-	// 获取微信基址
+	// 鑾峰彇寰俊鍩哄潃
 	DWORD winAddress = GetWechatWinAddress();
 
 	CllectMoneyStruct cellect;
@@ -45,7 +45,7 @@ void CollectMoney(wchar_t* wxid, wchar_t* transferid)
 		add esp, 0x30;
 	}
 }
-// 自动收款
+// 鑷姩鏀舵
 void AutoCollectMoney(wchar_t* wxid, wstring msg)
 {
 	int pos1 = msg.find(L"<transferid>");

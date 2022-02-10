@@ -1,9 +1,9 @@
 #pragma once
 
 
-// 打开微信
+// 鎵撳紑寰俊
 INT_PTR StartWechat();
-// 关闭微信
+// 鍏抽棴寰俊
 INT_PTR CloseAllWeChat();
-// 关闭进程
+// 鍏抽棴杩涚▼
 INT_PTR CloseProcess(int processId);

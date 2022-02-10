@@ -1,1 +1,6 @@
 .vs
+
+# Ignore files generated at compile time with visual studio
+/WechatRobot/Debug/
+/WechatRobot/Release/
+/WechatRobot/x64/

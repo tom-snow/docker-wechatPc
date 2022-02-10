@@ -4,11 +4,23 @@ on:
   push:
     branches:
       - master
+    paths:
+      - 'Bin/**'
+      - 'ServerPhp/**'
+      - 'Web/**'
+      - 'wine/**'
+      - 'Dockerfile'
+      - '*.py'
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      # - name: Dump GitHub context(Show What Event Triggered)
+      #   env:
+      #     GITHUB_CONTEXT: ${{ toJson(github) }}
+      #   run: echo "$GITHUB_CONTEXT"
+
       - name: Checkout
         uses: actions/checkout@v2
 

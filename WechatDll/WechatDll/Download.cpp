@@ -21,42 +21,42 @@
 
 using namespace std;
 
-// ½âÃÜÍ¼Æ¬ÎÄ¼ş
+// è§£å¯†å›¾ç‰‡æ–‡ä»¶
 void DecodeImage(char *datFile, char *saveFile)
 {
 	//CHAR documentDir[MAX_PATH] = {0};
 	//SHGetFolderPathA(NULL, CSIDL_PERSONAL, NULL, SHGFP_TYPE_CURRENT, documentDir);
-	// ¼ÓÃÜÎÄ¼şÂ·¾¶
+	// åŠ å¯†æ–‡ä»¶è·¯å¾„
 	//char datFile[] = "C:\\Users\\Lemonice\\Desktop\\c14d0257b67d5291bef56853ee3e3c6d.dat";
-	// ±£´æµÄÎÄ¼şÂ·¾¶
+	// ä¿å­˜çš„æ–‡ä»¶è·¯å¾„
 	//char saveFile[] = "C:\\Users\\Lemonice\\Desktop\\c14d0257b67d5291bef56853ee3e3c6d.jpg";
 
-	// ´ò¿ª¼ÓÃÜÎÄ¼ş
+	// æ‰“å¼€åŠ å¯†æ–‡ä»¶
 	ifstream is(datFile, ifstream::in);
-	// ¼ÆËãÎÄ¼ş³¤¶È
+	// è®¡ç®—æ–‡ä»¶é•¿åº¦
 	is.seekg(0, is.end);
 	int length = (int)is.tellg();
 	is.seekg(0, is.beg);
-	// ´´½¨ÄÚ´æ»º´æÇø
+	// åˆ›å»ºå†…å­˜ç¼“å­˜åŒº
 	char * buffer = new char[length];
-	// ¶ÁÈ¡¼ÓÃÜÄÚÈİ
+	// è¯»å–åŠ å¯†å†…å®¹
 	is.read(buffer, length);
 	
-	// ÅĞ¶ÏÎÄ¼şÍ· - JPG
+	// åˆ¤æ–­æ–‡ä»¶å¤´ - JPG
 	char password = buffer[0] ^ 0xFF;
 	char check1 = buffer[0] ^ password;
 	char check2 = buffer[1] ^ password;
 	char h1 = 0xFF;
 	char h2 = 0xD8;
 	if (check1 != h1 || check2 != h2) {
-		// ÅĞ¶ÏÎÄ¼şÍ· - PNG
+		// åˆ¤æ–­æ–‡ä»¶å¤´ - PNG
 		password = buffer[0] ^ 0x89;
 		check1 = buffer[0] ^ password;
 		check2 = buffer[1] ^ password;
 		h1 = 0x89;
 		h2 = 0x50;
 		if (check1 != h1 || check2 != h2) {
-			// ÅĞ¶ÏÎÄ¼şÍ· - GIF
+			// åˆ¤æ–­æ–‡ä»¶å¤´ - GIF
 			password = buffer[0] ^ 0x47;
 			check1 = buffer[0] ^ password;
 			check2 = buffer[1] ^ password;
@@ -67,21 +67,21 @@ void DecodeImage(char *datFile, char *saveFile)
 			}
 		}
 	}
-	// ÕÒ²»µ½ÀàĞÍ
+	// æ‰¾ä¸åˆ°ç±»å‹
 	if (password == NULL) {
-		MessageBoxA(NULL, "ÕÒ²»µ½ÎÄ¼şÀàĞÍ", "", NULL);
+		MessageBoxA(NULL, "æ‰¾ä¸åˆ°æ–‡ä»¶ç±»å‹", "", NULL);
 		is.close();
 		return;
 	}
 
-	// ½âÃÜ¹ı³Ì
+	// è§£å¯†è¿‡ç¨‹
 	int i = 0;
 	while (i < length) {
 		buffer[i] ^= password;
 		i++;
 	}
 
-	// Ğ´Èëµ½±£´æµÄÎÄ¼şÂ·¾¶
+	// å†™å…¥åˆ°ä¿å­˜çš„æ–‡ä»¶è·¯å¾„
 	FILE *fp = NULL;
 	fopen_s(&fp, saveFile, "wb");
 	fwrite(buffer, length, 1, fp);
@@ -92,10 +92,10 @@ void DecodeImage(char *datFile, char *saveFile)
 	is.close();
 }
 
-// ÏÂÔØÍ¼Æ¬
+// ä¸‹è½½å›¾ç‰‡
 void DownloadImage()
 {
-	// »ñÈ¡Î¢ĞÅ»ùÖ·
+	// è·å–å¾®ä¿¡åŸºå€
 	DWORD winAddress = GetWechatWinAddress();
 
 	DWORD dwCallAddr = winAddress + 0x4B5C30;
@@ -230,7 +230,7 @@ void DownloadImage()
 		lea esp, pathStruct
 		lea eax, pathStruct
 		lea edx, dword ptr buffer
-		lea ecx, dword ptr buff  // ecxÓĞÎÊÌâ£¬Î´½â¾ö
+		lea ecx, dword ptr buff  // ecxæœ‰é—®é¢˜ï¼Œæœªè§£å†³
 		call dwCallAddr;
 
 		popad

@@ -13,26 +13,26 @@
 #include <string.h>
 #include <atlstr.h>
 
-// ·¢ËÍºÃÓÑÁĞ±í
+// å‘é€å¥½å‹åˆ—è¡¨
 void Send::SendFriendList(FriendList *list, Package *package, int page, int pageSize, int total)
 {
-	// ³õÊ¼»¯Êı¾İ°ü
+	// åˆå§‹åŒ–æ•°æ®åŒ…
 	if (!package) {
 		package = new Package();
 	}
-	// ÉèÖÃ²Ù×÷ÀàĞÍ
+	// è®¾ç½®æ“ä½œç±»å‹
 	package->SetOpCode(OpCode::OPCODE_FRIEND_LIST);
 
-	// ÉèÖÃbody
-	rapidjson::Value body(rapidjson::kObjectType); // ´´½¨Ò»¸öObjectÀàĞÍµÄÔªËØ
+	// è®¾ç½®body
+	rapidjson::Value body(rapidjson::kObjectType); // åˆ›å»ºä¸€ä¸ªObjectç±»å‹çš„å…ƒç´ 
 
-	// ³õÊ¼»¯Ò»¸öºÃÓÑÁĞ±í×Ö¶Î
+	// åˆå§‹åŒ–ä¸€ä¸ªå¥½å‹åˆ—è¡¨å­—æ®µ
 	rapidjson::Value friendList(rapidjson::kArrayType);
 
 	FriendList *p = list;
 	while (p) {
 		if (strlen(p->wxid) > 0) {
-			// ³õÊ¼»¯Ò»¸öºÃÓÑÏêÇé¶ÔÏó
+			// åˆå§‹åŒ–ä¸€ä¸ªå¥½å‹è¯¦æƒ…å¯¹è±¡
 			rapidjson::Value info(rapidjson::kObjectType);
 
 			rapidjson::Value wxid(rapidjson::kStringType);
@@ -263,9 +263,9 @@ void Send::SendFriendList(FriendList *list, Package *package, int page, int page
 		p = p->next;
 	}
 
-	// ²åÈëÏûÏ¢ÁĞ±í
+	// æ’å…¥æ¶ˆæ¯åˆ—è¡¨
 	body.AddMember("friendList", friendList, package->json.GetAllocator());
-	// ·ÖÒ³²ÎÊı
+	// åˆ†é¡µå‚æ•°
 	rapidjson::Value pageNumber(rapidjson::kNumberType);
 	pageNumber.SetInt(page);
 	rapidjson::Value pageSizeNumber(rapidjson::kNumberType);
@@ -278,77 +278,77 @@ void Send::SendFriendList(FriendList *list, Package *package, int page, int page
 
 	package->SetBody(body);
 
-	// »ñÈ¡json×Ö·û´®
+	// è·å–jsonå­—ç¬¦ä¸²
 	rapidjson::StringBuffer pack = package->GetConText();
-	// ·¢ËÍ
+	// å‘é€
 	WsClientSend((char*)pack.GetString());
 }
 
 void Send::SendWxMessage(WebsocketMessageStruct *message, Package *package)
 {
-	// ³õÊ¼»¯Êı¾İ°ü
+	// åˆå§‹åŒ–æ•°æ®åŒ…
 	if (!package) {
 		package = new Package();
 	}
-	// ÉèÖÃ²Ù×÷ÀàĞÍ
+	// è®¾ç½®æ“ä½œç±»å‹
 	package->SetOpCode(OpCode::OPCODE_MESSAGE_RECEIVE);
 
-	// ÉèÖÃbody
-	rapidjson::Value body(rapidjson::kObjectType); // ´´½¨Ò»¸öObjectÀàĞÍµÄÔªËØ
+	// è®¾ç½®body
+	rapidjson::Value body(rapidjson::kObjectType); // åˆ›å»ºä¸€ä¸ªObjectç±»å‹çš„å…ƒç´ 
 
-	// ÏûÏ¢ID
+	// æ¶ˆæ¯ID
 	rapidjson::Value msgId(rapidjson::kStringType);
 	msgId.SetString(message->msgId, strlen(message->msgId));
 	body.AddMember("msgId", msgId, package->json.GetAllocator());
-	// ÊÇ·ñ×Ô¼º·¢µÄÏûÏ¢£º0=·ñ£¬1=ÊÇ
+	// æ˜¯å¦è‡ªå·±å‘çš„æ¶ˆæ¯ï¼š0=å¦ï¼Œ1=æ˜¯
 	rapidjson::Value isOwner(rapidjson::kNumberType);
 	isOwner.SetInt(message->isOwner);
 	body.AddMember("isOwner", isOwner, package->json.GetAllocator());
-	// ÏûÏ¢ÀàĞÍ
+	// æ¶ˆæ¯ç±»å‹
 	rapidjson::Value msgType(rapidjson::kNumberType);
 	msgType.SetInt(message->msgType);
 	body.AddMember("msgType", msgType, package->json.GetAllocator());
-	// ÏûÏ¢À´Ô´£º0=ºÃÓÑÏûÏ¢£¬1=ÈºÏûÏ¢
+	// æ¶ˆæ¯æ¥æºï¼š0=å¥½å‹æ¶ˆæ¯ï¼Œ1=ç¾¤æ¶ˆæ¯
 	rapidjson::Value msgSource(rapidjson::kNumberType);
 	msgSource.SetInt(message->msgSource);
 	body.AddMember("msgSource", msgSource, package->json.GetAllocator());
-	// ÏûÏ¢À´Ô´µÄXML
+	// æ¶ˆæ¯æ¥æºçš„XML
 	rapidjson::Value msgSourceXml(rapidjson::kStringType);
 	msgSourceXml.SetString(message->msgSourceXml, strlen(message->msgSourceXml));
 	body.AddMember("msgSourceXml", msgSourceXml, package->json.GetAllocator());
-	// ·¢ËÍÈËÎ¢ĞÅID
+	// å‘é€äººå¾®ä¿¡ID
 	rapidjson::Value wxid(rapidjson::kStringType);
 	wxid.SetString(message->wxid, strlen(message->wxid));
 	body.AddMember("wxid", wxid, package->json.GetAllocator());
-	// ÈºID
+	// ç¾¤ID
 	rapidjson::Value roomId(rapidjson::kStringType);
 	roomId.SetString(message->roomId, strlen(message->roomId));
 	body.AddMember("roomId", roomId, package->json.GetAllocator());
-	// ÏûÏ¢ÄÚÈİ
+	// æ¶ˆæ¯å†…å®¹
 	rapidjson::Value content(rapidjson::kStringType);
 	content.SetString(message->content, strlen(message->content));
 	body.AddMember("content", content, package->json.GetAllocator());
 
 	package->SetBody(body);
 
-	// »ñÈ¡json×Ö·û´®
+	// è·å–jsonå­—ç¬¦ä¸²
 	rapidjson::StringBuffer pack = package->GetConText();
-	// ·¢ËÍ
+	// å‘é€
 	WsClientSend((char*)pack.GetString());
 }
 
-// ·¢ËÍµÇÂ¼ÏêÇé
+// å‘é€ç™»å½•è¯¦æƒ…
 void Send::SendLoginInfo(LoginInfo *info, Package *package)
 {
-	// ³õÊ¼»¯Êı¾İ°ü
+	// åˆå§‹åŒ–æ•°æ®åŒ…
 	if (!package) {
 		package = new Package();
 	}
-	// ÉèÖÃ²Ù×÷ÀàĞÍ
+	// è®¾ç½®æ“ä½œç±»å‹
 	package->SetOpCode(OpCode::OPCODE_LOGIN_INFO);
 
-	// ÉèÖÃbody
-	rapidjson::Value body(rapidjson::kObjectType); // ´´½¨Ò»¸öObjectÀàĞÍµÄÔªËØ
+	// è®¾ç½®body
+	rapidjson::Value body(rapidjson::kObjectType); // åˆ›å»ºä¸€ä¸ªObjectç±»å‹çš„å…ƒç´ 
 
 	rapidjson::Value wxid(rapidjson::kStringType);
 	wxid.SetString(info->wxid, strlen(info->wxid));
@@ -390,7 +390,7 @@ void Send::SendLoginInfo(LoginInfo *info, Package *package)
 	city.SetString(info->city, strlen(info->city));
 	body.AddMember("city", city, package->json.GetAllocator());
 
-	// ÏÈ²»×ö¸öĞÔÇ©Ãû£¬»áÓĞÖĞÎÄÂÒÂëµÄÇé¿ö
+	// å…ˆä¸åšä¸ªæ€§ç­¾åï¼Œä¼šæœ‰ä¸­æ–‡ä¹±ç çš„æƒ…å†µ
 	//rapidjson::Value sign(rapidjson::kStringType);
 	//sign.SetString(info->sign, strlen(info->sign));
 	//body.AddMember("sign", sign, package->json.GetAllocator());
@@ -401,60 +401,60 @@ void Send::SendLoginInfo(LoginInfo *info, Package *package)
 
 	package->SetBody(body);
 
-	// »ñÈ¡json×Ö·û´®
+	// è·å–jsonå­—ç¬¦ä¸²
 	rapidjson::StringBuffer pack = package->GetConText();
-	// ·¢ËÍ
+	// å‘é€
 	WsClientSend((char*)pack.GetString());
 }
 
-// ·¢ËÍµÇÂ¼×´Ì¬
+// å‘é€ç™»å½•çŠ¶æ€
 void Send::SendLoginStatus(int loginStatus, Package *package)
 {
-	// ³õÊ¼»¯Êı¾İ°ü
+	// åˆå§‹åŒ–æ•°æ®åŒ…
 	if (!package) {
 		package = new Package();
 	}
-	// ÉèÖÃ²Ù×÷ÀàĞÍ
+	// è®¾ç½®æ“ä½œç±»å‹
 	package->SetOpCode(OpCode::OPCODE_WECHAT_GET_LOGIN_STATUS);
 
-	// ÉèÖÃbody
-	rapidjson::Value body(rapidjson::kObjectType); // ´´½¨Ò»¸öObjectÀàĞÍµÄÔªËØ
+	// è®¾ç½®body
+	rapidjson::Value body(rapidjson::kObjectType); // åˆ›å»ºä¸€ä¸ªObjectç±»å‹çš„å…ƒç´ 
 	rapidjson::Value statusInt(rapidjson::kNumberType);
 	statusInt.SetInt(loginStatus);
 	body.AddMember("loginStatus", statusInt, package->json.GetAllocator());
 	package->SetBody(body);
 
-	// »ñÈ¡json×Ö·û´®
+	// è·å–jsonå­—ç¬¦ä¸²
 	rapidjson::StringBuffer pack = package->GetConText();
-	// ·¢ËÍ
+	// å‘é€
 	WsClientSend((char*)pack.GetString());
 }
 
-// ·¢ËÍµÇÂ¼¶şÎ¬Âë
+// å‘é€ç™»å½•äºŒç»´ç 
 void Send::SendLoginQrcode(int loginStatus, char *qrcode, Package *package)
 {
-	// ³õÊ¼»¯Êı¾İ°ü
+	// åˆå§‹åŒ–æ•°æ®åŒ…
 	if (!package) {
 		package = new Package();
 	}
-	// ÉèÖÃ²Ù×÷ÀàĞÍ
+	// è®¾ç½®æ“ä½œç±»å‹
 	package->SetOpCode(OpCode::OPCODE_WECHAT_QRCODE);
 
-	// ÉèÖÃbody
-	rapidjson::Value body(rapidjson::kObjectType); // ´´½¨Ò»¸öObjectÀàĞÍµÄÔªËØ
-	// µÇÂ¼×´Ì¬
+	// è®¾ç½®body
+	rapidjson::Value body(rapidjson::kObjectType); // åˆ›å»ºä¸€ä¸ªObjectç±»å‹çš„å…ƒç´ 
+	// ç™»å½•çŠ¶æ€
 	rapidjson::Value loginStatusJson(rapidjson::kNumberType);
 	loginStatusJson.SetInt(loginStatus);
 	body.AddMember("loginStatus", loginStatusJson, package->json.GetAllocator());
-	// ¶şÎ¬ÂëÁ´½Ó
+	// äºŒç»´ç é“¾æ¥
 	rapidjson::Value qrcodeJson(rapidjson::kStringType);
 	qrcodeJson.SetString(qrcode, strlen(qrcode));
 	body.AddMember("loginQrcode", qrcodeJson, package->json.GetAllocator());
 
 	package->SetBody(body);
 
-	// »ñÈ¡json×Ö·û´®
+	// è·å–jsonå­—ç¬¦ä¸²
 	rapidjson::StringBuffer pack = package->GetConText();
-	// ·¢ËÍ
+	// å‘é€
 	WsClientSend((char*)pack.GetString());
 }

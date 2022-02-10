@@ -1,7 +1,7 @@
 #pragma once
 #include "Package.h"
 
-// Í¬Òâ¼ÓºÃÓÑµÄ²ÎÊı£ºv1
+// åŒæ„åŠ å¥½å‹çš„å‚æ•°ï¼šv1
 struct v1Info
 {
 	int fill = 0;
@@ -11,7 +11,7 @@ struct v1Info
 	char fill2[0x41C] = { 0 };
 	DWORD v2 = 0;
 };
-// Í¬Òâ¼ÓºÃÓÑµÄ²ÎÊı£ºv2
+// åŒæ„åŠ å¥½å‹çš„å‚æ•°ï¼šv2
 struct v2Info
 {
 	char fill[0x24C] = {0};
@@ -22,14 +22,14 @@ struct v2Info
 	int maxV2Len;
 	char fill2[0x8] = { 0 };
 };
-// ¼ÓºÃÓÑµÄ²ÎÊı
+// åŠ å¥½å‹çš„å‚æ•°
 struct wechatText
 {
 	wchar_t *pStr;
 	int strLen;
 	int strMaxLen;
 };
-// ºÃÓÑÏêÇé
+// å¥½å‹è¯¦æƒ…
 struct userInfo
 {
 	wchar_t wxid[0x100] = { 0 };
@@ -40,49 +40,49 @@ struct userInfo
 	wchar_t v1[0x100] = { 0 };
 };
 
-//É¾³ıºÃÓÑ½á¹¹Ìå
+//åˆ é™¤å¥½å‹ç»“æ„ä½“
 struct DeleteUserStructWxid
 {
-	//·¢ËÍµÄÎÄ±¾ÏûÏ¢Ö¸Õë
+	//å‘é€çš„æ–‡æœ¬æ¶ˆæ¯æŒ‡é’ˆ
 	wchar_t* pWxid;
-	//×Ö·û´®³¤¶È
+	//å­—ç¬¦ä¸²é•¿åº¦
 	DWORD length;
-	//×Ö·û´®×î´ó³¤¶È
+	//å­—ç¬¦ä¸²æœ€å¤§é•¿åº¦
 	DWORD maxLength;
 
-	//²¹³äÁ½¸öÕ¼Î»Êı¾İ
+	//è¡¥å……ä¸¤ä¸ªå ä½æ•°æ®
 	DWORD fill1;
 	DWORD fill2;
 };
-//Í¨¹ıÍÆ¼ö¿¨Æ¬¼ÓºÃÓÑ½á¹¹Ìå
+//é€šè¿‡æ¨èå¡ç‰‡åŠ å¥½å‹ç»“æ„ä½“
 struct AddUserFromCardStruct
 {
 	wchar_t* pStr;
 	int strLen;
 	int strMaxLen;
 };
-// ÉèÖÃºÃÓÑ±¸×¢½á¹¹
+// è®¾ç½®å¥½å‹å¤‡æ³¨ç»“æ„
 struct SetRemarkStruct
 {
 	wchar_t *remark;
 	int remarkLen;
 	int maxRemarkLen;
 };
-// ²éÑ¯Êı¾İ¿âºÃÓÑÁĞ±í
+// æŸ¥è¯¢æ•°æ®åº“å¥½å‹åˆ—è¡¨
 void selectFriendList();
-// ¼àÌıºÃÓÑÁĞ±í¸üĞÂ
+// ç›‘å¬å¥½å‹åˆ—è¡¨æ›´æ–°
 void ListFriendsList();
-// ·¢ËÍºÃÓÑÁĞ±í
+// å‘é€å¥½å‹åˆ—è¡¨
 void SendList(Package *package = NULL, int page = 1, int pageSize = 0, int total = 0);
-// Í¬Òâ¼ÓºÃÓÑÇëÇó
+// åŒæ„åŠ å¥½å‹è¯·æ±‚
 void VerifyFriend(PWCHAR v1, PWCHAR v2);
-// ¼ÓºÃÓÑ
+// åŠ å¥½å‹
 void AddFriend(PWCHAR wxid, PWCHAR message);
-// »ñÈ¡ºÃÓÑÏêÇé
+// è·å–å¥½å‹è¯¦æƒ…
 userInfo GetUserInfoByWxid(wchar_t* userwxid);
-// É¾³ıºÃÓÑ
+// åˆ é™¤å¥½å‹
 void DeleteUser(wchar_t* wxid);
-// Í¨¹ıÍÆ¼ö¿¨Æ¬Ìí¼ÓºÃÓÑ
+// é€šè¿‡æ¨èå¡ç‰‡æ·»åŠ å¥½å‹
 void AddUserFromCard(wchar_t* v1, wchar_t* msg);
-// ÉèÖÃºÃÓÑ±¸×¢
+// è®¾ç½®å¥½å‹å¤‡æ³¨
 void SetRemark(wchar_t *wxid, wchar_t *remark);

@@ -4,7 +4,7 @@
 #include "struct.h"
 using namespace std;
 
-//Êı¾İ¿â¾ä±ú
+//æ•°æ®åº“å¥æŸ„
 struct DbHandle
 {
 	int handler;
@@ -20,11 +20,11 @@ typedef int(WINAPI* Sqlite3_exec)(
 	void*,
 	char**
 );
-// ¼àÌıÎ¢ĞÅsqlite¾ä±ú
+// ç›‘å¬å¾®ä¿¡sqliteå¥æŸ„
 void ListenDbHandle();
-// Ö´ĞĞSQL
+// æ‰§è¡ŒSQL
 int runSql(string dbName, string sqlStr, sqlite3_callback callBack);
-// »ñÈ¡ËùÓĞÊı¾İ¿â¾ä±ú
+// è·å–æ‰€æœ‰æ•°æ®åº“å¥æŸ„
 list<DbHandle> getDbHandleList();
-// Çå³şËùÓĞÊı¾İ¿â¾ä±ú
+// æ¸…æ¥šæ‰€æœ‰æ•°æ®åº“å¥æŸ„
 VOID clearDbHandleList();

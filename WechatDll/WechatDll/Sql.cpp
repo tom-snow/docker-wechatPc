@@ -16,7 +16,7 @@ using namespace std;
 list<DbHandle> DbHandleList;
 DWORD databaseJumpAddr = 0;
 
-// ½«»ñÈ¡µ½µÄÊı¾İ¿â¾ä±úÑ¹ÈëlistÄÚ
+// å°†è·å–åˆ°çš„æ•°æ®åº“å¥æŸ„å‹å…¥listå†…
 VOID databaseHwnd(int dbAddress, int dbHandle)
 {
 	DbHandle Db = { 0 };
@@ -50,9 +50,9 @@ __declspec(naked) void databaseDeclspec()
 }
 void ListenDbHandle()
 {
-	// »ñÈ¡Î¢ĞÅ»ùÖ·
+	// è·å–å¾®ä¿¡åŸºå€
 	DWORD winAddress = GetWechatWinAddress();
-	//HOOKÊı¾İ¿â¾ä±ú
+	//HOOKæ•°æ®åº“å¥æŸ„
 	DWORD hookAddress = winAddress + 0x481DD3;
 	databaseJumpAddr = hookAddress + 6;
 	BYTE dbJmpCode[6] = { 0xE9 };
@@ -60,12 +60,12 @@ void ListenDbHandle()
 	*(DWORD*)&dbJmpCode[1] = (DWORD)databaseDeclspec - hookAddress - 5;
 	WriteProcessMemory(GetCurrentProcess(), (LPVOID)hookAddress, dbJmpCode, 6, NULL);
 }
-// Ö´ĞĞSQL
+// æ‰§è¡ŒSQL
 int runSql(string dbName, string sqlStr, sqlite3_callback callBack)
 {
 	for (auto& db : getDbHandleList()) {
 		if (StrStrA(db.path, dbName.c_str())) {
-			// »ñÈ¡Î¢ĞÅ»ùÖ·
+			// è·å–å¾®ä¿¡åŸºå€
 			DWORD winAddress = GetWechatWinAddress();
 			DWORD callAddr = winAddress + 0x8C6B70;
 			char *sql = (char*)sqlStr.c_str();
@@ -86,7 +86,7 @@ int runSql(string dbName, string sqlStr, sqlite3_callback callBack)
 	return 1;
 }
 
-// ·µ»ØÊı¾İ¿â¾ä±úÁĞ±í
+// è¿”å›æ•°æ®åº“å¥æŸ„åˆ—è¡¨
 list<DbHandle> getDbHandleList()
 {
 	return DbHandleList;

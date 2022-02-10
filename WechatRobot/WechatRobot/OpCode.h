@@ -3,35 +3,35 @@
 class OpCode
 {
 public:
-	/** @var int ÏìÓ¦Ö¸Áî */
-	static const int OPCODE_READY = 0x0;  // ws¿Í»§¶Ë×¼±¸Íê±Ï
-	static const int OPCODE_SUCCESS = 0x1;  // ²Ù×÷³É¹¦
-	static const int OPCODE_FAILURE = 0x2;  // ²Ù×÷Ê§°Ü
-	/** @var int ÒµÎñÖ¸Áî */
-	static const int OPCODE_WECHAT_OPEN = 0x10;  // ĞÂ¿ªÒ»¸öÎ¢ĞÅ¿Í»§¶Ë
-	static const int OPCODE_WECHAT_QUIT = 0x11;  // ÍË³öÒ»¸öÎ¢ĞÅ
-	static const int OPCODE_WECHAT_GET_LOGIN_STATUS = 0x12;  // »ñÈ¡µÇÂ¼×´Ì¬
-	static const int OPCODE_MESSAGE_SEND_TEXT = 0x20;  // ·¢ËÍÎÄ±¾ÏûÏ¢
-	static const int OPCODE_MESSAGE_SEND_IMAGE = 0x21;  // ·¢ËÍÍ¼Æ¬ÏûÏ¢
-	static const int OPCODE_MESSAGE_SEND_FILE = 0x22;  // ·¢ËÍ¸½¼şÏûÏ¢
-	static const int OPCODE_MESSAGE_SEND_CARD = 0x23;  // ·¢ËÍÃûÆ¬ÏûÏ¢
-	static const int OPCODE_MESSAGE_SEND_XML = 0x24;  // ·¢ËÍxmlÏûÏ¢
-	static const int OPCODE_FRIEND_ADD = 0x30;  // wxid¼ÓºÃÓÑ
-	static const int OPCODE_FRIEND_ADD_FROM_V1 = 0x31;  // v1¼ÓºÃÓÑ
-	static const int OPCODE_FRIEND_DELETE = 0x32;  // É¾³ıºÃÓÑ
-	static const int OPCODE_FRIEND_VERIFY = 0x33;  // v1+v2Í¬ÒâºÃÓÑÇëÇó
-	static const int OPCODE_FRIEND_LIST = 0x34;  // ºÃÓÑÁĞ±í
-	static const int OPCODE_FRIEND_REMARK = 0x35;  // ĞŞ¸Ä±¸×¢
-	static const int OPCODE_ROOM_CREATE = 0x40;  // ´´½¨ÈºÁÄ
-	static const int OPCODE_ROOM_EDIT_NAME = 0x41;  // ĞŞ¸ÄÈºÃû³Æ
-	static const int OPCODE_ROOM_ANNOUNCEMENT = 0x42;  // ·¢ËÍÈº¹«¸æ
-	static const int OPCODE_ROOM_MEMBER_LIST = 0x43;  // »ñÈ¡Èº³ÉÔ±ÁĞ±í
-	static const int OPCODE_ROOM_ADD_MEMBER = 0x44;  // À­ºÃÓÑÈëÈº
-	static const int OPCODE_ROOM_DELETE_MEMBER = 0x45;  // É¾³ıÈº³ÉÔ±
-	static const int OPCODE_ROOM_AT_MEMBER = 0x46;  // °¬ÌØÈº³ÉÔ±
-	static const int OPCODE_ROOM_QUIT = 0x47;  // ÍË³öÈºÁÄ
-	static const int OPCODE_TRANSFER_RECV = 0x50;  // ÊÕ¿î
-	static const int OPCODE_WECHAT_QRCODE = 0x90;  // ·µ»ØµÇÂ¼¶şÎ¬ÂëµØÖ·
-	static const int OPCODE_LOGIN_INFO = 0x91;  // ·µ»Øµ±Ç°µÇÂ¼µÄÎ¢ĞÅºÅĞÅÏ¢
-	static const int OPCODE_MESSAGE_RECEIVE = 0x92;  // ·µ»Ø½ÓÊÕµÄÎ¢ĞÅÏûÏ¢
+	/** @var int å“åº”æŒ‡ä»¤ */
+	static const int OPCODE_READY = 0x0;  // wså®¢æˆ·ç«¯å‡†å¤‡å®Œæ¯•
+	static const int OPCODE_SUCCESS = 0x1;  // æ“ä½œæˆåŠŸ
+	static const int OPCODE_FAILURE = 0x2;  // æ“ä½œå¤±è´¥
+	/** @var int ä¸šåŠ¡æŒ‡ä»¤ */
+	static const int OPCODE_WECHAT_OPEN = 0x10;  // æ–°å¼€ä¸€ä¸ªå¾®ä¿¡å®¢æˆ·ç«¯
+	static const int OPCODE_WECHAT_QUIT = 0x11;  // é€€å‡ºä¸€ä¸ªå¾®ä¿¡
+	static const int OPCODE_WECHAT_GET_LOGIN_STATUS = 0x12;  // è·å–ç™»å½•çŠ¶æ€
+	static const int OPCODE_MESSAGE_SEND_TEXT = 0x20;  // å‘é€æ–‡æœ¬æ¶ˆæ¯
+	static const int OPCODE_MESSAGE_SEND_IMAGE = 0x21;  // å‘é€å›¾ç‰‡æ¶ˆæ¯
+	static const int OPCODE_MESSAGE_SEND_FILE = 0x22;  // å‘é€é™„ä»¶æ¶ˆæ¯
+	static const int OPCODE_MESSAGE_SEND_CARD = 0x23;  // å‘é€åç‰‡æ¶ˆæ¯
+	static const int OPCODE_MESSAGE_SEND_XML = 0x24;  // å‘é€xmlæ¶ˆæ¯
+	static const int OPCODE_FRIEND_ADD = 0x30;  // wxidåŠ å¥½å‹
+	static const int OPCODE_FRIEND_ADD_FROM_V1 = 0x31;  // v1åŠ å¥½å‹
+	static const int OPCODE_FRIEND_DELETE = 0x32;  // åˆ é™¤å¥½å‹
+	static const int OPCODE_FRIEND_VERIFY = 0x33;  // v1+v2åŒæ„å¥½å‹è¯·æ±‚
+	static const int OPCODE_FRIEND_LIST = 0x34;  // å¥½å‹åˆ—è¡¨
+	static const int OPCODE_FRIEND_REMARK = 0x35;  // ä¿®æ”¹å¤‡æ³¨
+	static const int OPCODE_ROOM_CREATE = 0x40;  // åˆ›å»ºç¾¤èŠ
+	static const int OPCODE_ROOM_EDIT_NAME = 0x41;  // ä¿®æ”¹ç¾¤åç§°
+	static const int OPCODE_ROOM_ANNOUNCEMENT = 0x42;  // å‘é€ç¾¤å…¬å‘Š
+	static const int OPCODE_ROOM_MEMBER_LIST = 0x43;  // è·å–ç¾¤æˆå‘˜åˆ—è¡¨
+	static const int OPCODE_ROOM_ADD_MEMBER = 0x44;  // æ‹‰å¥½å‹å…¥ç¾¤
+	static const int OPCODE_ROOM_DELETE_MEMBER = 0x45;  // åˆ é™¤ç¾¤æˆå‘˜
+	static const int OPCODE_ROOM_AT_MEMBER = 0x46;  // è‰¾ç‰¹ç¾¤æˆå‘˜
+	static const int OPCODE_ROOM_QUIT = 0x47;  // é€€å‡ºç¾¤èŠ
+	static const int OPCODE_TRANSFER_RECV = 0x50;  // æ”¶æ¬¾
+	static const int OPCODE_WECHAT_QRCODE = 0x90;  // è¿”å›ç™»å½•äºŒç»´ç åœ°å€
+	static const int OPCODE_LOGIN_INFO = 0x91;  // è¿”å›å½“å‰ç™»å½•çš„å¾®ä¿¡å·ä¿¡æ¯
+	static const int OPCODE_MESSAGE_RECEIVE = 0x92;  // è¿”å›æ¥æ”¶çš„å¾®ä¿¡æ¶ˆæ¯
 };

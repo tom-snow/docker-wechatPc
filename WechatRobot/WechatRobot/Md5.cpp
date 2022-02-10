@@ -44,27 +44,27 @@ MD5::MD5() {
 	tempD = D;
 	strlength = 0;
 }
-// Fº¯Êı
+// Få‡½æ•°
 unsigned int MD5::F(unsigned int b, unsigned int c, unsigned int d) {
 	return (b & c) | ((~b) & d);
 }
-// Gº¯Êı
+// Gå‡½æ•°
 unsigned int MD5::G(unsigned int b, unsigned int c, unsigned int d) {
 	return (b & d) | (c & (~d));
 }
-// Hº¯Êı
+// Hå‡½æ•°
 unsigned int MD5::H(unsigned int b, unsigned int c, unsigned int d) {
 	return b ^ c ^ d;
 }
-// Iº¯Êı
+// Iå‡½æ•°
 unsigned int MD5::I(unsigned int b, unsigned int c, unsigned int d) {
 	return c ^ (b | (~d));
 }
-// ÒÆÎ»²Ù×÷º¯Êı
+// ç§»ä½æ“ä½œå‡½æ•°
 unsigned int MD5::shift(unsigned int a, unsigned int n) {
 	return (a << n) | (a >> (32 - n));
 }
-// ±àÂëº¯Êı
+// ç¼–ç å‡½æ•°
 string MD5::encode(string src) {
 	vector<unsigned int> rec = padding(src);
 	for (unsigned int i = 0; i < strlength / 16; i++) {
@@ -76,7 +76,7 @@ string MD5::encode(string src) {
 	}
 	return format(tempA) + format(tempB) + format(tempC) + format(tempD);
 }
-// Ñ­»·Ñ¹Ëõ
+// å¾ªç¯å‹ç¼©
 void MD5::iterateFunc(unsigned int* X, int size) {
 	unsigned int a = tempA,
 		b = tempB,
@@ -86,22 +86,22 @@ void MD5::iterateFunc(unsigned int* X, int size) {
 		g, k;
 	for (int i = 0; i < 64; i++) {
 		if (i < 16) {
-			// Fµü´ú
+			// Fè¿­ä»£
 			g = F(b, c, d);
 			k = i;
 		}
 		else if (i < 32) {
-			// Gµü´ú
+			// Gè¿­ä»£
 			g = G(b, c, d);
 			k = (1 + 5 * i) % 16;
 		}
 		else if (i < 48) {
-			// Hµü´ú
+			// Hè¿­ä»£
 			g = H(b, c, d);
 			k = (5 + 3 * i) % 16;
 		}
 		else {
-			// Iµü´ú
+			// Iè¿­ä»£
 			g = I(b, c, d);
 			k = (7 * i) % 16;
 		}
@@ -116,24 +116,24 @@ void MD5::iterateFunc(unsigned int* X, int size) {
 	tempC += c;
 	tempD += d;
 }
-// Ìî³ä×Ö·û´®
+// å¡«å……å­—ç¬¦ä¸²
 vector<unsigned int> MD5::padding(string src) {
-	// ÒÔ512Î»,64¸ö×Ö½ÚÎªÒ»×é
+	// ä»¥512ä½,64ä¸ªå­—èŠ‚ä¸ºä¸€ç»„
 	unsigned int remain = (src.length() * 8) % 512 == 448 ? 512 : 448 - (src.length() * 8) % 512;
 	unsigned int num = ((remain + src.length() * 8) + 64) / 512;
 	vector<unsigned int> rec(num * 16);
 	strlength = num * 16;
 	for (unsigned int i = 0; i < src.length(); i++) {
-		// Ò»¸öunsigned int¶ÔÓ¦4¸ö×Ö½Ú£¬±£´æ4¸ö×Ö·ûĞÅÏ¢
+		// ä¸€ä¸ªunsigned intå¯¹åº”4ä¸ªå­—èŠ‚ï¼Œä¿å­˜4ä¸ªå­—ç¬¦ä¿¡æ¯
 		rec[i >> 2] |= (int)(src[i]) << ((i % 4) * 8);
 	}
-	// ²¹³ä1000...000
+	// è¡¥å……1000...000
 	rec[src.length() >> 2] |= 0x80 << ((src.length() % 4) * 8);
-	// Ìî³äÔ­ÎÄ³¤¶È
+	// å¡«å……åŸæ–‡é•¿åº¦
 	rec[rec.size() - 2] = src.length() << 3;
 	return rec;
 }
-// ÕûÀíÊä³ö
+// æ•´ç†è¾“å‡º
 string MD5::format(unsigned int num) {
 	string res = "";
 	unsigned int base = 1 << 8;

@@ -1,4 +1,4 @@
-// Injection.cpp : ¶¨Òå×¢Èë·½·¨¡£
+// Injection.cpp : å®šä¹‰æ³¨å…¥æ–¹æ³•ã€‚
 //
 #include "stdafx.h"
 #include "Injection.h"
@@ -9,11 +9,11 @@
 
 
 /*
-×¢ÈëDLL
+æ³¨å…¥DLL
 */
 INT_PTR InjectDll(DWORD pid)
 {
-	// »ñÈ¡Î¢ĞÅ½ø³ÌµÄPID
+	// è·å–å¾®ä¿¡è¿›ç¨‹çš„PID
 	if(pid == 0) {
 		DWORD pid = ProcessNameFindPid(WECHAT_PROCESS_NAME);
 		if (pid == 0) {
@@ -21,28 +21,28 @@ INT_PTR InjectDll(DWORD pid)
 		}
 	}
 	
-	// ¼ì²éµ½ÒÑ¾­×¢Èë¾Í²»ÒªÔÙ×¢ÈëÁË
+	// æ£€æŸ¥åˆ°å·²ç»æ³¨å…¥å°±ä¸è¦å†æ³¨å…¥äº†
 	INT_PTR result = CheckInject(pid);
 	if (result == TRUE || result == NULL) {
-		// ´ò¿ª½ø³Ì
+		// æ‰“å¼€è¿›ç¨‹
 		HANDLE hProcess = OpenProcess(PROCESS_ALL_ACCESS, FALSE, pid);
 		if (hProcess == NULL) {
 			return FALSE;
 		}
-		// »ñÈ¡DLLÂ·¾¶
+		// è·å–DLLè·¯å¾„
 		CHAR dllPath[MAX_PATH] = { 0 };
 		GetDllPath(dllPath, MAX_PATH);
 
 		if (strlen(dllPath) <= 0) {
-			MessageBox(NULL, L"DLLÎÄ¼ş²»´æÔÚ£¡", L"ÎÂÜ°ÌáÊ¾£º", 0);
+			MessageBox(NULL, L"DLLæ–‡ä»¶ä¸å­˜åœ¨ï¼", L"æ¸©é¦¨æç¤ºï¼š", 0);
 			return FALSE;
 		}
-		// Ğ´ÈëÄÚ´æ
+		// å†™å…¥å†…å­˜
 		LPVOID dllAddress = writeMemory(hProcess, dllPath);
 		if (dllAddress == NULL) {
 			return FALSE;
 		}
-		// ¼ÓÔØDLL
+		// åŠ è½½DLL
 		if (loadLibrary(hProcess, dllAddress) == FALSE) {
 			return FALSE;
 		}
@@ -53,22 +53,22 @@ INT_PTR InjectDll(DWORD pid)
 }
 
 /*
-¼ì²éÊÇ·ñÒÑ¾­×¢Èë
+æ£€æŸ¥æ˜¯å¦å·²ç»æ³¨å…¥
 */
 INT_PTR CheckInject(DWORD dwProcessid)
 {
 	HANDLE hModuleSnap = INVALID_HANDLE_VALUE;
-	// ³õÊ¼»¯Ä£¿éĞÅÏ¢½á¹¹Ìå
+	// åˆå§‹åŒ–æ¨¡å—ä¿¡æ¯ç»“æ„ä½“
 	MODULEENTRY32 me32 = { sizeof(MODULEENTRY32) };
-	// ´´½¨Ä£¿é¿ìÕÕ 1 ¿ìÕÕÀàĞÍ 2 ½ø³ÌID
+	// åˆ›å»ºæ¨¡å—å¿«ç…§ 1 å¿«ç…§ç±»å‹ 2 è¿›ç¨‹ID
 	hModuleSnap = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE, dwProcessid);
-	// Èç¹û¾ä±úÎŞĞ§¾Í·µ»Øfalse
+	// å¦‚æœå¥æŸ„æ— æ•ˆå°±è¿”å›false
 	if (hModuleSnap == INVALID_HANDLE_VALUE) {
 		return NULL;
 	}
-	// Í¨¹ıÄ£¿é¿ìÕÕ¾ä±ú»ñÈ¡µÚÒ»¸öÄ£¿éµÄĞÅÏ¢
+	// é€šè¿‡æ¨¡å—å¿«ç…§å¥æŸ„è·å–ç¬¬ä¸€ä¸ªæ¨¡å—çš„ä¿¡æ¯
 	if (!Module32First(hModuleSnap, &me32)) {
-		//»ñÈ¡Ê§°ÜÔò¹Ø±Õ¾ä±ú
+		//è·å–å¤±è´¥åˆ™å…³é—­å¥æŸ„
 		CloseHandle(hModuleSnap);
 		return NULL;
 	}
@@ -81,7 +81,7 @@ INT_PTR CheckInject(DWORD dwProcessid)
 }
 
 /*
-Ğ¶ÔØ×¢Èë
+å¸è½½æ³¨å…¥
 */
 INT_PTR UnjectDll()
 {
@@ -103,7 +103,7 @@ INT_PTR UnjectDll()
 		}
 		DWORD dwPid = pe32.th32ProcessID;
 
-		//±éÀúÄ£¿é
+		//éå†æ¨¡å—
 		HANDLE hSnap = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE, dwPid);
 
 		if (hSnap == INVALID_HANDLE_VALUE) {
@@ -124,15 +124,15 @@ INT_PTR UnjectDll()
 			CloseHandle(hSnap);
 			continue;
 		}
-		//´ò¿ªÄ¿±ê½ø³Ì
+		//æ‰“å¼€ç›®æ ‡è¿›ç¨‹
 		HANDLE hPro = OpenProcess(PROCESS_ALL_ACCESS, FALSE, dwPid);
 		if (!hPro) {
 			CloseHandle(hSnap);
 			continue;
 		}
-		//»ñÈ¡FreeLibraryº¯ÊıµØÖ·
+		//è·å–FreeLibraryå‡½æ•°åœ°å€
 		FARPROC pFun = GetProcAddress(Kernel32, "FreeLibraryA");
-		//´´½¨Ô¶³ÌÏß³ÌÖ´ĞĞFreeLibrary
+		//åˆ›å»ºè¿œç¨‹çº¿ç¨‹æ‰§è¡ŒFreeLibrary
 		HANDLE hThread = CreateRemoteThread(hPro, NULL, 0, (LPTHREAD_START_ROUTINE)pFun, ME32.modBaseAddr, 0, NULL);
 		if (hThread != NULL) {
 			//WaitForSingleObject(hThread, INFINITE);
