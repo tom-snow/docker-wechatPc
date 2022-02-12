@@ -9,10 +9,9 @@
 #include "Send.h"
 #include "Struct.h"
 #include <stdio.h>
-#include <windows.h>
+#include <Windows.h>
 #include <string>
 #include <tchar.h>
-#include <Windows.h>
 #include <memoryapi.h>
 #include <WinBase.h>
 #include <iostream>
@@ -41,10 +40,10 @@ bool readConfigFile(const char * cfgfilepath, const string & key, string & value
 		return false;
 	}
 	printf_s("[Debug] Opened Config file\n");
-	char tmp[1000];
+	char tmp[500];
 	while (!cfgFile.eof())//循环读取每一行
 	{
-		cfgFile.getline(tmp, 1000);//每行读取前1000个字符
+		cfgFile.getline(tmp, 500);//每行读取前 500 个字符
 		string line(tmp);
 		size_t pos = line.find('=');//找到每行的“=”号位置，之前是key之后是value
 		if (pos == string::npos) continue; // 跳过空行或者注释行
@@ -185,7 +184,7 @@ VOID ReadWechatUser()
 	HWND hwndDlg = GetGlobalHwnd();
 
 	// 获取微信ID
-	CHAR wxid[0x100] = { 0 };
+	CHAR wxid[0x100] = {0};
 	int wxidLength = (int)*((DWORD*)(winAddress + WX_USER_ID + 0x10));
 	sprintf_s(wxid, "%s", (CHAR*)(winAddress + WX_USER_ID));
 	if (strlen(wxid) != wxidLength) {  // 指针
