@@ -4,6 +4,7 @@
 
 /.vs
 /.vscode
+**/.idea/
 
 ################################################################################
 # This below was automatically created for macOS system

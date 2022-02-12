@@ -36,5 +36,7 @@ def ReadDirectoryFile(rootdir):
                            os.path.join(parent, filename))
 
 if __name__ == "__main__":
+    src_path = "WechatDll/WechatDll"
+    ReadDirectoryFile(src_path)
     src_path = "WechatRobot/WechatRobot"
     ReadDirectoryFile(src_path)

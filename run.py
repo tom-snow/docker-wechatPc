@@ -57,6 +57,7 @@ class DockerWechatHook:
         app_id = os.environ['APP_ID']
         app_key = os.environ['APP_KEY']
         hex_version = self.compute_version(os.environ['WECHAT_DEST_VERSION'])
+        os.environ['WECHAT_HEX_VERSION'] = hex_version
         # 修改配置文件
         subprocess.run(['sed', '-i', '-e',
             f's@app_id=.*$@app_id={app_id}@g' , '-e',
