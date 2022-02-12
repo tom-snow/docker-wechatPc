@@ -16,47 +16,11 @@
 #include <WinBase.h>
 #include <iostream>
 #include <string>
-#include <fstream>
 
+#define BUFSIZE 128
+#define ENVNAME TEXT("WECHAT_HEX_VERSION")
 
 using namespace std;
-
-/*
- *parameter: cfgfilepath 文件的绝对路径名如: /user/home/my.cfg
- *           key         文本中的变量名
- *           value       对应变量的值，用于保存
- *
- * modified from: https://blog.csdn.net/lzx_bupt/article/details/7073272
- * 备注：代码鲁棒性不高，能用就行
- */
-bool readConfigFile(const char * cfgfilepath, const string & key, string & value)
-{
-	fstream cfgFile;
-	cfgFile.open(cfgfilepath);//打开文件	
-	if (!cfgFile.is_open())
-	{
-		//cout << "can not open cfg file!" << endl;
-		printf_s("can not open cfg file!\n");
-		return false;
-	}
-	printf_s("[Debug] Opened Config file\n");
-	char tmp[500];
-	while (!cfgFile.eof())//循环读取每一行
-	{
-		cfgFile.getline(tmp, 500);//每行读取前 500 个字符
-		string line(tmp);
-		size_t pos = line.find('=');//找到每行的“=”号位置，之前是key之后是value
-		if (pos == string::npos) continue; // 跳过空行或者注释行
-		string tmpKey = line.substr(0, pos);//取=号之前
-		if (key == tmpKey)
-		{
-			value = line.substr(pos + 1);//取=号之后
-			return true;
-		}
-	}
-	return false;
-}
-
 
 //修改内存版本号
 VOID WriteData() {
@@ -64,27 +28,75 @@ VOID WriteData() {
 	DWORD wxVersion = winAddress + 0x16276C4;
 	// DWORD wxVersion = winAddress + 0x161DA78;
 
+	/*
+	* GetEnvironmentVariable
+	* via: https://docs.microsoft.com/en-us/windows/win32/procthread/changing-environment-variables#example-2
+	*/
+	DWORD dwRet, dwErr;
+	LPTSTR envHexVersion;
+	BOOL fExist;
 
+	envHexVersion = (LPTSTR)malloc(BUFSIZE * sizeof(TCHAR));
+	if (NULL == envHexVersion)
+	{
+		printf_s("Out of memory\n");
+		return;
+	}
+
+	dwRet = GetEnvironmentVariable(ENVNAME, envHexVersion, BUFSIZE);
+
+	if (0 == dwRet)
+	{
+		dwErr = GetLastError();
+		if (ERROR_ENVVAR_NOT_FOUND == dwErr)
+		{
+			printf("Environment variable does not exist.\n");
+			fExist = FALSE;
+		}
+	}
+	else if (BUFSIZE < dwRet)
+	{
+		envHexVersion = (LPTSTR)realloc(envHexVersion, dwRet * sizeof(TCHAR));
+		if (NULL == envHexVersion)
+		{
+			printf("Out of memory\n");
+			return;
+		}
+		dwRet = GetEnvironmentVariable(ENVNAME, envHexVersion, dwRet);
+		if (!dwRet)
+		{
+			printf("GetEnvironmentVariable failed (%d)\n", GetLastError());
+			return;
+		}
+		else fExist = TRUE;
+	}
+	else fExist = TRUE;
 
 	DWORD oldVersion = 0x0;
 	DWORD newVersion = 0x63030073;
-	string value = "0x63030073";
-	bool readSuccess = readConfigFile("Z:\\Debug\\Config.txt", "hex_version", value);
-	if (readSuccess) {
-		sscanf_s((char*)value.data(), "%x", &newVersion);
-		printf_s("[Debug] Read wechat version from config file. Loaded data: 0x%x\n", newVersion);
-	}
 
+	if (fExist) {
+		// printf_s("[Debug] envHexVersion: %ls\n", envHexVersion);
+		int sizeNeeded = WideCharToMultiByte(CP_UTF8, 0, envHexVersion, -1, NULL, 0, NULL, NULL);
+		// printf_s("[Debug] sizeNeeded: %d\n", sizeNeeded);
+		char* hexVersion = new char[sizeNeeded];
+		WideCharToMultiByte(CP_UTF8, NULL, envHexVersion, -1, hexVersion, sizeNeeded, NULL, NULL);
+		// printf_s("[Debug] hexVersion: %s\n", hexVersion);
+		sscanf_s(hexVersion, "%x", &newVersion);
+		delete hexVersion;
+		printf_s("[Debug] Read wechat version from EnvironmentVariable. Loaded data: 0x%x\n", newVersion);
+	}
 
 	ReadProcessMemory(GetCurrentProcess(), (LPVOID)wxVersion, (LPVOID)&oldVersion, sizeof((LPVOID)newVersion), NULL);
 	printf_s("[Debug] winAddress: 0x%x, wxVersionAddress: 0x%x, data: 0x%x\n", winAddress, wxVersion, oldVersion);
 	WriteProcessMemory(GetCurrentProcess(), (LPVOID)wxVersion, &newVersion, sizeof((LPVOID)newVersion), NULL);
-	ReadProcessMemory(GetCurrentProcess(), (LPVOID)wxVersion, (LPVOID)&oldVersion, sizeof((LPVOID)newVersion), NULL);
-	printf_s("[Debug]\tsetVersion: 0x%x, newData: 0x%x\n", newVersion, oldVersion);
+	// ReadProcessMemory(GetCurrentProcess(), (LPVOID)wxVersion, (LPVOID)&oldVersion, sizeof((LPVOID)newVersion), NULL);
+	// printf_s("[Debug]\tsetVersion: 0x%x, newData: 0x%x\n", newVersion, oldVersion);
 	if (oldVersion == newVersion) {
 		printf_s("Wechat Version change success!!!\n\n");
 	}
 
+	free(envHexVersion);
 }
 
 VOID SendWechatUser(Package *package)
@@ -184,7 +196,7 @@ VOID ReadWechatUser()
 	HWND hwndDlg = GetGlobalHwnd();
 
 	// 获取微信ID
-	CHAR wxid[0x100] = {0};
+	CHAR wxid[0x100] = { 0 };
 	int wxidLength = (int)*((DWORD*)(winAddress + WX_USER_ID + 0x10));
 	sprintf_s(wxid, "%s", (CHAR*)(winAddress + WX_USER_ID));
 	if (strlen(wxid) != wxidLength) {  // 指针
