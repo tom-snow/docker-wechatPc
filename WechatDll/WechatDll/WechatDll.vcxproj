@@ -94,6 +94,7 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(ProjectDir)Library\HpSocket\Include;%(AdditionalUsingDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -188,6 +189,7 @@
     <ClInclude Include="OpCode.h" />
     <ClInclude Include="Package.h" />
     <ClInclude Include="PJson.h" />
+    <ClInclude Include="ReadEnv.h" />
     <ClInclude Include="Receive.h" />
     <ClInclude Include="Send.h" />
     <ClInclude Include="Sha1.h" />
@@ -211,6 +213,7 @@
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="Md5.cpp" />
     <ClCompile Include="Package.cpp" />
+    <ClCompile Include="ReadEnv.cpp" />
     <ClCompile Include="Receive.cpp" />
     <ClCompile Include="Send.cpp" />
     <ClCompile Include="Sha1.cpp" />

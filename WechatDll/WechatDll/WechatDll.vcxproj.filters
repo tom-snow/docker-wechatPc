@@ -85,6 +85,15 @@
     <Filter Include="数据响应\头文件">
       <UniqueIdentifier>{6007fa98-e236-4eb7-b659-559069e51e51}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ReadEnv">
+      <UniqueIdentifier>{375cbafd-dcb8-4b29-b87e-2d00ff847114}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ReadEnv\头文件">
+      <UniqueIdentifier>{139196d6-503a-4df7-aa58-63fe062f5218}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ReadEnv\源文件">
+      <UniqueIdentifier>{20996daa-8d22-49c7-bb74-4da2302184ba}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -228,6 +237,9 @@
     <ClInclude Include="Sql.h">
       <Filter>微信\头文件</Filter>
     </ClInclude>
+    <ClInclude Include="ReadEnv.h">
+      <Filter>ReadEnv\头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -283,6 +295,9 @@
     </ClCompile>
     <ClCompile Include="Sql.cpp">
       <Filter>微信\源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ReadEnv.cpp">
+      <Filter>ReadEnv\源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

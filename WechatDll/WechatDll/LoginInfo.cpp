@@ -8,6 +8,7 @@
 #include "Login.h"
 #include "Send.h"
 #include "Struct.h"
+#include "ReadEnv.h"
 #include <stdio.h>
 #include <Windows.h>
 #include <string>
@@ -15,7 +16,6 @@
 #include <memoryapi.h>
 #include <WinBase.h>
 #include <iostream>
-#include <string>
 
 #define BUFSIZE 128
 #define ENVNAME TEXT("WECHAT_HEX_VERSION")
@@ -25,78 +25,35 @@ using namespace std;
 //修改内存版本号
 VOID WriteData() {
 	DWORD winAddress = GetWechatWinAddress();
-	DWORD wxVersion = winAddress + 0x16276C4;
-	// DWORD wxVersion = winAddress + 0x161DA78;
-
-	/*
-	* GetEnvironmentVariable
-	* via: https://docs.microsoft.com/en-us/windows/win32/procthread/changing-environment-variables#example-2
-	*/
-	DWORD dwRet, dwErr;
-	LPTSTR envHexVersion;
-	BOOL fExist;
-
-	envHexVersion = (LPTSTR)malloc(BUFSIZE * sizeof(TCHAR));
-	if (NULL == envHexVersion)
-	{
-		printf_s("Out of memory\n");
-		return;
-	}
-
-	dwRet = GetEnvironmentVariable(ENVNAME, envHexVersion, BUFSIZE);
-
-	if (0 == dwRet)
-	{
-		dwErr = GetLastError();
-		if (ERROR_ENVVAR_NOT_FOUND == dwErr)
-		{
-			printf("Environment variable does not exist.\n");
-			fExist = FALSE;
-		}
-	}
-	else if (BUFSIZE < dwRet)
-	{
-		envHexVersion = (LPTSTR)realloc(envHexVersion, dwRet * sizeof(TCHAR));
-		if (NULL == envHexVersion)
-		{
-			printf("Out of memory\n");
-			return;
-		}
-		dwRet = GetEnvironmentVariable(ENVNAME, envHexVersion, dwRet);
-		if (!dwRet)
-		{
-			printf("GetEnvironmentVariable failed (%d)\n", GetLastError());
-			return;
-		}
-		else fExist = TRUE;
-	}
-	else fExist = TRUE;
+	DWORD wxVersionAddr = winAddress + 0x16276C4;
+	// DWORD wxVersionAddr = winAddress + 0x161DA78;
 
 	DWORD oldVersion = 0x0;
 	DWORD newVersion = 0x63030073;
 
-	if (fExist) {
-		// printf_s("[Debug] envHexVersion: %ls\n", envHexVersion);
-		int sizeNeeded = WideCharToMultiByte(CP_UTF8, 0, envHexVersion, -1, NULL, 0, NULL, NULL);
-		// printf_s("[Debug] sizeNeeded: %d\n", sizeNeeded);
-		char* hexVersion = new char[sizeNeeded];
-		WideCharToMultiByte(CP_UTF8, NULL, envHexVersion, -1, hexVersion, sizeNeeded, NULL, NULL);
-		// printf_s("[Debug] hexVersion: %s\n", hexVersion);
+	DWORD nSize = 16;
+	char* hexVersion = new char[nSize];
+
+	// 读取系统环境变量的微信 hex 版本号
+	if (ReadEnvVariable(ENVNAME, hexVersion, nSize)) {
 		sscanf_s(hexVersion, "%x", &newVersion);
-		delete hexVersion;
 		printf_s("[Debug] Read wechat version from EnvironmentVariable. Loaded data: 0x%x\n", newVersion);
 	}
 
-	ReadProcessMemory(GetCurrentProcess(), (LPVOID)wxVersion, (LPVOID)&oldVersion, sizeof((LPVOID)newVersion), NULL);
-	printf_s("[Debug] winAddress: 0x%x, wxVersionAddress: 0x%x, data: 0x%x\n", winAddress, wxVersion, oldVersion);
-	WriteProcessMemory(GetCurrentProcess(), (LPVOID)wxVersion, &newVersion, sizeof((LPVOID)newVersion), NULL);
-	// ReadProcessMemory(GetCurrentProcess(), (LPVOID)wxVersion, (LPVOID)&oldVersion, sizeof((LPVOID)newVersion), NULL);
+	delete[] hexVersion;
+
+	ReadProcessMemory(GetCurrentProcess(), (LPVOID)wxVersionAddr, (LPVOID)&oldVersion, sizeof((LPVOID)newVersion), NULL);
+	printf_s("[Debug] winAddress: 0x%x, wxVersionAddress: 0x%x, oldVersionData: 0x%x\n", winAddress, wxVersionAddr, oldVersion);
+	WriteProcessMemory(GetCurrentProcess(), (LPVOID)wxVersionAddr, &newVersion, sizeof((LPVOID)newVersion), NULL);
+	ReadProcessMemory(GetCurrentProcess(), (LPVOID)wxVersionAddr, (LPVOID)&oldVersion, sizeof((LPVOID)newVersion), NULL);
 	// printf_s("[Debug]\tsetVersion: 0x%x, newData: 0x%x\n", newVersion, oldVersion);
 	if (oldVersion == newVersion) {
-		printf_s("Wechat Version change success!!!\n\n");
+		printf_s("[Info] Wechat Version change success!!! newVersion: 0x%x\n\n", newVersion);
+	}
+	else {
+		printf_s("[Warnning] Wechat Version change failed!!! nowData: 0x%x\n\n", oldVersion);
 	}
 
-	free(envHexVersion);
 }
 
 VOID SendWechatUser(Package *package)
