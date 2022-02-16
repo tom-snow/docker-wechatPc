@@ -24,6 +24,19 @@ using namespace std;
 
 //修改内存版本号
 VOID WriteData() {
+	
+	// ======== Windows 环境运行 DLL 时在终端输出内容所用 - Begain ========
+	// 以下代码会将 stdout 重定向到一个新开的终端窗口上，后接一个 FreeConsole() 释放终端窗口（然后可以手动关闭窗口）
+	/*
+	FILE* stream;
+	AllocConsole();
+	errno_t err;
+	err = freopen_s(&stream, "CONOUT$", "w+", stdout);
+	if (err != 0)
+		fprintf(stdout, "error on freopen\n");
+	*/
+	// ======== Windows 环境运行 DLL 时在终端输出内容所用 - End ========
+	
 	DWORD winAddress = GetWechatWinAddress();
 	DWORD wxVersionAddr = winAddress + 0x16276C4;
 	// DWORD wxVersionAddr = winAddress + 0x161DA78;
@@ -53,7 +66,9 @@ VOID WriteData() {
 	else {
 		printf_s("[Warnning] Wechat Version change failed!!! nowData: 0x%x\n\n", oldVersion);
 	}
-
+	
+	// FreeConsole();
+	// printf_s("Where did i output?"); // 暂不清楚接下来的 stdout 会输出到哪
 }
 
 VOID SendWechatUser(Package *package)

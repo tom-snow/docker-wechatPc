@@ -13,7 +13,7 @@ def GBK_2_UTF8(src, dst):
     f = open(src, "rb")
     coding = chardet.detect(f.read())["encoding"]
     f.close()
-    if coding != "utf-8":
+    if coding != "utf-8" and coding != "ascii": # 同时忽略 ascii 
         with codecs.open(src, "r", coding) as f:
             try:
                 WriteFile(dst, f.read(), encoding="utf-8")
@@ -40,3 +40,4 @@ if __name__ == "__main__":
     ReadDirectoryFile(src_path)
     src_path = "WechatRobot/WechatRobot"
     ReadDirectoryFile(src_path)
+    print("All done!")
