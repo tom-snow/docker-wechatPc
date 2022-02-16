@@ -17,8 +17,9 @@
 void Send::SendFriendList(FriendList *list, Package *package, int page, int pageSize, int total)
 {
 	// 初始化数据包
+	Package tmp_package;
 	if (!package) {
-		package = new Package();
+		package = &tmp_package;
 	}
 	// 设置操作类型
 	package->SetOpCode(OpCode::OPCODE_FRIEND_LIST);
@@ -259,6 +260,7 @@ void Send::SendFriendList(FriendList *list, Package *package, int page, int page
 
 			friendList.PushBack(info, package->json.GetAllocator());
 		}
+
 		p = p->next;
 	}
 
@@ -328,6 +330,10 @@ void Send::SendWxMessage(WebsocketMessageStruct *message, Package *package)
 	rapidjson::Value content(rapidjson::kStringType);
 	content.SetString(message->content, strlen(message->content));
 	body.AddMember("content", content, package->json.GetAllocator());
+	// 图片文件名
+	rapidjson::Value imageFile(rapidjson::kStringType);
+	imageFile.SetString(message->imageFile, strlen(message->imageFile));
+	body.AddMember("imageFile", imageFile, package->json.GetAllocator());
 
 	package->SetBody(body);
 
@@ -341,8 +347,9 @@ void Send::SendWxMessage(WebsocketMessageStruct *message, Package *package)
 void Send::SendLoginInfo(LoginInfo *info, Package *package)
 {
 	// 初始化数据包
+	Package tmp_package;
 	if (!package) {
-		package = new Package();
+		package = &tmp_package;
 	}
 	// 设置操作类型
 	package->SetOpCode(OpCode::OPCODE_LOGIN_INFO);
@@ -411,8 +418,9 @@ void Send::SendLoginInfo(LoginInfo *info, Package *package)
 void Send::SendLoginStatus(int loginStatus, Package *package)
 {
 	// 初始化数据包
+	Package tmp_package;
 	if (!package) {
-		package = new Package();
+		package = &tmp_package;
 	}
 	// 设置操作类型
 	package->SetOpCode(OpCode::OPCODE_WECHAT_GET_LOGIN_STATUS);
@@ -434,8 +442,9 @@ void Send::SendLoginStatus(int loginStatus, Package *package)
 void Send::SendLoginQrcode(int loginStatus, char *qrcode, Package *package)
 {
 	// 初始化数据包
+	Package tmp_package;
 	if (!package) {
-		package = new Package();
+		package = &tmp_package;
 	}
 	// 设置操作类型
 	package->SetOpCode(OpCode::OPCODE_WECHAT_QRCODE);

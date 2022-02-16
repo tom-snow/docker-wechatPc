@@ -67,6 +67,7 @@ struct WebsocketMessageStruct
 	char msgSourceXml[0x2048] = { 0 };  // 群其他消息
 	char wxid[0x100] = { 0 };  // 发送人微信ID
 	char roomId[0x100] = { 0 };  // 群ID
+	char imageFile[0x200] = { 0 };  // 图片文件名
 	char content[0x8092] = { 0 };  // 消息内容
 };
 
