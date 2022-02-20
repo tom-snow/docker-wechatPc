@@ -331,9 +331,11 @@ void Send::SendWxMessage(WebsocketMessageStruct *message, Package *package)
 	content.SetString(message->content, strlen(message->content));
 	body.AddMember("content", content, package->json.GetAllocator());
 	// 图片文件名
-	rapidjson::Value imageFile(rapidjson::kStringType);
-	imageFile.SetString(message->imageFile, strlen(message->imageFile));
-	body.AddMember("imageFile", imageFile, package->json.GetAllocator());
+	if (message->msgType == 0x03) {
+		rapidjson::Value imageFile(rapidjson::kStringType);
+		imageFile.SetString(message->imageFile, strlen(message->imageFile));
+		body.AddMember("imageFile", imageFile, package->json.GetAllocator());
+	}
 
 	package->SetBody(body);
 
