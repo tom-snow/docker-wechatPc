@@ -180,4 +180,93 @@ class Tools {
         }
         return $key;
     }
+
+    /**
+     * base64Encode 文件（含 mime_type， 不建议使用）
+     * @param string $sourcePath 被 encode 的文件路径
+     * @return string|null "data:$mime_type;base64,$base64_encoded_file"
+     */
+    public static function encodeFileWithMime($sourcePath)
+    {
+        $base64_encoded_file = self::encodeFile($sourcePath);
+        if (!$base64_encoded_file) {
+            Tools::log('Error： function encodeFileWithMime. $base64_encoded_file is null');
+            return $base64_encoded_file;
+        }
+        $mime_type = mime_content_type($sourcePath);
+        $mime_data = 'data:'. $mime_type .';base64,'. $base64_encoded_file ;
+        return $mime_data ;
+    }
+
+    /**
+     * base64Encode 文件（纯 base64）
+     * @param string $sourcePath 被 encode 的文件路径
+     * @return string|null "$base64_encoded_file"
+     */
+    public static function encodeFile($sourcePath)
+    {
+        $base64_encoded_file = null;
+        if (!file_exists($sourcePath) || !is_readable($sourcePath) ) {
+            Tools::log('Error： function encodeFile. $sourcePath: file not exists or not readable');
+            return $base64_encoded_file;
+        }
+        $source = file_get_contents($sourcePath);
+        if (empty($source) ) {
+            Tools::log('Error： function encodeFile. $sourcePath: file is empty');
+            return $base64_encoded_file;
+        }
+        $base64_encoded_file = base64_encode($source);
+        return $base64_encoded_file;
+    }
+
+    /**
+     * base64Decode 文件（含 mime_type，不建议使用）
+     * @param string $mime_data 源数据，格式："data:$mime_type;base64,$base64_encoded_file"
+     * @param string $output_filename 输出的文件名（不含后缀）
+     * @param string $ext 输出文件的后缀（不指定则根据 $mime_type 判断: https://www.iana.org/assignments/media-types/media-types.xhtml ）
+     * @param string $output_path 输出文件所在的路径（默认 '/tmp/'）
+     * @return string|null decode 后输出文件的完整路径
+     */
+    public static function decodeFileWithMime($mime_data, $output_filename, $ext = null, $output_path = '/tmp/')
+    {
+        $pattern = "/(?<=^data:)\w+\/[\w\-\+\d.]+(?=;base64,)/i";
+        $default_mime_type = "application/octet-stream";
+        if (!preg_match($pattern, $mime_data, $mime_type)) {
+            Tools::log('Error： function decodeFileWithMime. $mime_data: not match "data:$mime_type;base64,$base64_encoded_file". (pattern: ' . $pattern . ')');
+            return null;
+        }
+        if (!$ext) {
+            $ext = Tools::config($mime_type[0], "MimeType");
+            if ($ext) {
+                Tools::log('Info： function decodeFileWithMime. Matched: "'.$mime_type[0].'" -> "'.$ext.'"');
+            } else {
+                $ext = Tools::config($default_mime_type , "MimeType");
+                Tools::log('Warnning： function decodeFileWithMime. No MimeType Matched: "'.$mime_type[0].'". Using default ext: "'.$ext.'"');
+            }
+        }
+        $file = self::decodeFile(explode(",", $mime_data, 2)[1], $output_filename, $ext, $output_path);
+        return $file;
+    }
+
+    /**
+     * base64Decode 文件（纯 base64）
+     * @param string $encoded_data 源数据，格式："$base64_encoded_file"
+     * @param string $output_filename 输出的文件名（不含后缀）
+     * @param string $ext 输出文件的后缀（不指定则根据 $mime_type 判断: https://www.iana.org/assignments/media-types/media-types.xhtml ）
+     * @param string $output_path 输出文件所在的路径（默认 '/tmp/'）
+     * @return string|null decode 后输出文件的完整路径
+     */
+    public static function decodeFile($encoded_data, $output_filename, $ext = null, $output_path = '/tmp/')
+    {
+        $targetPath = $output_path . $output_filename . $ext;
+        try {
+            $data = base64_decode($encoded_data);
+            $file = fopen($targetPath, 'w');
+            fwrite($file, $data);
+            fclose($file);
+        } catch (Exception $e) {
+            echo 'Caught exception: ',  $e->getMessage(), "\n";
+        }
+        return $targetPath;
+    }
 }
