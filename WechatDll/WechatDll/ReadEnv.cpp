@@ -13,7 +13,7 @@ using namespace std;
 * 
 * TODO: Define error codes and use "SetLastError" / GetLastError ?
 */
-bool ReadEnvVariable(LPCTSTR varname, char* value, DWORD nSize)
+bool ReadEnvVariable(LPCTSTR varname, char* value, DWORD nSize, bool ignoreNotFoundErr=false)
 {
 	DWORD dwRet, dwErr;
 	LPTSTR envData;
@@ -33,7 +33,8 @@ bool ReadEnvVariable(LPCTSTR varname, char* value, DWORD nSize)
 		dwErr = GetLastError();
 		if (ERROR_ENVVAR_NOT_FOUND == dwErr)
 		{
-			printf_s("[Error] Environment variable does not exist.\n");
+			if (!ignoreNotFoundErr)
+				printf_s("[Error] Environment variable %ls does not exist.\n", varname);
 			fExist = FALSE;
 		}
 	}

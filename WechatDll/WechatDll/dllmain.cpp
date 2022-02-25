@@ -36,7 +36,7 @@ BOOL APIENTRY DllMain( HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpRese
 			char* debugEnv = new char[nSize];
 
 			// 读取系统环境变量的微信调试开关
-			if (ReadEnvVariable(DEBUG_CONSOLE, debugEnv, nSize)) {
+			if (ReadEnvVariable(DEBUG_CONSOLE, debugEnv, nSize, true)) {
 				errno_t err;
 				err = _strupr_s(debugEnv, 16);
 				if (!strncmp("TRUE", debugEnv, 16)) {

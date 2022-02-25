@@ -41,15 +41,6 @@ VOID RecieveMsg(DWORD esp)
 
 	//消息类型[[esp]]+0x30
 	message->msgType = (int)*((DWORD*)(**msgAddress + 0x30));
-	switch (message->msgType) {
-		case 0x03:  // 图片
-			{
-				wstring imageFile = GetMsgByAddress(**msgAddress + 0x154);
-				sprintf_s(message->imageFile, 0x100, "%s", UnicodeToUtf8((wchar_t*)imageFile.c_str()));
-			}
-		default:
-			break;
-	}
 	/*
 	switch (message->msgType) {
 		case 0x01:  // 文字
@@ -132,6 +123,16 @@ VOID RecieveMsg(DWORD esp)
 
 	// 是否自己发的消息：0=否，1=是
 	message->isOwner = (int)*((DWORD*)(**msgAddress + 0x34));
+
+	switch (message->msgType) {
+		case 0x03:  // 图片
+		{
+			wstring imageFile = GetMsgByAddress(**msgAddress + 0x154);
+			sprintf_s(message->imageFile, 0x100, "%s", UnicodeToUtf8((wchar_t*)imageFile.c_str()));
+		}
+		default:
+			break;
+	}
 	
 	//_WaitingSendData *a = new _WaitingSendData;
 	WebsocketMessageStruct a = *message;

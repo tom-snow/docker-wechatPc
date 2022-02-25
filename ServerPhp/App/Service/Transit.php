@@ -81,12 +81,14 @@ class Transit
             ];
 
             if ($data['opCode'] == 146 && $data['body']['msgType'] == 3) {
-                if (!file_exists("/.dockerenv") || !is_readable("/.dockerenv") ) {
+                if ( file_exists("/.dockerenv") ) {
                     Tools::log('Info：PHP run in docker environment');
+                    // Dockerfile 已将默认 wxfiles 目录软链接到 /wxFiles
                     $imageDatPath = "/wxFiles/" . str_replace('\\', '/', $data['body']['imageFile']);
                 } else {
                     Tools::log('Info：PHP run in windows environment');
-                    $imageDatPath = getenv("HOME", true) . "\\Documents\\WeChat Files\\" . $data['body']['imageFile'];
+                    // 获取 windows 用户目录再拼接默认 wxfiles 目录和图片路径
+                    $imageDatPath = getenv("USERPROFILE", true) . "\\Documents\\WeChat Files\\" . $data['body']['imageFile'];
                 }
                 $targetFile = Tools::decodeDatImage($imageDatPath);
                 print_r($targetFile . "\n");
