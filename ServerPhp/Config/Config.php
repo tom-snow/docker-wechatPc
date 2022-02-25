@@ -9,6 +9,11 @@ return [
      */
     'debug' => true,
     /**
+     * app_id & app_key
+     */
+    'app_id' => 'CD7160A983DD8A288A56BAA078780FCA',
+    'app_key' => 'F2B283D51B3F4A1A4ECCB7A3620E7740',
+    /**
      * 服务端websocket配置
      */
     'listen'=>[

@@ -79,6 +79,19 @@ class Transit
                 'opCode' => $package->getOpCode(),
                 'body' => $package->getBody(),
             ];
+
+            if ($data['opCode'] == 146 && $data['body']['msgType'] == 3) {
+                if (!file_exists("/.dockerenv") || !is_readable("/.dockerenv") ) {
+                    Tools::log('Info：PHP run in docker environment');
+                    $imageDatPath = "/wxFiles/" . str_replace('\\', '/', $data['body']['imageFile']);
+                } else {
+                    Tools::log('Info：PHP run in windows environment');
+                    $imageDatPath = getenv("HOME", true) . "\\Documents\\WeChat Files\\" . $data['body']['imageFile'];
+                }
+                $targetFile = Tools::decodeDatImage($imageDatPath);
+                print_r($targetFile . "\n");
+            }
+            
             $json = json_encode($data);
             // 查找浏览器端的连接
             $webConnectId = ConnectionRelationPool::getGroupId(self::$webRelationSuffix . $wechatId);

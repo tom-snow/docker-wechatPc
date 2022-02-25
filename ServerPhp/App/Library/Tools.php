@@ -186,11 +186,11 @@ class Tools {
      * @param string $sourcePath 被 encode 的文件路径
      * @return string|null "data:$mime_type;base64,$base64_encoded_file"
      */
-    public static function encodeFileWithMime($sourcePath)
+    public static function bass64EncodeFileWithMime($sourcePath)
     {
-        $base64_encoded_file = self::encodeFile($sourcePath);
+        $base64_encoded_file = self::bass64EncodeFile($sourcePath);
         if (!$base64_encoded_file) {
-            Tools::log('Error： function encodeFileWithMime. $base64_encoded_file is null');
+            Tools::log('Error： function bass64EncodeFileWithMime. $base64_encoded_file is null');
             return $base64_encoded_file;
         }
         $mime_type = mime_content_type($sourcePath);
@@ -203,16 +203,16 @@ class Tools {
      * @param string $sourcePath 被 encode 的文件路径
      * @return string|null "$base64_encoded_file"
      */
-    public static function encodeFile($sourcePath)
+    public static function bass64EncodeFile($sourcePath)
     {
         $base64_encoded_file = null;
         if (!file_exists($sourcePath) || !is_readable($sourcePath) ) {
-            Tools::log('Error： function encodeFile. $sourcePath: file not exists or not readable');
+            Tools::log('Error： function bass64EncodeFile. $sourcePath:' . $sourcePath . ' file not exists or not readable');
             return $base64_encoded_file;
         }
         $source = file_get_contents($sourcePath);
         if (empty($source) ) {
-            Tools::log('Error： function encodeFile. $sourcePath: file is empty');
+            Tools::log('Error： function bass64EncodeFile. $sourcePath:' . $sourcePath . ' file is empty');
             return $base64_encoded_file;
         }
         $base64_encoded_file = base64_encode($source);
@@ -227,24 +227,24 @@ class Tools {
      * @param string $output_path 输出文件所在的路径（默认 '/tmp/'）
      * @return string|null decode 后输出文件的完整路径
      */
-    public static function decodeFileWithMime($mime_data, $output_filename, $ext = null, $output_path = '/tmp/')
+    public static function bass64DecodeFileWithMime($mime_data, $output_filename, $ext = null, $output_path = '/tmp/')
     {
         $pattern = "/(?<=^data:)\w+\/[\w\-\+\d.]+(?=;base64,)/i";
         $default_mime_type = "application/octet-stream";
         if (!preg_match($pattern, $mime_data, $mime_type)) {
-            Tools::log('Error： function decodeFileWithMime. $mime_data: not match "data:$mime_type;base64,$base64_encoded_file". (pattern: ' . $pattern . ')');
+            Tools::log('Error： function bass64DecodeFileWithMime. $mime_data: not match "data:$mime_type;base64,$base64_encoded_file". (pattern: ' . $pattern . ')');
             return null;
         }
         if (!$ext) {
             $ext = Tools::config($mime_type[0], "MimeType");
             if ($ext) {
-                Tools::log('Info： function decodeFileWithMime. Matched: "'.$mime_type[0].'" -> "'.$ext.'"');
+                Tools::log('Info： function bass64DecodeFileWithMime. Matched: "'.$mime_type[0].'" -> "'.$ext.'"');
             } else {
                 $ext = Tools::config($default_mime_type , "MimeType");
-                Tools::log('Warnning： function decodeFileWithMime. No MimeType Matched: "'.$mime_type[0].'". Using default ext: "'.$ext.'"');
+                Tools::log('Warnning： function bass64DecodeFileWithMime. No MimeType Matched: "'.$mime_type[0].'". Using default ext: "'.$ext.'"');
             }
         }
-        $file = self::decodeFile(explode(",", $mime_data, 2)[1], $output_filename, $ext, $output_path);
+        $file = self::bass64DecodeFile(explode(",", $mime_data, 2)[1], $output_filename, $ext, $output_path);
         return $file;
     }
 
@@ -256,7 +256,7 @@ class Tools {
      * @param string $output_path 输出文件所在的路径（默认 '/tmp/'）
      * @return string|null decode 后输出文件的完整路径
      */
-    public static function decodeFile($encoded_data, $output_filename, $ext = null, $output_path = '/tmp/')
+    public static function bass64DecodeFile($encoded_data, $output_filename, $ext = null, $output_path = '/tmp/')
     {
         $targetPath = $output_path . $output_filename . $ext;
         try {
@@ -268,5 +268,70 @@ class Tools {
             echo 'Caught exception: ',  $e->getMessage(), "\n";
         }
         return $targetPath;
+    }
+
+    /**
+     * decodeDatImage 文件（解密被异或加密的图片文件）
+     * @param string $sourcePath 被加密的图片文件(.dat)路径
+     * @param string $targetPath 解密后存放图片文件路径(文件夹)
+     * @return string|null 解密后文件路径
+     */
+    public static function decodeDatImage($sourcePath, $targetPath=null)
+    {
+        if (!file_exists($sourcePath) || !is_readable($sourcePath) ) {
+            Tools::log('Error： function decodeDatImage. $sourcePath:' . $sourcePath . ' file not exists or not readable');
+            return null;
+        }
+        $datFileData = file_get_contents($sourcePath);
+        if (empty($datFileData) ) {
+            Tools::log('Error： function decodeDatImage. $sourcePath:' . $sourcePath . ' file is empty');
+            return null;
+        }
+
+        // 找出图片的或异值
+        $info = self::checkDatType(substr($encode,0,2));
+        if (is_null($info)) {
+            Tools::log('Warnning： function decodeDatImage. 检查不出是什么图片。');
+            return null;
+        }
+        // 开始解密
+        $decodedData = '';
+        for ($i = 0; $i < strlen($datFileData); $i++) {
+            $decodedData .= $datFileData[$i] ^ chr($info['password']);
+        }
+        // 保存解密后的图片
+        if (!$targetPath) {
+            $targetFilePath = implode(explode('.', $sourcePath, -1)) . $info['ext'];
+        } else {
+            // 取原路径的文件名+后缀后替换后缀并加上
+            $targetFilePath = $targetPath . implode(explode('.', explode('/', $sourcePath)[-1], -1)) . $info['ext'];
+        }
+        file_put_contents($targetFilePath, $decodedData);
+        return $targetFilePath;
+    }
+
+    /**
+     * 检查 Dat 文件（被异或加密的图片文件）的图片类型
+     * @param string $twoByte 文件前面的2字节
+     * @return string|null 解密后文件路径
+     */
+    public static function checkDatType($twoByte)
+    {
+        // 图片文件头
+        $header = [
+            'jpg' => [0xFF, 0xD8],
+            'png' => [0x89, 0x50],
+            'gif' => [0x47, 0x49],
+        ];
+        foreach ($header as $ext => $hex) {
+            $strInfo = @unpack("C2chars", $twoByte);
+            $password = $strInfo['chars1'] ^ $hex[0];
+            $charCheck1 = $strInfo['chars1'] ^ $password;
+            $charCheck2 = $strInfo['chars2'] ^ $password;
+            if ($charCheck1 == $hex[0] && $charCheck2 == $hex[1]) {
+                return ['ext' => $ext, 'password' => $password];
+            }
+        }
+        return null;
     }
 }

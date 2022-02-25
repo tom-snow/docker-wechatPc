@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-import sys, subprocess, os, signal, datetime
+import subprocess, os, signal, datetime
 
 
 class DockerWechatHook:
@@ -34,14 +34,17 @@ class DockerWechatHook:
         self.exit_container()
 
     def run_php(self):
+        app_id = os.environ['APP_ID']
+        app_key = os.environ['APP_KEY']
+        subprocess.run(['sed', '-i', '-e', 
+            f"s@app_id' => '.*'@app_id' => '{app_id}'@g", '-e', 
+            f"s@app_key' => '.*'@app_key' => '{app_key}'@g", 
+            '/ServerPhp/Config/Config.php'])
         if os.path.exists('/ServerPhp/Storage/pid/wechat.pid'):
             os.remove('/ServerPhp/Storage/pid/wechat.pid')
-        if (os.environ['PHPDEBUG'] == 'false') or (os.environ['PHPDEBUG'] == 'False'):
+        if os.environ['PHPDEBUG'].lower() == 'false':
             subprocess.run(['sed', '-i', "s@debug' => true@debug' => false@g", '/ServerPhp/Config/Config.php'])
         self.php = subprocess.Popen(['/usr/bin/php7.2','index.php','start'], cwd='/ServerPhp')
-
-    def run_scanversion(self):
-        self.scanversion = subprocess.Popen(['/usr/bin/python3','/scanversion.py'])
 
     def run_vnc(self):
         # 根据VNCPASS环境变量生成vncpasswd文件
@@ -69,11 +72,6 @@ class DockerWechatHook:
 
     def exit_container(self):
         print(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')+ ' 正在退出容器...')
-        # try:
-        #     print(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')+ ' 退出修改版本脚本...')
-        #     os.kill(self.scanversion.pid, signal.SIGTERM)
-        # except:
-        #     pass
         try:
             print(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')+ ' 退出Hook程序...')
             os.kill(self.hook.pid, signal.SIGTERM)
@@ -94,7 +92,6 @@ class DockerWechatHook:
     def run_all_in_one(self):
         print(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')+ ' 启动容器中...')
         self.run_php()
-        # self.run_scanversion()
         self.run_vnc()
         self.run_hook()
         print(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')+ ' 启动完成.')

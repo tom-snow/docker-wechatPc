@@ -60,7 +60,7 @@ class Listener
      */
     public function onMessage($connection, $message)
     {
-        echo 'Recv Data: ' . $message."\n";
+        // echo 'Recv Data: ' . $message."\n";
         Factory::Message($connection, $message)->handle();
     }
 }
