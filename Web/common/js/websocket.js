@@ -307,6 +307,13 @@ function recv(data)
 	switch (opCode) {
 		// 收到微信消息
 		case OPCODE_MESSAGE_RECEIVE:
+			if (body.msgType == 3) {
+				if (body.imageFile.status == true) {
+					body.content = '<img src="'+body.imageFile.base64Content+'"/>';
+				} else {
+					body.content = body.imageFile.message;
+				}
+			}
 			recvMessage(wechatId, body);
 		break;
 		// 好友列表

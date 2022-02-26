@@ -274,25 +274,44 @@ class Tools {
      * decodeDatImage 文件（解密被异或加密的图片文件）
      * @param string $sourcePath 被加密的图片文件(.dat)路径
      * @param string $targetPath 解密后存放图片文件路径(文件夹)
-     * @return string|null 解密后文件路径
+     * @return array => status: 状态(解密成功为true) ; code: 状态码（200: 解密成功，404: 文件读取失败，500: 解密失败）; 
+     *                  message: 提示信息; filePath:解密成功文件存放路径
      */
-    public static function decodeDatImage($sourcePath, $targetPath=null)
+    public static function decodeDatImage($sourcePath, $targetPath=null, $retryTimes=5)
     {
-        if (!file_exists($sourcePath) || !is_readable($sourcePath) ) {
-            Tools::log('Error： function decodeDatImage. $sourcePath:' . $sourcePath . ' file not exists or not readable');
-            return null;
+        $result = [
+            'status' => false,
+            'code' => 404,
+            'message' => "File not found or not readable.\n你收到了一张微信图片，但微信没有自动下载该图片或文件读取失败。",
+            'filePath' => ""
+        ];
+        $retrys = 0;
+        while ($retrys <= $retryTimes) {
+            if (!file_exists($sourcePath) || !is_readable($sourcePath) ) {
+                Tools::log('Error： function decodeDatImage. $sourcePath:' . $sourcePath . ' file not exists or not readable! Retrying...' . $retrys . '/' . $retryTimes);
+                if ($retrys == $retryTimes) {
+                    return $result;
+                }
+            } else {
+                break;
+            }
+            $retrys += 1;
+            sleep($retrys*1);
         }
         $datFileData = file_get_contents($sourcePath);
         if (empty($datFileData) ) {
             Tools::log('Error： function decodeDatImage. $sourcePath:' . $sourcePath . ' file is empty');
-            return null;
+            return $result;
         }
 
         // 找出图片的或异值
-        $info = self::checkDatType(substr($encode,0,2));
+        $info = self::checkDatType(substr($datFileData, 0, 2));
         if (is_null($info)) {
             Tools::log('Warnning： function decodeDatImage. 检查不出是什么图片。');
-            return null;
+            $result['code'] = 500;
+            $result['message'] = "Decode Dat Image Failed.\n你收到了一张微信图片，但程序解密图片失败。";
+            // $result['filePath'] = $sourcePath; // 开发阶段返回未解密的文件？
+            return $result;
         }
         // 开始解密
         $decodedData = '';
@@ -301,13 +320,17 @@ class Tools {
         }
         // 保存解密后的图片
         if (!$targetPath) {
-            $targetFilePath = implode(explode('.', $sourcePath, -1)) . $info['ext'];
+            $targetFilePath = implode(explode('.', $sourcePath, -1)) . '.' . $info['ext'];
         } else {
             // 取原路径的文件名+后缀后替换后缀并加上
-            $targetFilePath = $targetPath . implode(explode('.', explode('/', $sourcePath)[-1], -1)) . $info['ext'];
+            $targetFilePath = $targetPath . implode(explode('.', explode('/', $sourcePath)[-1], -1)) . '.' . $info['ext'];
         }
         file_put_contents($targetFilePath, $decodedData);
-        return $targetFilePath;
+        $result['status'] = true;
+        $result['code'] = 200;
+        $result['message'] = "Success.\n微信图片解密成功。";
+        $result['filePath'] = $targetFilePath;
+        return $result;
     }
 
     /**
@@ -328,6 +351,7 @@ class Tools {
             $password = $strInfo['chars1'] ^ $hex[0];
             $charCheck1 = $strInfo['chars1'] ^ $password;
             $charCheck2 = $strInfo['chars2'] ^ $password;
+            // echo "Check ext:" . $ext . "\n";
             if ($charCheck1 == $hex[0] && $charCheck2 == $hex[1]) {
                 return ['ext' => $ext, 'password' => $password];
             }

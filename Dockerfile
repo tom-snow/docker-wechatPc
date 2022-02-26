@@ -47,6 +47,7 @@ RUN chmod a+x /bin/dumb-init && \
     mkdir -p "/home/user/.wine/drive_c/users/user/My Documents/WeChat Files/" && \
     ln -s "/home/user/.wine/drive_c/users/user/My Documents/WeChat Files/" "/wxFiles"
 
+# ln -s "/home/user/WeChat Files/" "/wxFiles"
 
 COPY ServerPhp /ServerPhp
 COPY Bin/Debug /Debug
