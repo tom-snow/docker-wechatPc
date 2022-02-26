@@ -1,5 +1,4 @@
 FROM docker.io/zixia/wechat:3.3.0.115
-MAINTAINER endokai
 
 USER root
 WORKDIR /
@@ -15,7 +14,7 @@ ENV VNCPASS=YourSafeVNCPassword \
     PHPDEBUG=true
 
 
-EXPOSE 5678 5905  8686
+EXPOSE 5678 5905 80
 
 
 RUN apt update &&  \
@@ -44,8 +43,11 @@ RUN chmod a+x /bin/dumb-init && \
     chmod a+x /run.py && \
     cp -rf /Tencent "/home/user/.wine/drive_c/Program Files/" && \
     chown root:root -R /home/user/.wine && \
-    rm -rf /Tencent
+    rm -rf /Tencent && \
+    mkdir -p "/home/user/.wine/drive_c/users/user/My Documents/WeChat Files/" && \
+    ln -s "/home/user/.wine/drive_c/users/user/My Documents/WeChat Files/" "/wxFiles"
 
+# ln -s "/home/user/WeChat Files/" "/wxFiles"
 
 COPY ServerPhp /ServerPhp
 COPY Bin/Debug /Debug

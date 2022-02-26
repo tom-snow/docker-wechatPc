@@ -14,4 +14,4 @@
 * 
 * note: nSise is the CHAR* value length, it Shoud less than BUFSIZE(1024)
 */
-bool ReadEnvVariable(LPCTSTR varname, char* value, DWORD nSize);
+bool ReadEnvVariable(LPCTSTR varname, char* value, DWORD nSize, bool ignoreNotFoundErr=false);

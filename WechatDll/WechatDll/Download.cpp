@@ -22,6 +22,7 @@
 using namespace std;
 
 // 解密图片文件
+/*
 void DecodeImage(char *datFile, char *saveFile)
 {
 	//CHAR documentDir[MAX_PATH] = {0};
@@ -91,9 +92,10 @@ void DecodeImage(char *datFile, char *saveFile)
 	fclose(fp);
 	is.close();
 }
+*/
 
 // 下载图片
-void DownloadImage()
+void DownloadImage(wchar_t* a_wxid, wchar_t* a_msgid, wchar_t* a_imgpath, wchar_t* a_contentXml, wchar_t* a_msgsourceXml)
 {
 	// 获取微信基址
 	DWORD winAddress = GetWechatWinAddress();
@@ -102,20 +104,79 @@ void DownloadImage()
 	DWORD dwParamAddr1 = winAddress + 0x1380C64;  // ebx\edi
 	DWORD dwParamAddr2 = winAddress + 0x137ED90;  // esi
 
-	wchar_t wxid[] = L"Lemonice-cheng";
-	wchar_t msgId[] = L"864a39b9836477fd76b9526e6d767495";
-	wchar_t savePath[] = L"C:/Users/Lemonice/Desktop/MM_WeChat_Image.dat";
+	//wchar_t wxid[] = L"Lemonice-cheng";
+	wchar_t wxid[0x40] = { 0 };
+	wcscpy_s(wxid, a_wxid);
+	printf_s("wxid: %ls\n", wxid);
 
-	wchar_t imagePath[] = L"C:\\Users\\Lemonice\\Documents\\WeChat Files\\supper-busy\\FileStorage\\Image\\2020-03\\0adce5d4785780dee857def881d279bd.dat";
+	//wchar_t msgId[] = L"864a39b9836477fd76b9526e6d767495";
+	wchar_t msgId[0x40] = { 0 };
+	wcscpy_s(msgId, a_msgid);
+	printf_s("msgId: %ls\n", msgId);
 
-	wchar_t imagePathThumb[] = L"C:\\Users\\Lemonice\\Documents\\WeChat Files\\supper-busy\\FileStorage\\Image\\Thumb\\2020-03\\0adce5d4785780dee857def881d279bd_t.dat";
-		
-	wchar_t encodePath1[] = L"supper-busy\\FileStorage\\Image\\Thumb\\2020-03\\0adce5d4785780dee857def881d279bd_t.dat";
-	wchar_t encodePath2[] = L"C:\\Users\\Lemonice\\Documents\\WeChat Files\\supper-busy\\FileStorage\\Image\\2020-03\\0adce5d4785780dee857def881d279bd.dat";
 
-	wchar_t contentXml[] = L"<?xml version=\"1.0\"?><msg><img aeskey=\"f835b8acd6e330d1edfc1c50a8847cbb\" encryver=\"0\" cdnthumbaeskey=\"f835b8acd6e330d1edfc1c50a8847cbb\" cdnthumburl=\"3053020100044c304a02010002040ba253b702032df7f9020455e7e16a02045e5be1300425617570696d675f353362383066366139306631393334345f313538333037393732373636310204010838010201000400\" cdnthumblength=\"2878\" cdnthumbheight=\"120\" cdnthumbwidth=\"68\" cdnmidheight=\"0\" cdnmidwidth=\"0\" cdnhdheight=\"0\" cdnhdwidth=\"0\" cdnmidimgurl=\"3053020100044c304a02010002040ba253b702032df7f9020455e7e16a02045e5be1300425617570696d675f353362383066366139306631393334345f313538333037393732373636310204010838010201000400\" length=\"35397\" cdnbigimgurl=\"3053020100044c304a02010002040ba253b702032df7f9020455e7e16a02045e5be1300425617570696d675f353362383066366139306631393334345f313538333037393732373636310204010838010201000400\" hdlength=\"778229\" md5=\"0e01a7226bd06ce54aea4d448bb208b3\" /></msg>";
-	wchar_t msgsourceXml[] = L"<msgsource><sec_msg_node><uuid>777bcac044e7e71d45347245018d91b1_</uuid></sec_msg_node></msgsource>";
-	
+	wchar_t basePath[] = L"C:\\Users\\user\\My Documents\\WeChat Files\\";
+	wchar_t temp[0xA0] = { 0 };
+	wcscpy_s(temp, a_imgpath);
+	//wchar_t savePath[] = L"C:/Users/Lemonice/Desktop/MM_WeChat_Image.dat";
+	wchar_t savePath[0xA0] = { 0 };
+	wcscpy_s(savePath, basePath);
+	wcscat_s(savePath, temp);
+	printf_s("savePath: %ls\n", savePath);
+
+	//wchar_t imagePath[] = L"C:\\Users\\Lemonice\\Documents\\WeChat Files\\supper-busy\\FileStorage\\Image\\2020-03\\0adce5d4785780dee857def881d279bd.dat";
+	wchar_t imagePath[0xA0] = { 0 };
+	wcscpy_s(imagePath, savePath);
+	printf_s("imagePath: %ls\n", imagePath);
+	//wchar_t imagePathThumb[] = L"C:\\Users\\Lemonice\\Documents\\WeChat Files\\supper-busy\\FileStorage\\Image\\Thumb\\2020-03\\0adce5d4785780dee857def881d279bd_t.dat";
+	wchar_t imagePathThumb[0xA0];
+	wcscpy_s(imagePathThumb, basePath);
+	wchar_t* pwc;
+	wchar_t* pt = NULL;
+	int i = 0;
+	pwc = wcstok_s(temp, L"\\.", &pt);
+	while (pwc != NULL)
+	{
+		if (wcscmp(pwc, L"dat") == 0) {
+			wcscat_s(imagePathThumb, L"_t.");
+			wcscat_s(imagePathThumb, pwc);
+			break;
+		}
+		if (i > 0) {
+			wcscat_s(imagePathThumb, L"\\");
+		}
+		i++;
+		wcscat_s(imagePathThumb, pwc);
+		if (wcscmp(pwc, L"Image") == 0) {
+			wcscat_s(imagePathThumb, L"\\Thump");
+		}
+		pwc = wcstok_s(NULL, L"\\.", &pt);
+	}
+	wcscat_s(imagePathThumb, L"\0");
+	printf_s("imagePathThumb: %ls\n", imagePathThumb);
+	wcscpy_s(temp, a_imgpath);
+
+
+	//wchar_t encodePath1[] = L"supper-busy\\FileStorage\\Image\\Thumb\\2020-03\\0adce5d4785780dee857def881d279bd_t.dat";
+	wchar_t encodePath1[0xA0] = { 0 };
+	wcscpy_s(encodePath1, temp);
+	printf_s("encodePath1: %ls\n", encodePath1);
+	//wchar_t encodePath2[] = L"C:\\Users\\Lemonice\\Documents\\WeChat Files\\supper-busy\\FileStorage\\Image\\2020-03\\0adce5d4785780dee857def881d279bd.dat";
+	wchar_t encodePath2[0xA0] = { 0 };
+	wcscpy_s(encodePath2, savePath);
+	printf_s("encodePath2: %ls\n", encodePath2);
+
+	//wchar_t contentXml[] = L"<?xml version=\"1.0\"?><msg><img aeskey=\"f835b8acd6e330d1edfc1c50a8847cbb\" encryver=\"0\" cdnthumbaeskey=\"f835b8acd6e330d1edfc1c50a8847cbb\" cdnthumburl=\"3053020100044c304a02010002040ba253b702032df7f9020455e7e16a02045e5be1300425617570696d675f353362383066366139306631393334345f313538333037393732373636310204010838010201000400\" cdnthumblength=\"2878\" cdnthumbheight=\"120\" cdnthumbwidth=\"68\" cdnmidheight=\"0\" cdnmidwidth=\"0\" cdnhdheight=\"0\" cdnhdwidth=\"0\" cdnmidimgurl=\"3053020100044c304a02010002040ba253b702032df7f9020455e7e16a02045e5be1300425617570696d675f353362383066366139306631393334345f313538333037393732373636310204010838010201000400\" length=\"35397\" cdnbigimgurl=\"3053020100044c304a02010002040ba253b702032df7f9020455e7e16a02045e5be1300425617570696d675f353362383066366139306631393334345f313538333037393732373636310204010838010201000400\" hdlength=\"778229\" md5=\"0e01a7226bd06ce54aea4d448bb208b3\" /></msg>";
+	wchar_t contentXml[0x8092] = { 0 };
+	wcscpy_s(contentXml, a_contentXml);
+	printf_s("contentXml: %ls\n", contentXml);
+	//wchar_t msgsourceXml[] = L"<msgsource><sec_msg_node><uuid>777bcac044e7e71d45347245018d91b1_</uuid></sec_msg_node></msgsource>";
+	wchar_t msgsourceXml[0x2048] = { 0 };
+	wcscpy_s(msgsourceXml, a_msgsourceXml);
+	printf_s("msgsourceXml: %ls\n", msgsourceXml);
+
+	printf_s("argvs %ls\n%ls\n%ls\n%ls\n%ls\n", a_wxid, a_msgid, a_imgpath, a_contentXml, a_msgsourceXml);
+
 	DWORD buffer[0x1EC0] = {0};
 
 	buffer[0] = (DWORD)imagePath;
@@ -219,7 +280,7 @@ void DownloadImage()
 	DWORD *asmP1 = (DWORD*)dwParamAddr1;
 	DWORD *asmP2 = (DWORD*)dwParamAddr2;
 	*/
-
+	
 	__asm {
 		pushad
 
@@ -235,4 +296,12 @@ void DownloadImage()
 
 		popad
 	}
+	
+	/*
+	free(contentXml);
+	free(msgsourceXml);
+	free(buff);
+	free(buffer);
+	free(pPath);
+	*/
 }

@@ -52,6 +52,6 @@ struct DownloadImageMessageStruct
 
 
 // 解密图片文件
-void DecodeImage(char *datFile, char *saveFile);
+// void DecodeImage(char *datFile, char *saveFile);
 // 下载图片
-void DownloadImage();
+void DownloadImage(wchar_t* wxid, wchar_t* msgid, wchar_t* imgpath, wchar_t* contentXml, wchar_t* msgsourceXml);

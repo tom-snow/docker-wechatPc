@@ -15,7 +15,11 @@
 #include "Transfer.h"
 //#include "Download.h"
 #include "Receive.h"
+#include "ReadEnv.h"
 
+#define DEBUG_CONSOLE TEXT("WECHAT_DEBUG_CONSOLE")
+
+bool debug_flag = false;
 
 BOOL APIENTRY DllMain( HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReserved )
 {
@@ -24,6 +28,34 @@ BOOL APIENTRY DllMain( HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpRese
     {
 		case DLL_PROCESS_ATTACH:
 		{
+			// 登录前打开终端 
+			// ======== Windows 环境运行 DLL 时新建终端并输出内容所用 - Begain ========
+			// 以下代码会将 stdout 重定向到一个新开的终端窗口上，后接一个 FreeConsole() 释放终端窗口（然后可以手动关闭窗口，否则关闭终端窗口可能导致微信退出）
+			///*
+			DWORD nSize = 16;
+			char* debugEnv = new char[nSize];
+
+			// 读取系统环境变量的微信调试开关
+			if (ReadEnvVariable(DEBUG_CONSOLE, debugEnv, nSize, true)) {
+				errno_t err;
+				err = _strupr_s(debugEnv, 16);
+				if (!strncmp("TRUE", debugEnv, 16)) {
+					debug_flag = true;
+					FILE* stream;
+					AllocConsole();
+					errno_t err;
+					err = freopen_s(&stream, "CONOUT$", "w+", stdout);
+					if (err != 0)
+						fprintf(stdout, "error on freopen\n");
+
+					printf_s("Opened Console.\n");
+				}
+			}
+
+			delete[] debugEnv;
+			//*/
+			// ======== Windows 环境运行 DLL 时在终端输出内容所用 - End ========
+
 			// 开新线程处理
 			/*
 			// 此处是调试界面，存在不完善情况
@@ -59,6 +91,7 @@ BOOL APIENTRY DllMain( HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpRese
 */
 DWORD WINAPI LoginMonitor(HMODULE hModule)
 {
+
 	// 跳转到二维码界面
 	GotoQrCode();
 	//修改内存版本号
@@ -93,6 +126,9 @@ DWORD WINAPI LoginMonitor(HMODULE hModule)
 		// 已经退出登录了
 		if (CheckLoginStatus() == 0) {
 			Receive::SendLogout();
+			// 释放终端
+			if (debug_flag)
+				FreeConsole();
 			break;
 		}
 		Sleep(5000);  // 每隔5秒检查一次
