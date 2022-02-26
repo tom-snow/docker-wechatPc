@@ -81,7 +81,7 @@ class Transit
             ];
 
             if ($data['opCode'] == 146 && $data['body']['msgType'] == 3) {
-                if ( file_exists("/.dockerenv") ) {
+                if ( file_exists("/.dockerenv") || file_exists("/runningIn.docker") ) {
                     // Tools::log('Info：PHP run in docker environment');
                     // // Dockerfile 已将默认 wxfiles 目录软链接到 /wxFiles
                     $imageDatPath = "/wxFiles/" . str_replace('\\', '/', $data['body']['imageFile']);

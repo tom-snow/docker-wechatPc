@@ -37,7 +37,7 @@ COPY wine/微信.lnk /home/user/.wine/drive_c/users/Public/Desktop/微信.lnk
 COPY wine/system.reg  /home/user/.wine/system.reg
 COPY wine/user.reg  /home/user/.wine/user.reg
 COPY wine/userdef.reg /home/user/.wine/userdef.reg
-
+COPY runningIn.docker /runningIn.docker
 
 RUN chmod a+x /bin/dumb-init && \
     chmod a+x /run.py && \
