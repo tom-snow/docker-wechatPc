@@ -284,7 +284,7 @@ function closeWechat(wechatId)
 function openWechat()
 {
 	var json = new Package();
-	json.setWechatId('5B4729E0FCB1A8B75973D68C31FF7DBC');
+	json.setWechatId('1234567890ABCDEFGHIJKLMNOPQRSTUV');
 	json.setOpCode(OPCODE_WECHAT_OPEN);
 	json.setBody({});
 	send(json.getJson());
