@@ -88,11 +88,46 @@ class WorkerStart extends AbstractListener
 
     /**
      * 连接成功
+     * via: https://www.workerman.net/doc/workerman/appendices/about-websocket.html
      * @param TcpConnection $connection
      */
     public function onConnect($connection)
     {
-        Transit::webConnect($connection);
+        $connection->onWebSocketConnect = function($connection , $http_header)
+        {
+            // 可以在这里判断连接来源是否合法，不合法就关掉连接
+            // Tools::log("new connection from ip " . $connection->getRemoteIp());
+            // client side data
+            $app_id = $_GET['app_id'];
+            $timestamp = $_GET['timestamp'];
+            $hash = $_GET['hash'];
+            // server side data
+            $local_timestamp = Tools::timestamp();
+            $local_app_id = Tools::config('app_id');
+            $local_app_key = Tools::config('app_key');
+            $expire = Tools::config('expire');
+            
+            if (abs($local_timestamp - $timestamp) < $expire) {
+                if ($app_id == $local_app_id) {
+                    $query = "app_id=" . $local_app_id . "&timestamp=" . $timestamp . "&app_key" . $local_app_key;
+                    $local_hash = hash("sha256", $query, false);
+                    // Tools::log("hash:" . $hash);
+                    // Tools::log("local_hash:" . $local_hash);
+                    if ($local_hash == $hash) {
+                        Transit::webConnect($connection);
+                    } else {
+                        $connection->close();
+                        Tools::log("[Error] hash not match!");
+                    }
+                } else {
+                    $connection->close();
+                    Tools::log("[Error] app_id not match!");
+                }
+            } else {
+                $connection->close();
+                Tools::log("[Error] timestamp expired!");
+            }
+        };
     }
 
     /**

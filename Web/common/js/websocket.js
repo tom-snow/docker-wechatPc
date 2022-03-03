@@ -352,8 +352,29 @@ function recv(data)
 
 function connect()
 {
+	/*
+	* 使用 app_id, timestamp 与 app_key 生成 sha256 hash：
+	* hash = sha256("app_id={app_id}&timestamp={timestamp}&app_key={app_key}");
+	* 	其中 app_id 与 app_key 需与 php 端相同（docker 环境下环境变量会覆盖 config.php 设置），timestamp 是当前时间，需要与 php 服务器端误差小于 config.php 中 expire 变量的值（默认10分钟），如果 websocket 连接失败可能是时区不同，请自行统一
+	* 	【求 hash 时，各参数顺序不能乱！】
+	* 再按照 app_id, timestamp 与 hash 拼接成 websocket 的 query，如：
+	* app_id=1234567890ABCDEFGHIJKLMNOPQRSTUV&timestamp=1646320498300&hash=657224060800afa42f6941a0c988e0d0a8cc6a2b322672f6733392b39ef78a77
+	* 最后链接就为： ws://127.0.0.1:5678/?app_id=1234567890ABCDEFGHIJKLMNOPQRSTUV&timestamp=1646320498300&hash=657224060800afa42f6941a0c988e0d0a8cc6a2b322672f6733392b39ef78a77
+	*/
+	var query = "";
+	var app_id = "1234567890ABCDEFGHIJKLMNOPQRSTUV";
+	var app_key = "1234567890ABCDEFGHIJKLMNOPQRSTUV";
+	var wsUrl = "ws://127.0.0.1:5678/?";
+	var timestamp = Date.now();
+	query += "app_id=" + app_id;
+	query += "&timestamp=" + timestamp;
+	var hash = sha256(query + "&app_key" + app_key);
+	query += "&hash=" + hash;
+	wsUrl += query;
+
+	// console.log(wsUrl);
 	// 打开一个 web socket
-	ws = new WebSocket("ws://127.0.0.1:5678");
+	ws = new WebSocket(wsUrl);
 	ws.status = false;
 	ws.onopen = function() {
 		ws.status = true;

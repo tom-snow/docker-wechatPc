@@ -10,9 +10,11 @@ return [
     'debug' => true,
     /**
      * app_id & app_key
+     * expire: 10*60*1000 ms, hash (token) 过期时间
      */
-    'app_id' => 'CD7160A983DD8A288A56BAA078780FCA',
-    'app_key' => 'F2B283D51B3F4A1A4ECCB7A3620E7740',
+    'app_id' => '1234567890ABCDEFGHIJKLMNOPQRSTUV',
+    'app_key' => '1234567890ABCDEFGHIJKLMNOPQRSTUV',
+    'expire' => 10*60*1000,
     /**
      * 服务端websocket配置
      */
