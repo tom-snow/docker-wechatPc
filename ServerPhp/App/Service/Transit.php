@@ -6,6 +6,7 @@ use Wechat\App\Library\ConnectionPool;
 use Wechat\App\Library\ConnectionRelationPool;
 use Wechat\App\Library\Package;
 use Wechat\App\Library\Tools;
+use Wechat\App\Library\Fork;
 use Workerman\Connection\TcpConnection;
 
 /**
@@ -81,7 +82,7 @@ class Transit
             ];
 
             if ($data['opCode'] == 146 && $data['body']['msgType'] == 3) {
-                if ( file_exists("/.dockerenv") ) {
+                if ( file_exists("/.dockerenv") || file_exists("/runningIn.docker") ) {
                     // Tools::log('Info：PHP run in docker environment');
                     // // Dockerfile 已将默认 wxfiles 目录软链接到 /wxFiles
                     $imageDatPath = "/wxFiles/" . str_replace('\\', '/', $data['body']['imageFile']);
@@ -90,24 +91,41 @@ class Transit
                     // // 获取 windows 用户目录再拼接默认 wxfiles 目录和图片路径
                     $imageDatPath = getenv("USERPROFILE", true) . "\\Documents\\WeChat Files\\" . $data['body']['imageFile'];
                 }
-                $decodeResult = Tools::decodeDatImage($imageDatPath);
-                $imageFile = [
-                    'status' => $decodeResult['status'],
-                    'code' => $decodeResult['code'],
-                    'message' => $decodeResult['message'],
-                    'base64Content' => ""
-                ];
-                if ($decodeResult['status']) {
-                    Tools::log("[Info]图片已解密并存放在：". $decodeResult['filePath']);
-                    $imageFile['base64Content'] = Tools::bass64EncodeFileWithMime($decodeResult['filePath']);
-                }
-                $data['body']['imageFile'] = $imageFile;
+                Fork::getInstance()->run(function() use ($imageDatPath, $data, $wechatId) { // FIXME: use 里的东西是否必须？
+                    $decodeResult = Tools::decodeDatImage($imageDatPath);
+                    $imageFile = [
+                        'status' => $decodeResult['status'],
+                        'code' => $decodeResult['code'],
+                        'message' => $decodeResult['message'],
+                        'base64Content' => ""
+                    ];
+                    if ($decodeResult['status']) {
+                        Tools::log("[Info]图片已解密并存放在：". $decodeResult['filePath']);
+                        $imageFile['base64Content'] = Tools::bass64EncodeFileWithMime($decodeResult['filePath']);
+                    }
+                    $data['body']['imageFile'] = $imageFile;
+
+                    $json = json_encode($data);
+                    // 查找浏览器端的连接
+                    $webConnectId = ConnectionRelationPool::getGroupId(self::$webRelationSuffix . $wechatId);
+                    if ($webConnectId) {
+                        $webConnectId = str_replace(self::$webRelationSuffix, '', $webConnectId);
+                        $webConnection = ConnectionPool::get($webConnectId, self::$webListenPort);
+                        // 转发数据
+                        if ($webConnection) {
+                            $webConnection->send($json);
+                        } else {
+                            Tools::log('Transit Wechat Message Error: Not Find Web Client' . 'ConnectId=' . $package->getConnection()->id . ', opCode=' . $package->getOpCode());
+                            return false;
+                        }
+                    }
+                });
+                // call_user_func_array(array(),array());
+                Tools::log('Transit Wechat Message: ' . 'ConnectId=' . $package->getConnection()->id . ', opCode=' . $package->getOpCode());
+                return true;
             }
             
             $json = json_encode($data);
-            unset($decodeResult);
-            unset($imageFile);
-            unset($data);
             // 查找浏览器端的连接
             $webConnectId = ConnectionRelationPool::getGroupId(self::$webRelationSuffix . $wechatId);
             if ($webConnectId) {
