@@ -109,6 +109,7 @@ class WorkerStart extends AbstractListener
             
             if (abs($local_timestamp - $timestamp) < $expire) {
                 if ($app_id == $local_app_id) {
+                    // $query = "app_id=" . $local_app_id . "&timestamp=" . $timestamp . "&app_key=" . $local_app_key;
                     $query = "app_id=" . $local_app_id . "&timestamp=" . $timestamp . "&app_key" . $local_app_key;
                     $local_hash = hash("sha256", $query, false);
                     // Tools::log("hash:" . $hash);

@@ -354,7 +354,7 @@ function connect()
 {
 	/*
 	* 使用 app_id, timestamp 与 app_key 生成 sha256 hash：
-	* hash = sha256("app_id={app_id}&timestamp={timestamp}&app_key={app_key}");
+	* hash = sha256("app_id={app_id}&timestamp={timestamp}&app_key{app_key}");
 	* 	其中 app_id 与 app_key 需与 php 端相同（docker 环境下环境变量会覆盖 config.php 设置），timestamp 是当前时间，需要与 php 服务器端误差小于 config.php 中 expire 变量的值（默认10分钟），如果 websocket 连接失败可能是时区不同，请自行统一
 	* 	【求 hash 时，各参数顺序不能乱！】
 	* 再按照 app_id, timestamp 与 hash 拼接成 websocket 的 query，如：
@@ -368,6 +368,7 @@ function connect()
 	var timestamp = Date.now();
 	query += "app_id=" + app_id;
 	query += "&timestamp=" + timestamp;
+	// var hash = sha256(query + "&app_key=" + app_key);
 	var hash = sha256(query + "&app_key" + app_key);
 	query += "&hash=" + hash;
 	wsUrl += query;
