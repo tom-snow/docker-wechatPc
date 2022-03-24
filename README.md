@@ -6,7 +6,7 @@
 项目的 Docker 镜像基于：[DoChat](https://github.com/huan/docker-wechat) ，Hook程序基于：[wechatPc](https://github.com/chengciming/wechatPc)，十分感谢两位作者。
 
 ## Change Log
-[v0.2](./ChangeLog.md#v02)
+[v0.2.2](./ChangeLog.md#v022)
 
 ## 镜像启动的组件：
 1. PHP7.2 运行 ServerPhp 目录下的 Websocket 接口服务器，端口 5678

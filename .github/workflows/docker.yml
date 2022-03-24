@@ -16,11 +16,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      # - name: Dump GitHub context(Show What Event Triggered)
-      #   env:
-      #     GITHUB_CONTEXT: ${{ toJson(github) }}
-      #   run: echo "$GITHUB_CONTEXT"
-
       - name: Checkout
         uses: actions/checkout@v2
 
@@ -44,6 +39,10 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
 
+      - name: Get Version Tag
+        id: get_version_tag
+        run: echo ::set-output name=VERSION::`cat VERSION`
+
       - name: Build and push
         id: docker_build
         uses: docker/build-push-action@v2
@@ -53,9 +52,14 @@ jobs:
           platforms: linux/arm64,linux/amd64
           builder: ${{ steps.buildx.outputs.name }}
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/wechatpchook:latest
-#           tags: ${{ steps.meta.outputs.tags }}
-#           labels: ${{ steps.meta.outputs.labels }}
+          tags: |
+            ${{ secrets.DOCKER_HUB_USERNAME }}/wechatpchook:latest
+            ${{ secrets.DOCKER_HUB_USERNAME }}/wechatpchook:${{ steps.get_version_tag.outputs.VERSION }}
+          labels: |
+            maintainer=${{ github.event.head_commit.author.email }}
+            timestamp=${{ github.event.head_commit.timestamp }}
+            message=${{ github.event.head_commit.message }}
+            commit=${{ github.event.head_commit.url }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
 
