@@ -6,7 +6,7 @@ use Wechat\App\Library\Tools;
 use Wechat\App\Service\Transit;
 use Workerman\Connection\TcpConnection;
 use Workerman\Protocols\Http;
-use Workerman\WebServer;
+// use Workerman\WebServer;
 use Workerman\Worker;
 
 /**
@@ -45,15 +45,15 @@ class WorkerStart extends AbstractListener
         $this->worker->onError = array($this, 'onError');
         $this->worker->listen();
 
-        // 监听WebServer
-        $webserver = new WebServer('http://0.0.0.0:80');
-        $webserver->onMessage = function($connection, $info) use ($webserver) {
-            // 文件访问
-            $webserver->onMessage($connection);
-        };
-        $webserver->addRoot('*', ROOT_PATH . '/Public/');
-        $webserver->initMimeTypeMap();
-        $webserver->listen();
+        // // 监听WebServer
+        // $webserver = new WebServer('http://0.0.0.0:80');
+        // $webserver->onMessage = function($connection, $info) use ($webserver) {
+        //     // 文件访问
+        //     $webserver->onMessage($connection);
+        // };
+        // $webserver->addRoot('*', ROOT_PATH . '/Public/');
+        // $webserver->initMimeTypeMap();
+        // $webserver->listen();
     }
 
     /**
@@ -64,6 +64,7 @@ class WorkerStart extends AbstractListener
     public function onMessage($connection, $message)
     {
         try {
+            Tools::log('Recv Web Data:  Conn:' . $connection->id . ', Data: ' . $message);
             $json = json_decode($message, true);
             if (
                 !isset($json['wechatId']) || !$json['wechatId'] ||
