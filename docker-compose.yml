@@ -1,0 +1,19 @@
+version: '3.3'
+services:
+    wechatpchook:
+        container_name: wechathook
+        ports:
+            - '5905:5905'
+            - '5678:5678'
+        environment:
+            - VNCPASS=asdfgh123
+            - APP_ID=1234567890ABCDEFGHIJKLMNOPQRSTUV
+            - APP_KEY=1234567890ABCDEFGHIJKLMNOPQRSTUV
+            - PHPDEBUG=true
+            - WECHAT_DEST_VERSION=3.3.0.115
+        ipc: host
+        volumes:
+            - "~/DoChat/WeChat Files/:/root/WeChat Files/"
+            - "~/DoChat/Application Data:/root/.wine/drive_c/users/user/Application Data/"
+        privileged: true
+        image: endokai/wechatpchook

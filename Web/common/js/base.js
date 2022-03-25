@@ -203,9 +203,69 @@ $(function (){
 	})
 
 	$(".bri_bottom_file").click(function (){
-		$(".bri_bottom_files").click();
+		// // https://web.dev/i18n/zh/read-files/
+		var wechatId = $('.bri_top').attr('data-wechat-id');
+		if (wechatId != undefined) {
+			$(".bri_bottom_files").click();
+		} else {
+			alert("请先登陆");
+		}
 	})
 	
+	function readFile(file, callback) {
+		const reader = new FileReader();
+		reader.addEventListener('load', (event) => {
+		  // 对结果进行一些操作
+		  const result = event.target.result;
+		  callback(result);
+		});
+		reader.readAsDataURL(file);
+	}
+
+	function readImage(file, callback) {
+		// 检查文件是否为图像。
+		if (file.type && !file.type.startsWith('image/')) {
+		  console.log('File is not an image.', file.type, file);
+		  return;
+		}
+	  
+		const reader = new FileReader();
+		reader.addEventListener('load', (event) => {
+			// 对结果进行一些操作
+			const result = event.target.result;
+			callback(result)
+		});
+		reader.readAsDataURL(file);
+	}
+
+	$(".bri_bottom_files").on("change", function (event) {
+		file = event.target.files[0];
+		const name = file.name ? file.name : 'NOT SUPPORTED';
+		const type = file.type ? file.type : 'NOT SUPPORTED';
+		const size = file.size ? file.size : 'NOT SUPPORTED';
+		if (type && type.startsWith('image/')) {
+			readImage(file, function(result) {
+				var wechatId = $('.bri_top').attr('data-wechat-id');
+				var wxid = $('.bri_top').attr('data-wxid');
+				var content = '<img src="'+result+'"/>';
+				saveMessage(wechatId, {wxid: wxid, roomId: '', content: content}, true);
+				showMessage(content, true);
+
+				messageSendImage(wechatId, wxid, result);
+			})
+		} else {
+			readFile(file, function(result) {
+				var wechatId = $('.bri_top').attr('data-wechat-id');
+				var wxid = $('.bri_top').attr('data-wxid');
+				var content = '文件名: ' + name + "<br>类型:" + type + "<br>大小:" + size+ "<br>发送时间:" + Date.now();
+				saveMessage(wechatId, {wxid: wxid, roomId: '', content: content}, true);
+				showMessage(content, true);
+
+				messageSendFile(wechatId, wxid, result, name);
+			})
+		}
+	})
+
 	// 退出群聊
 	$('.bin_six').click(function(){
 		var wechatId = $('.bri_top').attr('data-wechat-id');

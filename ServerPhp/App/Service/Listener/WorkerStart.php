@@ -109,16 +109,19 @@ class WorkerStart extends AbstractListener
             
             if (abs($local_timestamp - $timestamp) < $expire) {
                 if ($app_id == $local_app_id) {
-                    // $query = "app_id=" . $local_app_id . "&timestamp=" . $timestamp . "&app_key=" . $local_app_key;
-                    $query = "app_id=" . $local_app_id . "&timestamp=" . $timestamp . "&app_key" . $local_app_key;
+                    $query = "app_id=" . $local_app_id . "&timestamp=" . $timestamp . "&app_key=" . $local_app_key;
                     $local_hash = hash("sha256", $query, false);
-                    // Tools::log("hash:" . $hash);
-                    // Tools::log("local_hash:" . $local_hash);
                     if ($local_hash == $hash) {
                         Transit::webConnect($connection);
                     } else {
-                        $connection->close();
-                        Tools::log("[Error] hash not match!");
+                        $query_old_bug = "app_id=" . $local_app_id . "&timestamp=" . $timestamp . "&app_key" . $local_app_key;
+                        $local_hash_old_bug = hash("sha256", $query_old_bug, false);
+                        if ($local_hash_old_bug == $hash) {
+                            Transit::webConnect($connection);
+                        } else {
+                            $connection->close();
+                            Tools::log("[Error] hash not match!");
+                        }
                     }
                 } else {
                     $connection->close();

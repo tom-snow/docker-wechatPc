@@ -45,26 +45,38 @@ function sendText(wechatId, wxid, content)
 	send(json.getJson());
 }
 // 发送图片消息
-function messageSendImage(wechatId, wxid, imageUrl)
+function messageSendImage(wechatId, wxid, base64Content)
 {
+	/**
+	 * 参数说明：
+	 * base64Content: 含 mime_type 信息的 base64 加密图片。(其中 mime_type 必须)【后端通过正则(/(?<=^data:)\w+\/[\w\-\+\d.]+(?=;base64,)/i)判断 mime_type】
+	 * 		格式形如： data:image/png;base64,aW1hZ2U=
+	 */
 	var json = new Package();
 	json.setWechatId(wechatId);
 	json.setOpCode(OPCODE_MESSAGE_SEND_IMAGE);
 	json.setBody({
 		wxid: wxid,
-		imageUrl: imageUrl
+		base64Content: base64Content
 	});
 	send(json.getJson());
 }
 // 发送附件消息
-function messageSendFile(wechatId, wxid, fileUrl)
+function messageSendFile(wechatId, wxid, base64Content, fileName)
 {
+	/**
+	 * 参数说明：
+	 * base64Content: 含 mime_type 信息的 base64 加密文件。(其中 mime_type 可以不准确，但是需要符合格式)【后端通过正则(/(?<=^data:)\w+\/[\w\-\+\d.]+(?=;base64,)/i)判断 mime_type】
+	 * 		格式形如： data:application/json;base64,e30=
+	 * fileName: 文件名(不含路径)，微信客户端上会显示此文件名
+	 */
 	var json = new Package();
 	json.setWechatId(wechatId);
 	json.setOpCode(OPCODE_MESSAGE_SEND_FILE);
 	json.setBody({
 		wxid: wxid,
-		fileUrl: fileUrl
+		base64Content: base64Content,
+		fileName: fileName
 	});
 	send(json.getJson());
 }
@@ -354,7 +366,7 @@ function connect()
 {
 	/*
 	* 使用 app_id, timestamp 与 app_key 生成 sha256 hash：
-	* hash = sha256("app_id={app_id}&timestamp={timestamp}&app_key{app_key}");
+	* hash = sha256("app_id={app_id}&timestamp={timestamp}&app_key={app_key}");
 	* 	其中 app_id 与 app_key 需与 php 端相同（docker 环境下环境变量会覆盖 config.php 设置），timestamp 是当前时间，需要与 php 服务器端误差小于 config.php 中 expire 变量的值（默认10分钟），如果 websocket 连接失败可能是时区不同，请自行统一
 	* 	【求 hash 时，各参数顺序不能乱！】
 	* 再按照 app_id, timestamp 与 hash 拼接成 websocket 的 query，如：
@@ -368,8 +380,7 @@ function connect()
 	var timestamp = Date.now();
 	query += "app_id=" + app_id;
 	query += "&timestamp=" + timestamp;
-	// var hash = sha256(query + "&app_key=" + app_key);
-	var hash = sha256(query + "&app_key" + app_key);
+	var hash = sha256(query + "&app_key=" + app_key);
 	query += "&hash=" + hash;
 	wsUrl += query;
 
