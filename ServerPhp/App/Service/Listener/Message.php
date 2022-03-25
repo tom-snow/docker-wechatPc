@@ -46,7 +46,7 @@ class Message extends AbstractListener
             return false;
         }
         // 打印日记
-        Tools::log('Recv Data: ' . $this->connection->id . ', Data: ' . $this->message);
+        Tools::log('Recv Wechat Data: Conn:' . $this->connection->id . ', Data: ' . $this->message);
 
         // 处理
         $object = $this->receive->setPackage($package);
