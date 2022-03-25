@@ -205,6 +205,23 @@ class Transit
                 // 绑定关系
                 self::bindWechatConnection($package->getConnection(), $wechatId);
                 break;
+            case OpCode::OPCODE_MESSAGE_SEND_IMAGE:
+                $body = $package->getBody();
+                $filename = Tools::timestamp();
+                $imageUrl = Tools::bass64DecodeFileWithMime($body["base64Content"], $filename);
+                unset($body["base64Content"]);
+                $body["imageUrl"] = "Z:" . str_replace('/', '\\', $imageUrl);
+                $package->setBody($body);
+                break;
+            case OpCode::OPCODE_MESSAGE_SEND_FILE:
+                $body = $package->getBody();
+                $filename = explode('.', $body["fileName"], 2);
+                $fileUrl = Tools::bass64DecodeFileWithMime($body["base64Content"], $filename[0], "." . $filename[1]);
+                unset($body["base64Content"]);
+                unset($body["fileName"]);
+                $body["fileUrl"] = "Z:" . str_replace('/', '\\', $fileUrl);
+                $package->setBody($body);
+                break;
         }
         $wechatId = $package->getWechatId();
         // 转发消息
