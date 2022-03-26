@@ -11,34 +11,41 @@ class DockerWechatHook:
     def compute_version(self, ver):
         # 计算微信版本号，并且转换为10进制字符串
         if len(ver) >= 7 :
-            version_list = ver.split('.')
+            try:
+                version_list = ver.split('.')
 
-            # 第一个最前面要补个6，后面几个则是补0
-            version_list[0] = '6' + str(hex(int(version_list[0]))).split('x')[1]
-            version_list[1] = str(hex(int(version_list[1]))).split('x')[1]
-            if len(version_list[1]) == 1 :
-                version_list[1] = '0' + version_list[1]
-            version_list[2] = str(hex(int(version_list[2]))).split('x')[1]
-            if len(version_list[2]) == 1 :
-                version_list[2] = '0' + version_list[2]
-            version_list[3] = str(hex(int(version_list[3]))).split('x')[1]
-            if len(version_list[3]) == 1 :
-                version_list[3] = '0' + version_list[3]
-            version_hex = "0x" + version_list[0] + version_list[1] + version_list[2] + version_list[3]
+                # 第一个最前面要补个6，后面几个则是补0
+                version_list[0] = '6' + str(hex(int(version_list[0]))).split('x')[1]
+                version_list[1] = str(hex(int(version_list[1]))).split('x')[1]
+                if len(version_list[1]) == 1 :
+                    version_list[1] = '0' + version_list[1]
+                version_list[2] = str(hex(int(version_list[2]))).split('x')[1]
+                if len(version_list[2]) == 1 :
+                    version_list[2] = '0' + version_list[2]
+                version_list[3] = str(hex(int(version_list[3]))).split('x')[1]
+                if len(version_list[3]) == 1 :
+                    version_list[3] = '0' + version_list[3]
+                version_hex = "0x" + version_list[0] + version_list[1] + version_list[2] + version_list[3]
+            except:
+                print(f"Error to convert wechat_dest_version, use default")
+                version_hex = "0x63030073"
             # version_int = int(version_hex, 16)
             return str(version_hex)
         else :
             return '0x63030073' # 默认 3.3.0.115
 
-    def now_exit(self,signum, frame):
+    def now_exit(self, signum, frame):
         self.exit_container()
 
     def run_php(self):
         app_id = os.environ['APP_ID']
         app_key = os.environ['APP_KEY']
+        phplog_max_length = int(os.environ['PHPLOG_MAX_LENGTH'])
+        print(f"phplog_max_length {phplog_max_length}")
         subprocess.run(['sed', '-i', '-e', 
             f"s@app_id' => '.*'@app_id' => '{app_id}'@g", '-e', 
-            f"s@app_key' => '.*'@app_key' => '{app_key}'@g", 
+            f"s@app_key' => '.*'@app_key' => '{app_key}'@g",  '-e', 
+            f"s@log_max_length' => 0@log_max_length' => {phplog_max_length}@g", 
             '/ServerPhp/Config/Config.php'])
         if os.path.exists('/ServerPhp/Storage/pid/wechat.pid'):
             os.remove('/ServerPhp/Storage/pid/wechat.pid')

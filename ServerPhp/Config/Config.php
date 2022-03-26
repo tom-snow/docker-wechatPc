@@ -8,6 +8,7 @@ return [
      * 是否开启debug模式
      */
     'debug' => true,
+    'log_max_length' => 0,
     /**
      * app_id & app_key
      * expire: 10*60*1000 ms, hash (token) 过期时间

@@ -10,6 +10,7 @@ services:
             - APP_ID=1234567890ABCDEFGHIJKLMNOPQRSTUV
             - APP_KEY=1234567890ABCDEFGHIJKLMNOPQRSTUV
             - PHPDEBUG=true
+            - PHPLOG_MAX_LENGTH=0
             - WECHAT_DEST_VERSION=3.3.0.115
         ipc: host
         volumes:
