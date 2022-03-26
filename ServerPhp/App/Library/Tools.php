@@ -23,6 +23,10 @@ class Tools {
         $timestamp = explode('.',$timestamp / 1000);
         $date = date('Y-m-d H:i:s', ($timestamp[0] ?? 0)).'.'.($timestamp[1] ?? 0);
         $debug = Tools::config('debug');
+        $log_max_length = Tools::config('log_max_length');
+        if ($log_max_length > 0) {
+            $message = substr($message, 0, $log_max_length) . " ======== 日志过长，已截断";
+        }
         if (function_exists('getmypid')) {
             $message = '[PID:'.getmypid().' | '.$date.'] ' . $message;
         } else if (function_exists('posix_getpid')) {

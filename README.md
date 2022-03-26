@@ -24,6 +24,7 @@ docker run \
   -e APP_ID=1234567890ABCDEFGHIJKLMNOPQRSTUV \
   -e APP_KEY=1234567890ABCDEFGHIJKLMNOPQRSTUV \
   -e PHPDEBUG=true \
+  -e PHPLOG_MAX_LENGTH=0 \
   -e WECHAT_DEST_VERSION=3.3.0.115 \
   -dti  \
   --ipc=host \
@@ -48,6 +49,7 @@ docker run \
   * APP_ID 和 APP_KEY: 设置 wechatPc 的密钥【自 [v0.2.2](./ChangeLog.md#v022) 起，必须 docker 端与 web 端设置相同的 APP_ID 和 APP_KEY 】
   * WECHAT_DEST_VERSION: 微信自定义版本号，默认 3.3.0.115。（伪装微信版本所用，必须是 a.b.c.d 格式的版本号）【可参考 [wechat-windows-versions](https://github.com/tom-snow/wechat-windows-versions/releases) 】
   * PHPDEBUG: 日志详细开关，默认打开，设置为 false 可关闭。
+  * PHPLOG_MAX_LENGTH: PHP 单条日志最大长度(对使用 `Tools::log();` 方法打印的日志全局生效)，小于等于 0 为不限制。
 
 ## 使用说明：
 ### API使用方法：
