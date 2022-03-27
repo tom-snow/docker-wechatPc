@@ -227,6 +227,8 @@ class Transit
         // 转发消息
         $wechatConnectId = ConnectionRelationPool::getGroupId(self::$wechatRelationSuffix . $wechatId);
         if (!$wechatConnectId) {
+            Tools::log('$wechatId:' . $wechatId . '  \t $wechatConnectId' . $wechatConnectId);
+            ConnectionRelationPool::dumpData();
             Tools::log('Transit Web Not WechatConectionId: ' . 'ConnectId=' . $package->getConnection()->id);
             return false;
         }

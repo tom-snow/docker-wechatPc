@@ -14,6 +14,18 @@ class ConnectionRelationPool
     protected static $relationPool = array();
 
     /**
+     * 查看当前数据
+     * @return null
+     */
+    public static function dumpData()
+    {
+        echo "dump - 一对多绑定关系，关系组储存: relationPoolGroup :\n";
+        var_dump(self::$relationPoolGroup);
+        echo "dump - 一对一绑定关系，关系池: relationPool :\n";
+        var_dump(self::$relationPool);
+    }
+
+    /**
      * 随机获取一个目标ID
      * @param string $groupId 组ID
      * @return mixed|null
