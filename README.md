@@ -18,7 +18,7 @@
 <pre>
 docker run \
   --name wechathook  \
-  -p 127.0.0.1:5905:5905 \
+  -p 5905:5905 \
   -p 127.0.0.1:5678:5678 \
   -e VNCPASS=asdfgh123 \
   -e APP_ID=1234567890ABCDEFGHIJKLMNOPQRSTUV \
@@ -37,7 +37,7 @@ docker run \
 或者使用 [docker-compose](https://github.com/tom-snow/docker-wechatPc/blob/master/docker-compose.yml)
 
 ### 参数说明
-* 端口：
+* 端口：(绑定在 127.0.0.1 上时外网无法访问)
   * 5905: VNC 的端口
   * 5678: Websocket API 的通信端口
 
@@ -46,7 +46,7 @@ docker run \
 
 * 环境变量：
   * VNCPASS: 设置 VNC 的密码【若在互联网上公开了 vnc 端口，请自行设置强秘码】
-  * APP_ID 和 APP_KEY: 设置 wechatPc 的密钥【自 [v0.2.2](./ChangeLog.md#v022) 起，必须 docker 端与 web 端设置相同的 APP_ID 和 APP_KEY 】
+  * APP_ID 和 APP_KEY: 设置 wechatPc 的密钥，长度32个字符【自 [v0.2.2](./ChangeLog.md#v022) 起，必须 docker 端与 web 端设置相同的 APP_ID 和 APP_KEY 】
   * WECHAT_DEST_VERSION: 微信自定义版本号，默认 3.3.0.115。（伪装微信版本所用，必须是 a.b.c.d 格式的版本号）【可参考 [wechat-windows-versions](https://github.com/tom-snow/wechat-windows-versions/releases) 】
   * PHPDEBUG: 日志详细开关，默认打开，设置为 false 可关闭。
   * PHPLOG_MAX_LENGTH: PHP 单条日志最大长度(对使用 `Tools::log();` 方法打印的日志全局生效)，小于等于 0 为不限制。
@@ -70,4 +70,4 @@ wechatPc 提供一个简易的 Web 端。下载此项目，打开 Web 文件夹�
 
    如果你打算采用 [直接用Workerman开启SSL](https://www.workerman.net/doc/workerman/faq/secure-websocket-server.html#方法一%20，直接用Workerman开启SSL) 的方式开启 ssl ，你只需要修改 [/ServerPhp/App/Service/Listener/WorkerStart.php](https://github.com/tom-snow/docker-wechatPc/blob/66f4832be94d9917647a1c13c740e62e46faeb95/ServerPhp/App/Service/Listener/WorkerStart.php#L40) 文件。
 
-3. 此项目当前尚不完善，且很多代码并不规范，各位还请海涵。同时无偿招募大佬优化代码(不要吝啬你的 PR )。亦可加入 [TG群](https://t.me/+bHJc6QsHG1xmYTdh) 进行交流。
+3. 此项目当前尚不完善，且很多代码并不规范，各位还请海涵。同时无偿招募大佬优化代码(不要吝啬你的 PR )。

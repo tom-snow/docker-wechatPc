@@ -4,7 +4,7 @@ services:
         container_name: wechathook
         ports:
             - '5905:5905'
-            - '5678:5678'
+            - '127.0.0.1:5678:5678'
         environment:
             - VNCPASS=asdfgh123
             - APP_ID=1234567890ABCDEFGHIJKLMNOPQRSTUV
