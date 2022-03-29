@@ -14,7 +14,7 @@ services:
             - WECHAT_DEST_VERSION=3.3.0.115
         ipc: host
         volumes:
-            - "~/DoChat/WeChat Files/:/root/WeChat Files/"
-            - "~/DoChat/Application Data:/root/.wine/drive_c/users/user/Application Data/"
+            - "~/DoChat/WeChat Files/:/home/user/WeChat Files/"
+            - "~/DoChat/Application Data:/home/user/.wine/drive_c/users/user/Application Data/"
         privileged: true
         image: endokai/wechatpchook

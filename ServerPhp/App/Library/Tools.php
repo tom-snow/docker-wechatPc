@@ -24,7 +24,7 @@ class Tools {
         $date = date('Y-m-d H:i:s', ($timestamp[0] ?? 0)).'.'.($timestamp[1] ?? 0);
         $debug = Tools::config('debug');
         $log_max_length = Tools::config('log_max_length');
-        if ($log_max_length > 0 && mb_strlen($message, 'utf8') > $log_max_length) {
+        if ($log_max_length > 0 && strlen($message) > $log_max_length) {
             $message = substr($message, 0, $log_max_length) . " ======== 日志过长，已截断";
         }
         if (function_exists('getmypid')) {
