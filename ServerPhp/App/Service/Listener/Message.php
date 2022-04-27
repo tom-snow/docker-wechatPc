@@ -1,6 +1,7 @@
 <?php
 namespace Wechat\App\Service\Listener;
 
+use Wechat\App\Enums\OpCode;
 use Wechat\App\Library\Package;
 use Wechat\App\Library\Tools;
 use Wechat\App\Service\Receive;
@@ -45,8 +46,12 @@ class Message extends AbstractListener
             Tools::log('Recv Error Package: ConnectId=' . $this->connection->id . ', Data=' . $this->message);
             return false;
         }
-        // 打印日记
-        Tools::log('Recv Wechat Data: Conn:' . $this->connection->id . ', Data: ' . $this->message);
+
+        // 临时关闭，好友列表的日志输出(数据太大)
+        if ($package->getOpCode() != OpCode::OPCODE_FRIEND_LIST) {
+            // 打印日志
+            Tools::log('Recv Wechat Data: Conn:' . $this->connection->id . ', Data: ' . $this->message);
+        }
 
         // 处理
         $object = $this->receive->setPackage($package);

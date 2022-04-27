@@ -52,7 +52,7 @@ class Listener
     }
 
     /**
-     * 收到消息事件
+     * 收到 PC Wechat 消息事件
      *
      * @param \Workerman\Connection\TcpConnection $connection
      * @param $message

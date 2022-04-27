@@ -1,6 +1,8 @@
 <?php
 namespace Wechat\App\Library;
 
+use Wechat\App\Library\Tools;
+
 /**
  * 连接关系池
  * Class ConnectionRelationPool
@@ -76,6 +78,8 @@ class ConnectionRelationPool
         if (isset(self::$relationPool[$id])) {
             return self::$relationPool[$id];
         }
+
+        Tools::log("获取失败"+$id + "" + json_encode(self::$relationPool));
         return null;
     }
 
