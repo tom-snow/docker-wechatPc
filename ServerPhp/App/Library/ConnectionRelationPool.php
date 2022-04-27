@@ -41,6 +41,8 @@ class ConnectionRelationPool
         }
         self::$relationPoolGroup[$groupId][$id] = $id;  // 一对多
         self::$relationPool[$id] = $groupId;  // 一对一
+
+        Tools::log('ConnectionRelationPool: '.json_encode(self::$relationPool));
         return true;
     }
 

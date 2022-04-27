@@ -7,6 +7,7 @@ use Wechat\App\Library\ConnectionRelationPool;
 use Wechat\App\Library\Package;
 use Wechat\App\Library\Tools;
 use Workerman\Connection\TcpConnection;
+use Workerman\Lib\Timer;
 
 /**
  * 消息中转: <wechat> <<===>> <Transit> <<===>> <web>
@@ -48,6 +49,9 @@ class Transit
                 // 获取微信客户端列表
                 $body = $package->getBody();
                 if (isset($body['wechatIdList']) && !empty($body['wechatIdList'])) {
+
+                    Tools::log('Transit Wechat wechatIdList: ' . json_encode($body));
+
                     $wechatIdList = explode(',', $body['wechatIdList']);
                     $loginStatusPackage = clone($package);
                     $connection = $package->getConnection();
@@ -65,8 +69,72 @@ class Transit
                     // 初始化个数
                     self::$wechatOpenNumber[$package->getConnection()->id] = count($wechatIdList);
                 } else {
+
+                    Tools::log('Transit Wechat wechatIdList Empty.');
+
                     // 初始化个数
                     self::$wechatOpenNumber[$package->getConnection()->id] = 0;
+                }
+
+                Tools::log('Transit Wechat wechatOpen Info: '. json_encode(self::$wechatOpenNumber));
+                break;
+            case OpCode::OPCODE_WECHAT_GET_LOGIN_STATUS:
+                Tools::log('Transit Wechat get login STATUS: '. json_encode($package->getBody()));
+                $body = $package->getBody();
+
+                // 用户登录成功，添加检测脚本，检测微信是否退出
+                // 在微信多开的情况下会有问题
+                if (!empty($body['loginStatus'])) {
+                    // 每5s检测一次进程
+                    Timer::add(5, function() use($package) {
+                        $execString = "ps aux | grep '\\\\WeChat\\\\WeChat.exe' | grep -v grep | wc -l";
+
+                        $processNum  = 0;
+                        // 获取当前系统运行的进程数量
+                        exec($execString, $processNum);
+                        $processNum = $processNum[0];
+
+                        Tools::log('Timer runing ' . $execString . ', processNum: ' . $processNum);
+
+                        if ($processNum <= 0) {
+                            $wechatId = $package->getWechatId();
+
+                            // 如果没有有微信ID 不做处理；如果有微信ID，返回给浏览器端
+                            if (empty($wechatId)) {
+                                Tools::log('Transit Wechat Message: ' . 'ConnectId=' . $package->getConnection()->id . ', opCode=' . $package->getOpCode() . ', 未获取到微信ID');
+                                return true;
+                            }
+
+                            // 构造返回给浏览器端的数据
+                            $data = [
+                                'wechatId' => $wechatId,
+                                'opCode' => 146,
+                                'body' => [
+                                    'isOwner' => 1,
+                                    'msgType' => 1,
+                                    'msgSource' => 0,
+                                    'wxid' => 'filehelper',
+                                    'roomId' => '',
+                                    'content' => '🤬😱微信客户端异常关闭了，请重新登录',
+                                ],
+                            ];
+
+                            $json = json_encode($data);
+                            // 查找浏览器端的连接
+                            $webConnectId = ConnectionRelationPool::getGroupId(self::$webRelationSuffix . $wechatId);
+                            if ($webConnectId) {
+                                $webConnectId = str_replace(self::$webRelationSuffix, '', $webConnectId);
+                                $webConnection = ConnectionPool::get($webConnectId, self::$webListenPort);
+                                // 转发数据
+                                if ($webConnection) {
+                                    $webConnection->send($json);
+                                } else {
+                                    Tools::log('Transit Wechat Message Error: Not Find Web Client' . 'ConnectId=' . $package->getConnection()->id . ', opCode=' . $package->getOpCode());
+                                    return false;
+                                }
+                            }
+                        }
+                    });
                 }
                 break;
         }
@@ -74,7 +142,7 @@ class Transit
 
         // 如果没有有微信ID 不做处理；如果有微信ID，返回给浏览器端
         if (empty($wechatId)) {
-            Tools::log('Transit Wechat Message: ' . 'ConnectId=' . $package->getConnection()->id . ', opCode=' . $package->getOpCode() . '未获取到微信ID');
+            Tools::log('Transit Wechat Message: ' . 'ConnectId=' . $package->getConnection()->id . ', opCode=' . $package->getOpCode() . ', 未获取到微信ID');
             return true;
         }
 
@@ -263,6 +331,12 @@ class Transit
 
     /**
      * 绑定微信ID与终端关系
+     *
+     * 微信 ID 对应的 ws 连接
+     * "web_08917EFAA5DCD5858EA1D25440D7A989":"web_3",
+     * "wechat_08917EFAA5DCD5858EA1D25440D7A989":"wechat_2"
+     *
+     *
      * @param $webConnection
      * @param $wechatId
      * @param TcpConnection|null $wechatConnection
@@ -273,6 +347,7 @@ class Transit
         ConnectionRelationPool::add(self::$webRelationSuffix . $wechatId, self::$webRelationSuffix . $webConnection->id);
 
         // 绑定微信端与微信ID的关系
+        // Tools::getArrayKeyByMinValue(self::$wechatOpenNumber); 获取连接最少的客户端微信连接
         $wechatConnectId = !is_null($wechatConnection) ? $wechatConnection->id : Tools::getArrayKeyByMinValue(self::$wechatOpenNumber);
         ConnectionRelationPool::add(self::$wechatRelationSuffix . $wechatId, self::$wechatRelationSuffix . $wechatConnectId);
     }
