@@ -86,7 +86,7 @@ class Transit
                 // 在微信多开的情况下会有问题
                 if (!empty($body['loginStatus'])) {
                     // 每5s检测一次进程
-                    Timer::add(5, function() use($package) {
+                    $timer_id = Timer::add(5, function() use($package, &$timer_id) {
                         $execString = "ps aux | grep '\\\\WeChat\\\\WeChat.exe' | grep -v grep | wc -l";
 
                         $processNum  = 0;
@@ -94,7 +94,7 @@ class Transit
                         exec($execString, $processNum);
                         $processNum = $processNum[0];
 
-                        Tools::log('Timer runing ' . $execString . ', processNum: ' . $processNum);
+                        // Tools::log('Timer runing ' . $execString . ', processNum: ' . $processNum);
 
                         if ($processNum <= 0) {
                             $wechatId = $package->getWechatId();
@@ -130,9 +130,10 @@ class Transit
                                     $webConnection->send($json);
                                 } else {
                                     Tools::log('Transit Wechat Message Error: Not Find Web Client' . 'ConnectId=' . $package->getConnection()->id . ', opCode=' . $package->getOpCode());
-                                    return false;
                                 }
                             }
+
+                            Timer::del($timer_id);
                         }
                     });
                 }
