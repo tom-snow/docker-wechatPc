@@ -19,6 +19,8 @@ class Transit
     public static $webListenPort = null;
     /** @var string 绑定关系的前缀 */
     protected static $webRelationSuffix = 'web_';
+    /** @var Package 如果浏览器先连接上 ws，缓存 Package, 等待微信客户端初始化完成后 再发送 */
+    protected static $openWechatPackage = '';
 
     /** @var null 微信端配置 */
     public static $wechatListenAddress = null;
@@ -71,9 +73,21 @@ class Transit
                 } else {
 
                     Tools::log('Transit Wechat wechatIdList Empty.');
-
                     // 初始化个数
                     self::$wechatOpenNumber[$package->getConnection()->id] = 0;
+
+
+                    if (!empty(self::$openWechatPackage)) {
+                        Tools::log('Transit openPackage is not empty, send web data.');
+
+                        $openPackage = self::$openWechatPackage;
+                        self::$openWechatPackage = null;
+
+                        self::webMessage($openPackage);
+
+                        $wechatId = $openPackage->getWechatId();
+                        $package->setWechatId($wechatId);
+                    }
                 }
 
                 Tools::log('Transit Wechat wechatOpen Info: '. json_encode(self::$wechatOpenNumber));
@@ -248,13 +262,22 @@ class Transit
         switch ($opCode) {
             // 新开一个微信
             case OpCode::OPCODE_WECHAT_OPEN:
-                if (empty(self::$wechatOpenNumber)) {
-                    Tools::log('Transit Web Relation Not Wechat Online: ' . 'ConnectId=' . $package->getConnection()->id);
-                    return false;
+
+                if (self::$openWechatPackage ) {
+                    return;
                 }
+                
                 // 自动生成一个微信客户端ID
                 $wechatId = strtoupper(md5(rand(100000, 999999) . Tools::timestamp() . rand(100000, 999999)));
                 $package->setWechatId($wechatId);
+
+                if (empty(self::$wechatOpenNumber)) {
+                    Tools::log('Transit Web Relation Not Wechat Online, Cache package: ' . 'ConnectId=' . $package->getConnection()->id);
+
+                    self::$openWechatPackage = $package;
+                    return false;
+                }
+                
                 // 绑定关系
                 self::bindWechatConnection($package->getConnection(), $wechatId);
                 break;
@@ -350,6 +373,9 @@ class Transit
         // 绑定微信端与微信ID的关系
         // Tools::getArrayKeyByMinValue(self::$wechatOpenNumber); 获取连接最少的客户端微信连接
         $wechatConnectId = !is_null($wechatConnection) ? $wechatConnection->id : Tools::getArrayKeyByMinValue(self::$wechatOpenNumber);
-        ConnectionRelationPool::add(self::$wechatRelationSuffix . $wechatId, self::$wechatRelationSuffix . $wechatConnectId);
+
+        if (!empty($wechatConnectId)) {
+            ConnectionRelationPool::add(self::$wechatRelationSuffix . $wechatId, self::$wechatRelationSuffix . $wechatConnectId);
+        }
     }
 }

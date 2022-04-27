@@ -81,7 +81,7 @@ class ConnectionRelationPool
             return self::$relationPool[$id];
         }
 
-        Tools::log("获取失败"+$id + "" + json_encode(self::$relationPool));
+        Tools::log('获取失败: ' . $id . ', ' . json_encode(self::$relationPool));
         return null;
     }
 
