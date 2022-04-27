@@ -1,6 +1,8 @@
 <?php
 namespace Wechat\App\Library;
 
+use Wechat\App\Library\Tools;
+
 /**
  * 连接关系池
  * Class ConnectionRelationPool
@@ -39,6 +41,8 @@ class ConnectionRelationPool
         }
         self::$relationPoolGroup[$groupId][$id] = $id;  // 一对多
         self::$relationPool[$id] = $groupId;  // 一对一
+
+        Tools::log('ConnectionRelationPool: '.json_encode(self::$relationPool));
         return true;
     }
 
@@ -76,6 +80,8 @@ class ConnectionRelationPool
         if (isset(self::$relationPool[$id])) {
             return self::$relationPool[$id];
         }
+
+        Tools::log('获取失败: ' . $id . ', ' . json_encode(self::$relationPool));
         return null;
     }
 

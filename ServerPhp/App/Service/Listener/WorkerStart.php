@@ -33,8 +33,8 @@ class WorkerStart extends AbstractListener
      */
     public function handle()
     {
-        // 打印日记
-        Tools::log('Worker Started.');
+        // 打印日志
+        Tools::log('Web Worker Started. ');
 
         // 开启浏览器端的websocket监听，浏览器端发送过来的数据做转发给微信客户端
         $this->worker = new Worker("websocket://" . Transit::$webListenAddress . ":" . Transit::$webListenPort);
